@@ -1,19 +1,18 @@
 .hero {
-  --gradient-start: rgb(var(--color-dark-base) / 85%);
-  --gradient-end: rgb(var(--color-dark-base) / 60%);
-  --default-min-height: 480px;
-  --min-height: var(--default-min-height);
+  --gradient-start: rgb(var(--color-dark-base) / 80%);
+  --gradient-end: rgb(var(--color-dark-base) / 20%);
+  --min-height: var(--block-m-min-height); /* Default: Medium 560px */
 
   position: relative;
   color: #fff;
   overflow: hidden;
 
   &.small {
-    --min-height: 180px;
+    --min-height: var(--block-s-min-height); /* Small: 360px */
   }
 
   &.large {
-    --min-height: 720px;
+    --min-height: var(--block-l-min-height); /* Large: 700px */
   }
 
   &.full {
@@ -128,7 +127,7 @@
   &.stack {
     .hero-background {
       > div {
-        min-height: var(--default-min-height);
+        min-height: var(--block-m-min-height); /* Medium: 560px */
         position: relative;
       }
     }

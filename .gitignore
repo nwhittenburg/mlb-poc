@@ -8,3 +8,6 @@ helix-importer-ui
 *.bak
 .idea
 .wrangler
+
+# Design token checksums (auto-generated)
+design-tokens/.token-checksums.json
