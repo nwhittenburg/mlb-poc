@@ -99,14 +99,13 @@
 
     .hero-heading {
       margin: 0;
-      font-size: 48px;
+      font-size: var(--typography-heading-2xl); /* 44px desktop, 36px tablet/mobile */
       font-weight: 700;
       line-height: 1.2;
-      letter-spacing: -0.5px;
     }
 
     .hero-breadcrumb {
-      font-size: 14px;
+      font-size: var(--typography-heading-xs); /* 18px desktop, 16px tablet/mobile */
       font-weight: 600;
       letter-spacing: 0.5px;
       text-transform: uppercase;
@@ -217,7 +216,7 @@
       grid-template-columns: 40% 40%;
 
       .hero-heading {
-        font-size: 64px;
+        font-size: var(--typography-heading-3xl); /* 80px desktop, 44px tablet/mobile */
       }
     }
   }
@@ -228,9 +227,7 @@
     .hero-foreground {
       grid-template-columns: 33% 33%;
 
-      .hero-heading {
-        font-size: 72px;
-      }
+      /* Typography is already handled by --typography-heading-3xl at 900px+ */
     }
   }
 }

@@ -36,6 +36,47 @@
 
 The Hero block maps to **Marquee** in the Consonant Design System.
 
+### Typography Tokens
+
+#### Heading Sizes (Responsive)
+```css
+/* Hero Heading - Use typography-heading-2xl or 3xl */
+--typography-heading-3xl: 80px  /* Desktop: Large hero headings */
+--typography-heading-2xl: 44px  /* Desktop: Default hero headings */
+--typography-heading-xl: 36px   /* Desktop: Smaller headings */
+--typography-heading-l: 28px
+--typography-heading-m: 24px
+--typography-heading-s: 20px
+--typography-heading-xs: 18px   /* Desktop: Breadcrumbs, small text */
+
+/* Tablet & Mobile (600-899px & <600px) */
+--typography-heading-3xl: 44px  /* Large hero headings scale down */
+--typography-heading-2xl: 36px  /* Default hero headings scale down */
+--typography-heading-xl: 28px
+--typography-heading-l: 24px
+--typography-heading-m: 20px
+--typography-heading-s: 18px
+--typography-heading-xs: 16px   /* Breadcrumbs, small text */
+```
+
+#### Hero Typography Usage
+```css
+.hero-heading {
+  font-size: var(--typography-heading-2xl);  /* 44px → 36px responsive */
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.hero-heading-large {
+  font-size: var(--typography-heading-3xl);  /* 80px → 44px responsive */
+}
+
+.hero-breadcrumb {
+  font-size: var(--typography-heading-xs);   /* 18px → 16px responsive */
+  font-weight: 600;
+}
+```
+
 ### Component-Specific Tokens (13 available)
 
 #### Padding & Spacing
