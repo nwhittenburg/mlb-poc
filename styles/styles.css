@@ -1,3 +1,6 @@
+/* Import Consonant Design System tokens */
+@import url('consonant.css');
+
 @font-face {
   font-family: Montserrat;
   font-style: normal;
