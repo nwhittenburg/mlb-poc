@@ -1,5 +1,5 @@
 .section {
-  --top-bottom-spacing: 0;
+  --top-bottom-spacing: calc(var(--spacing-m) * 2);
   --section-container-width: var(--grid-container-width);
   --section-column-width: var(--grid-column-width);
 
