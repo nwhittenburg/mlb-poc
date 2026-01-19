@@ -366,6 +366,16 @@ strong {
   font-weight: 600;
 }
 
+/* Detail Large text style - C1/Detail/L */
+.detail-large {
+  color: var(--C1-Text-text, #2c2c2c);
+  font-size: var(--body-font-size-m, 16px);
+  font-style: normal;
+  font-weight: 700;
+  line-height: 125%; /* 20px */
+  text-transform: uppercase;
+}
+
 input,
 textarea,
 select,
