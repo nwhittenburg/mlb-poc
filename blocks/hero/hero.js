@@ -39,8 +39,9 @@ function decorateForeground(fg) {
     if (heading) {
       heading.classList.add('hero-heading');
       const detail = heading.previousElementSibling;
-      if (detail) {
-        detail.classList.add('hero-detail');
+      if (detail && detail.tagName === 'P') {
+        // Paragraph before heading is breadcrumb text
+        detail.classList.add('hero-breadcrumb');
       }
     }
     // Determine foreground column types

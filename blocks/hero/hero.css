@@ -69,7 +69,7 @@
 
   .hero-foreground {
     min-height: var(--min-height);
-    padding: var(--spacing-xxl) 0;
+    padding: var(--spacing-tokens-spacing-xl, 56px) 0;
     box-sizing: border-box;
     position: relative;
     display: flex;
@@ -98,8 +98,25 @@
       margin: 0;
     }
 
+    .hero-breadcrumb {
+      margin: 0 0 var(--spacing-tokens-spacing-xs, 16px) 0;
+      font-size: 16px;
+      font-weight: 400;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      line-height: 1.25;
+
+      strong,
+      b {
+        font-weight: 700;
+      }
+    }
+
     .hero-heading {
       margin: 0;
+      font-size: var(--typography-heading-2xl, 44px);
+      font-weight: 700;
+      line-height: 1.25;
     }
   }
 
@@ -145,12 +162,16 @@
 @media (width >= 600px) {
   .hero {
     .hero-foreground {
-      display: grid;
-      grid-template-columns: 45% 45%;
-      justify-content: space-between;
       max-width: var(--grid-container-width);
       margin: 0 auto;
       background: unset;
+
+      /* Only use grid if there are 2+ columns */
+      &:has(> *:nth-child(2)) {
+        display: grid;
+        grid-template-columns: 45% 45%;
+        justify-content: space-between;
+      }
 
       .fg-text {
         width: unset;
