@@ -130,12 +130,16 @@
       padding: 24px;
       min-width: 0;
       
-      p {
+      p,
+      h3,
+      h4,
+      h5,
+      h6 {
         margin: 0;
       }
     }
 
-    /* C1/Body/XS/Regular - First paragraph when two exist */
+    /* C1/Body/XS/Regular - Heading label (H3-H6) */
     .tooltip-body {
       font-family: var(--font-adobe-clean, "Adobe Clean");
       font-size: 14px;
