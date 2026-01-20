@@ -2,18 +2,18 @@
   /* Respect section container width */
   max-width: var(--section-container-width, var(--grid-container-width));
   margin: 0 auto;
-  
-  /* White background using token */
-  background-color: var(--color-light, #fff);
-  border: 1px solid var(--c1-stroke-card-caas, #e8e8e8);
-  border-radius: 4px;
-  overflow: hidden;
 }
 
 .tooltip-container {
   display: flex;
   align-items: center;
   min-height: 130px;
+  
+  /* White background using token */
+  background-color: var(--color-light, #fff);
+  border: 1px solid var(--c1-stroke-card-caas, #e8e8e8);
+  border-radius: 4px;
+  overflow: hidden;
 }
 
 .tooltip-image {

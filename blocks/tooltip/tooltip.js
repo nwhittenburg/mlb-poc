@@ -6,22 +6,30 @@
 export default async function decorate(block) {
   const rows = [...block.querySelectorAll(':scope > div')];
   
-  // Collect all paragraphs from all rows (each row has one cell with content)
+  // Collect all paragraphs from all rows
   const allParagraphs = [];
   let imageElement = null;
   
-  // Process each row
+  // Process each row - check both row and cell level
   rows.forEach((row) => {
-    const picture = row.querySelector('picture');
-    const paragraph = row.querySelector('p');
+    // Look in the row and its first cell
+    const cell = row.querySelector(':scope > div');
+    const searchElement = cell || row;
+    
+    const picture = searchElement.querySelector('picture');
+    const paragraphs = searchElement.querySelectorAll('p');
     
     if (picture && !imageElement) {
       // First picture we find becomes the image
       imageElement = picture;
-    } else if (paragraph) {
-      // Collect text paragraphs
-      allParagraphs.push(paragraph);
     }
+    
+    // Collect all paragraphs from this row
+    paragraphs.forEach((p) => {
+      if (p.textContent.trim()) {
+        allParagraphs.push(p.cloneNode(true));
+      }
+    });
   });
   
   // Clear block
@@ -35,7 +43,7 @@ export default async function decorate(block) {
   if (imageElement) {
     const imageWrapper = document.createElement('div');
     imageWrapper.classList.add('tooltip-image');
-    imageWrapper.appendChild(imageElement);
+    imageWrapper.appendChild(imageElement.cloneNode(true));
     container.appendChild(imageWrapper);
   }
   
