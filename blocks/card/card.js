@@ -23,11 +23,11 @@ export default function init(el) {
   con.classList.add(isTooltip ? 'tooltip-copy' : 'card-content-container');
 
   if (isTooltip) {
-    // Heading (H3-H6) gets body style
+    // Heading (H3-H6) gets smaller uppercase style
     const heading = con.querySelector('h3, h4, h5, h6');
-    if (heading) heading.classList.add('tooltip-body');
-    // Paragraphs get heading style
-    con.querySelectorAll('p').forEach((p) => p.classList.add('tooltip-heading'));
+    if (heading) heading.classList.add('tooltip-heading');
+    // Paragraphs get larger bold style
+    con.querySelectorAll('p').forEach((p) => p.classList.add('tooltip-body'));
     return;
   }
 
