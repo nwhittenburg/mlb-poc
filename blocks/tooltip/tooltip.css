@@ -9,8 +9,8 @@
   align-items: center;
   min-height: 130px;
   
-  /* White background using token */
-  background-color: var(--color-light, #fff);
+  /* White background */
+  background-color: #ffffff;
   border: 1px solid var(--c1-stroke-card-caas, #e8e8e8);
   border-radius: 4px;
   overflow: hidden;
@@ -57,6 +57,7 @@
   line-height: 1.5;
   color: var(--c1-text-text, #2c2c2c);
   margin-bottom: 16px;
+  text-transform: uppercase;
 }
 
 /* C1/Heading/XS - Heading text */
