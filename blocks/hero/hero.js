@@ -34,18 +34,6 @@ function decorateBackground(bg) {
 function decorateForeground(fg) {
   const { children } = fg;
   for (const [idx, child] of [...children].entries()) {
-    // Check if this child contains only images (logo pattern)
-    const pictures = child.querySelectorAll('picture');
-    const paragraphs = child.querySelectorAll('p');
-    const hasOnlyImages = pictures.length > 0 && 
-      paragraphs.length === pictures.length &&
-      [...paragraphs].every((p) => p.querySelector('picture'));
-    
-    if (hasOnlyImages) {
-      child.classList.add('hero-logos');
-      continue; // Skip other decorations for logo rows
-    }
-
     const heading = child.querySelector('h1, h2, h3, h4, h5, h6');
     const text = heading || child.querySelector('p');
     if (heading) {

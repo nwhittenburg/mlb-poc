@@ -99,33 +99,6 @@
       margin: 0;
     }
 
-    .hero-logos {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 32px;
-      margin: 0 0 var(--spacing-tokens-spacing-s, 24px) 0;
-
-      p {
-        margin: 0;
-        height: 56px;
-        width: auto;
-
-        picture {
-          display: block;
-          height: 100%;
-          width: auto;
-        }
-
-        img {
-          display: block;
-          height: 56px;
-          width: auto;
-          object-fit: contain;
-        }
-      }
-    }
-
     .hero-breadcrumb {
       margin: 0 0 var(--spacing-tokens-spacing-xs, 16px) 0;
       font-size: 16px;
@@ -299,15 +272,4 @@
       grid-template-columns: 33% 33%;
     }
   }
-}
-
-/* Override global img { width: 100% } for hero logo images */
-.hero .hero-foreground .hero-logos p img {
-  width: auto;
-  height: 56px;
-}
-
-.hero .hero-foreground .hero-logos p picture {
-  width: auto;
-  height: 56px;
 }
