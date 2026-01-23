@@ -30,7 +30,7 @@
   font-weight: 300 900;
   font-stretch: 62.5% 125%;
   font-display: swap;
-  src: url("/styles/fonts/MLBClarendonVariable[wdth,wght].woff2") format("woff2-variations");
+  src: url("/styles/fonts/MLBClarendonVariable.woff2") format("woff2-variations");
 }
 
 /* Montserrat - Fallback font (can be removed if not needed) */
