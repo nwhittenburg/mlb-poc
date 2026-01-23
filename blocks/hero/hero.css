@@ -117,6 +117,7 @@
         img {
           height: 100%;
           width: auto !important;
+          max-width: none !important;
           object-fit: contain;
         }
       }
@@ -295,4 +296,10 @@
       grid-template-columns: 33% 33%;
     }
   }
+}
+
+/* Explicit selector to override global img { width: 100% } for hero logos */
+.hero .hero-foreground .hero-logos .hero-logo img {
+  width: auto !important;
+  max-width: none !important;
 }
