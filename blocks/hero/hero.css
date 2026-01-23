@@ -7,7 +7,7 @@
   position: relative;
   color: #fff;
   overflow: hidden;
-  margin-bottom: 80px;
+  margin-bottom: var(--spacing-tokens-spacing-xxl, 80px);
 
   &.small {
     --min-height: 180px;

@@ -104,6 +104,13 @@
   --spacing-s: 8px;
   --spacing-xs: 4px;
 
+  /* Consonant spacing aliases for consistent naming */
+  --spacing-tokens-spacing-xl: var(--spacing-block-section-responsive-spacer-xl, 56px);
+  --spacing-tokens-spacing-xxl: var(--spacing-block-section-responsive-spacer-xxl, 80px);
+  --spacing-tokens-spacing-xxxl: var(--spacing-block-section-responsive-spacer-xxxl, 104px);
+  --spacing-tokens-spacing-s: 24px; /* No direct Consonant token */
+  --spacing-tokens-spacing-xs: 16px; /* No direct Consonant token */
+
   /* color schemes */
   color-scheme: light dark;
 
