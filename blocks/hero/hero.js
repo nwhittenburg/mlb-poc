@@ -34,23 +34,6 @@ function decorateBackground(bg) {
 function decorateForeground(fg) {
   const { children } = fg;
   for (const [idx, child] of [...children].entries()) {
-    // Check if this child contains only images (logo pattern)
-    const pictures = child.querySelectorAll('picture');
-    const hasOnlyImages = pictures.length > 0 && 
-      [...child.children].every((el) => el.tagName === 'P' && el.querySelector('picture'));
-    
-    if (hasOnlyImages) {
-      child.classList.add('hero-logos');
-      // Apply logo class to each image container
-      pictures.forEach((pic) => {
-        const paragraph = pic.closest('p');
-        if (paragraph) {
-          paragraph.classList.add('hero-logo');
-        }
-      });
-      continue; // Skip other decorations for logo rows
-    }
-
     const heading = child.querySelector('h1, h2, h3, h4, h5, h6');
     const text = heading || child.querySelector('p');
     if (heading) {

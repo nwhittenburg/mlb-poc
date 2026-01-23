@@ -99,29 +99,6 @@
       margin: 0;
     }
 
-    .hero-logos {
-      display: flex;
-      align-items: center;
-      gap: 32px;
-      margin: 0 0 var(--spacing-tokens-spacing-s, 24px) 0;
-
-      .hero-logo {
-        margin: 0;
-        height: 56px;
-
-        picture {
-          display: block;
-          height: 100%;
-        }
-
-        img {
-          height: 100%;
-          width: auto;
-          object-fit: contain;
-        }
-      }
-    }
-
     .hero-breadcrumb {
       margin: 0 0 var(--spacing-tokens-spacing-xs, 16px) 0;
       font-size: 16px;
