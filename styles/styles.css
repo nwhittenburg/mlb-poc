@@ -23,6 +23,16 @@
   src: url("/styles/fonts/adobe-clean-bold.woff2") format("woff2");
 }
 
+/* MLB Clarendon Variable - H1 display font */
+@font-face {
+  font-family: "MLB Clarendon";
+  font-style: normal;
+  font-weight: 300 900;
+  font-stretch: 62.5% 125%;
+  font-display: swap;
+  src: url("/styles/fonts/MLBClarendonVariable[wdth,wght].woff2") format("woff2-variations");
+}
+
 /* Montserrat - Fallback font (can be removed if not needed) */
 @font-face {
   font-family: Montserrat;
@@ -355,7 +365,12 @@ h6 {
   line-height: var(--heading-line-height);
 }
 
-h1 { font-size: var(--heading-font-size-xxl); }
+h1 {
+  font-family: "MLB Clarendon", var(--font-family);
+  font-size: var(--heading-font-size-xxl);
+  font-weight: 700;
+  font-stretch: 100%;
+}
 h2 { font-size: var(--heading-font-size-xl); }
 h3 { font-size: var(--heading-font-size-l); }
 h4 { font-size: var(--heading-font-size-m); }
