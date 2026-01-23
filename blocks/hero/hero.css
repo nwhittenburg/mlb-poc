@@ -118,6 +118,20 @@
       font-weight: 700;
       line-height: 1.25;
     }
+
+    .hero-body {
+      margin: var(--spacing-tokens-spacing-s, 24px) 0 0 0;
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.5;
+    }
+  }
+
+  /* Constrained variant - max-width 500px for content */
+  &.constrained {
+    .fg-text {
+      max-width: 500px;
+    }
   }
 
   &.stack {

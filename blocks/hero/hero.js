@@ -38,10 +38,20 @@ function decorateForeground(fg) {
     const text = heading || child.querySelector('p');
     if (heading) {
       heading.classList.add('hero-heading');
+      
+      // Paragraph before heading is breadcrumb text
       const detail = heading.previousElementSibling;
       if (detail && detail.tagName === 'P') {
-        // Paragraph before heading is breadcrumb text
         detail.classList.add('hero-breadcrumb');
+      }
+      
+      // Paragraphs after heading are body text
+      let nextSibling = heading.nextElementSibling;
+      while (nextSibling) {
+        if (nextSibling.tagName === 'P') {
+          nextSibling.classList.add('hero-body');
+        }
+        nextSibling = nextSibling.nextElementSibling;
       }
     }
     // Determine foreground column types
