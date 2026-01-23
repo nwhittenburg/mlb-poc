@@ -34,49 +34,37 @@ function decorateBackground(bg) {
 function decorateForeground(fg) {
   const { children } = fg;
   for (const [idx, child] of [...children].entries()) {
-    const heading = child.querySelector('h1, h2, h3, h4, h5, h6');
+    // Check if this child contains only images (logo pattern)
+    const pictures = child.querySelectorAll('picture');
+    const paragraphs = child.querySelectorAll('p');
+    const hasOnlyImages = pictures.length > 0 && 
+      paragraphs.length === pictures.length &&
+      [...paragraphs].every((p) => p.querySelector('picture'));
     
-    if (heading) {
-      // Extract pictures from paragraphs that come before the heading
-      const elementsBeforeHeading = [];
-      let sibling = child.firstElementChild;
-      while (sibling && sibling !== heading) {
-        elementsBeforeHeading.push(sibling);
-        sibling = sibling.nextElementSibling;
-      }
+    if (hasOnlyImages) {
+      child.classList.add('hero-logos');
       
-      // Check if any of these elements are paragraphs with pictures
-      const logoPictures = [];
-      const textParagraphs = [];
-      
-      elementsBeforeHeading.forEach((el) => {
-        if (el.tagName === 'P') {
-          const pic = el.querySelector('picture');
-          if (pic && el.childNodes.length === 1) {
-            // Paragraph contains only a picture - it's a logo
-            logoPictures.push(pic);
-            el.remove();
-          } else {
-            // Paragraph has text content
-            textParagraphs.push(el);
-          }
+      // Extract pictures from paragraphs and place as direct children
+      pictures.forEach((pic) => {
+        const paragraph = pic.closest('p');
+        if (paragraph) {
+          child.insertBefore(pic, paragraph);
+          paragraph.remove();
         }
       });
       
-      // If we found logo pictures, create a hero-logos container
-      if (logoPictures.length > 0) {
-        const logosContainer = document.createElement('div');
-        logosContainer.classList.add('hero-logos');
-        logoPictures.forEach((pic) => logosContainer.appendChild(pic));
-        child.insertBefore(logosContainer, child.firstElementChild);
-      }
-      
-      // Apply hero-heading class
+      continue; // Skip other decorations for logo rows
+    }
+
+    const heading = child.querySelector('h1, h2, h3, h4, h5, h6');
+    const text = heading || child.querySelector('p');
+    if (heading) {
       heading.classList.add('hero-heading');
       
-      // First remaining text paragraph before heading is breadcrumb
-      if (textParagraphs.length > 0) {
-        textParagraphs[0].classList.add('hero-breadcrumb');
+      // Paragraph before heading is breadcrumb text
+      const detail = heading.previousElementSibling;
+      if (detail && detail.tagName === 'P') {
+        detail.classList.add('hero-breadcrumb');
       }
       
       // Paragraphs after heading are body text
@@ -97,8 +85,8 @@ function decorateForeground(fg) {
         nextSibling = nextSibling.nextElementSibling;
       }
     }
-    
-    const text = heading || child.querySelector('p');
+    // Determine foreground column types
+    if (text) {
       child.classList.add('fg-text');
       if (idx === 0) {
         child.closest('.hero').classList.add('hero-text-start');
