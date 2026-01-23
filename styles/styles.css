@@ -362,12 +362,23 @@ main {
   ul,
   ol {
     padding-inline-start: 24px;
+    list-style-position: outside;
+    margin: 0;
+    padding-block: 0;
 
     /* Reduce nested lists even further */
     ul,
     ol {
       padding-inline-start: 12px;
     }
+  }
+
+  ul {
+    list-style-type: disc;
+  }
+
+  ol {
+    list-style-type: decimal;
   }
 }
 
@@ -376,7 +387,13 @@ button {
 }
 
 li {
-  margin-block: 1em 1em;
+  margin-block: 0;
+  padding-block: 0;
+  line-height: 1.5;
+}
+
+li + li {
+  margin-top: 18px;
 }
 
 h1,
