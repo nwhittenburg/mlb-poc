@@ -106,10 +106,16 @@
       gap: 32px;
       margin: 0 0 var(--spacing-tokens-spacing-s, 24px) 0;
 
-      picture {
-        display: block;
+      p {
+        margin: 0;
         height: 56px;
         width: auto;
+
+        picture {
+          display: block;
+          height: 100%;
+          width: auto;
+        }
 
         img {
           display: block;
@@ -296,12 +302,12 @@
 }
 
 /* Override global img { width: 100% } for hero logo images */
-.hero .hero-foreground .hero-logos picture {
+.hero .hero-foreground .hero-logos p img {
   width: auto;
   height: 56px;
 }
 
-.hero .hero-foreground .hero-logos picture img {
+.hero .hero-foreground .hero-logos p picture {
   width: auto;
   height: 56px;
 }
