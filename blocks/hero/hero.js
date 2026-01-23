@@ -49,7 +49,16 @@ function decorateForeground(fg) {
       let nextSibling = heading.nextElementSibling;
       while (nextSibling) {
         if (nextSibling.tagName === 'P') {
-          nextSibling.classList.add('hero-body');
+          // Check if paragraph contains only a link (button pattern)
+          const link = nextSibling.querySelector('a');
+          const hasOnlyLink = link && nextSibling.childNodes.length === 1;
+          
+          if (hasOnlyLink) {
+            link.classList.add('button', 'hero-button');
+            nextSibling.classList.add('button-container');
+          } else {
+            nextSibling.classList.add('hero-body');
+          }
         }
         nextSibling = nextSibling.nextElementSibling;
       }
