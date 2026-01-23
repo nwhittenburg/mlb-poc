@@ -141,7 +141,7 @@
 
     /* C1/Body/XS/Regular - applied to .tooltip-heading */
     .tooltip-heading {
-      font-family: var(--font-adobe-clean, "Adobe Clean");
+      font-family: "HEX Franklin MLB", var(--font-family);
       font-size: 14px;
       font-weight: 400;
       line-height: 1.5;
@@ -152,7 +152,7 @@
 
     /* C1/Heading/XS - applied to .tooltip-body */
     .tooltip-body {
-      font-family: var(--font-adobe-clean, "Adobe Clean");
+      font-family: "HEX Franklin MLB", var(--font-family);
       font-size: var(--typography-heading-xs, 18px);
       font-weight: 700;
       line-height: 1.25;
