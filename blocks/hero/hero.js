@@ -43,6 +43,16 @@ function decorateForeground(fg) {
     
     if (hasOnlyImages) {
       child.classList.add('hero-logos');
+      
+      // Extract pictures from paragraphs and place as direct children
+      pictures.forEach((pic) => {
+        const paragraph = pic.closest('p');
+        if (paragraph) {
+          child.insertBefore(pic, paragraph);
+          paragraph.remove();
+        }
+      });
+      
       continue; // Skip other decorations for logo rows
     }
 
