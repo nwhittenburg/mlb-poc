@@ -245,7 +245,7 @@
   --body-font-size-m: 16px;
   --body-font-size-s: 14px;
   --body-font-size-xs: 12px;
-  --body-line-height: 1.6;
+  --body-line-height: 1.5;
 
   /* misc */
   --header-height: 64px;
@@ -269,7 +269,7 @@ body {
   background-color: light-dark(var(--color-light), var(--color-dark));
   color: var(--color-text);
   font-family: var(--font-family);
-  font-size: var(--body-font-size-m);
+  font-size: var(--body-font-size-xl);
   line-height: var(--body-line-height);
   padding: var(--header-height) 0 0;
 
