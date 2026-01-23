@@ -362,8 +362,9 @@ main {
   ul,
   ol {
     padding-inline-start: 24px;
-    list-style-position: outside;
+    list-style-position: inside;
     margin: 0;
+    margin-block-end: 1em;
     padding-block: 0;
 
     /* Reduce nested lists even further */
