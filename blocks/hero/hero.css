@@ -69,7 +69,7 @@
 
   .hero-foreground {
     min-height: var(--min-height);
-    padding: var(--spacing-tokens-spacing-xl, 56px) 0;
+    padding: var(--spacing-tokens-spacing-xl, 56px) 0 80px;
     box-sizing: border-box;
     position: relative;
     display: flex;
