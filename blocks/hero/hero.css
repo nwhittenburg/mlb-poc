@@ -116,7 +116,7 @@
 
         img {
           height: 100%;
-          width: auto;
+          width: auto !important;
           object-fit: contain;
         }
       }
