@@ -78,6 +78,10 @@
     align-items: center;
     background: linear-gradient(90deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
 
+    img {
+      max-height: 56px;
+      width: auto;
+    }
     p {
       margin: 8px 0;
     }
