@@ -38,9 +38,29 @@ function decorateForeground(fg) {
     const text = heading || child.querySelector('p');
     if (heading) {
       heading.classList.add('hero-heading');
+      
+      // Paragraph before heading is breadcrumb text
       const detail = heading.previousElementSibling;
-      if (detail) {
-        detail.classList.add('hero-detail');
+      if (detail && detail.tagName === 'P') {
+        detail.classList.add('hero-breadcrumb');
+      }
+      
+      // Paragraphs after heading are body text
+      let nextSibling = heading.nextElementSibling;
+      while (nextSibling) {
+        if (nextSibling.tagName === 'P') {
+          // Check if paragraph contains only a link (button pattern)
+          const link = nextSibling.querySelector('a');
+          const hasOnlyLink = link && nextSibling.childNodes.length === 1;
+          
+          if (hasOnlyLink) {
+            link.classList.add('button', 'hero-button');
+            nextSibling.classList.add('button-container');
+          } else {
+            nextSibling.classList.add('hero-body');
+          }
+        }
+        nextSibling = nextSibling.nextElementSibling;
       }
     }
     // Determine foreground column types
