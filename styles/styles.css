@@ -1,0 +1,406 @@
+/* Adobe Clean - Primary font family */
+@font-face {
+  font-family: "Adobe Clean";
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url("/styles/fonts/adobe-clean-light.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Adobe Clean";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/styles/fonts/adobe-clean-regular.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Adobe Clean";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/styles/fonts/adobe-clean-bold.woff2") format("woff2");
+}
+
+/* HEX Franklin MLB Variable - Primary font family */
+@font-face {
+  font-family: "HEX Franklin MLB";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/styles/fonts/HEXFranklinMLBVariable-Regular.woff2") format("woff2-variations");
+}
+
+@font-face {
+  font-family: "HEX Franklin MLB";
+  font-style: italic;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/styles/fonts/HEXFranklinMLBVariable-Italic.woff2") format("woff2-variations");
+}
+
+/* MLB Clarendon Variable - H1 display font */
+@font-face {
+  font-family: "MLB Clarendon";
+  font-style: normal;
+  font-weight: 300 900;
+  font-stretch: 62.5% 125%;
+  font-display: swap;
+  src: url("/styles/fonts/MLBClarendonVariable.woff2") format("woff2-variations");
+}
+
+/* Montserrat - Fallback font (can be removed if not needed) */
+@font-face {
+  font-family: Montserrat;
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/styles/fonts/montserrat.woff2") format("woff2");
+  unicode-range:
+    U+0000-00FF,
+    U+0131,
+    U+0152-0153,
+    U+02BB-02BC,
+    U+02C6,
+    U+02DA,
+    U+02DC,
+    U+0304,
+    U+0308,
+    U+0329,
+    U+2000-206F,
+    U+20AC,
+    U+2122,
+    U+2191,
+    U+2193,
+    U+2212,
+    U+2215,
+    U+FEFF,
+    U+FFFD;
+}
+
+@font-face {
+  font-family: Montserrat;
+  font-style: italic;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/styles/fonts/montserrat-italic.woff2") format("woff2");
+  unicode-range:
+    U+0000-00FF,
+    U+0131,
+    U+0152-0153,
+    U+02BB-02BC,
+    U+02C6,
+    U+02DA,
+    U+02DC,
+    U+0304,
+    U+0308,
+    U+0329,
+    U+2000-206F,
+    U+20AC,
+    U+2122,
+    U+2191,
+    U+2193,
+    U+2212,
+    U+2215,
+    U+FEFF,
+    U+FFFD;
+}
+
+:root {
+  /* grid */
+  --grid-container-width: 83.4%;
+  --grid-column-width: calc(var(--grid-container-width) / 12);
+  --grid-gutter-width: 8.3%;
+
+  /* spacing */
+  --spacing-xxl: 48px;
+  --spacing-xl: 32px;
+  --spacing-l: 24px;
+  --spacing-m: 12px;
+  --spacing-s: 8px;
+  --spacing-xs: 4px;
+
+  /* Consonant spacing aliases for consistent naming */
+  --spacing-tokens-spacing-xl: var(--spacing-block-section-responsive-spacer-xl, 56px);
+  --spacing-tokens-spacing-xxl: var(--spacing-block-section-responsive-spacer-xxl, 80px);
+  --spacing-tokens-spacing-xxxl: var(--spacing-block-section-responsive-spacer-xxxl, 104px);
+  --spacing-tokens-spacing-s: 24px; /* No direct Consonant token */
+  --spacing-tokens-spacing-xs: 16px; /* No direct Consonant token */
+
+  /* color schemes */
+  color-scheme: light dark;
+
+  /* color tokens */
+  --color-gray-100: #f1f1f1;
+  --color-gray-200: #d3d3d3;
+  --color-gray-300: #b5b5b5;
+  --color-gray-400: #999;
+  --color-gray-500: #7d7d7d;
+  --color-gray-600: #636363;
+  --color-gray-700: #494949;
+  --color-gray-800: #313131;
+  --color-gray-900: #1b1b1b;
+  --color-orange-400: #f37500;
+
+  /* named colors */
+  --color-light-base: 245 245 245;
+  --color-dark-base: 0 0 0;
+  --color-light: rgb(245 245 245);
+  --color-dark: rgb(0 0 0);
+  --color-text: light-dark(var(--color-dark), var(--color-light));
+  --color-link: light-dark(var(--color-gray-900), var(--color-gray-100));
+  --color-brand: var(--color-purple-500);
+  --color-accent: light-dark(var(--color-orange-400), var(--color-orange-400));
+  --color-shaded: light-dark(#f9f9f9, #111);
+
+  /* fonts */
+  --font-family: "HEX Franklin MLB", "Adobe Clean", "adobe-clean", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  /* headings */
+  --heading-font-size-xxl: 32.44px;
+  --heading-font-size-xl: 28.83px;
+  --heading-font-size-l: 25.63px;
+  --heading-font-size-m: 22.78px;
+  --heading-font-size-s: 20.25px;
+  --heading-font-size-xs: 18px;
+  --heading-line-height: 1.15;
+
+  /* body */
+  --body-font-size-xxxl: 25px;
+  --body-font-size-xxl: 22px;
+  --body-font-size-xl: 20px;
+  --body-font-size-l: 18px;
+  --body-font-size-m: 16px;
+  --body-font-size-s: 14px;
+  --body-font-size-xs: 12px;
+  --body-line-height: 1.5;
+
+  /* misc */
+  --header-height: 64px;
+  --breadcrumb-height: 24px;
+}
+
+.light-scheme {
+  color-scheme: light;
+}
+
+.dark-scheme {
+  color-scheme: dark;
+}
+
+html {
+  scroll-padding-top: calc(var(--header-height) + 1rem);
+}
+
+body {
+  margin: 0;
+  background-color: light-dark(var(--color-light), var(--color-dark));
+  color: var(--color-text);
+  font-family: var(--font-family);
+  font-size: var(--body-font-size-xl);
+  line-height: var(--body-line-height);
+  padding: var(--header-height) 0 0;
+
+  &.has-breadcrumb {
+    margin: calc(var(--header-height) + var(--breadcrumb-height)) 0 0;
+  }
+
+  &.no-header {
+    --header-height: 0;
+
+    margin: 0;
+  }
+}
+
+header {
+  display: none;
+  height: var(--header-height);
+  position: fixed;
+}
+
+a {
+  color: var(--color-link);
+
+  &.btn {
+    display: inline-block;
+    line-height: 1;
+    font-weight: 500;
+    text-decoration: none;
+    border: 2px solid;
+    padding: 8px 12px;
+    box-sizing: border-box;
+
+    &.btn-outline {
+      background: transparent;
+    }
+  }
+
+  &.btn-accent {
+    color: #fff;
+    background: var(--color-accent);
+    border: 2px solid var(--color-accent);
+
+    &.btn-outline {
+      color: var(--color-accent);
+    }
+  }
+
+  &.btn-primary {
+    color: light-dark(var(--color-light), var(--color-dark));
+    background-color: light-dark(var(--color-dark), var(--color-light));
+
+    &.btn-outline {
+      color: light-dark(var(--color-dark), var(--color-light));
+      background: transparent;
+    }
+  }
+
+  &.btn-secondary {
+    color: light-dark(var(--color-light), var(--color-dark));
+    background-color: var(--color-gray-500);
+    border: 2px solid var(--color-gray-500);
+
+    &.btn-outline {
+      color: var(--color-gray-500);
+    }
+  }
+
+  &.btn-negative {
+    color: #fff;
+    background-color: var(--color-red-600);
+    border: 2px solid var(--color-red-600);
+
+    &.btn-outline {
+      color: var(--color-red-600);
+    }
+  }
+}
+
+/* sections */
+.section {
+  display: block;
+
+  > .default-content {
+    max-width: var(--grid-container-width);
+    margin: 0 auto;
+  }
+}
+
+main {
+  ul,
+  ol {
+    padding-inline-start: 24px;
+    list-style-position: inside;
+    margin: 0;
+    margin-block-end: 1em;
+    padding-block: 0;
+
+    /* Reduce nested lists even further */
+    ul,
+    ol {
+      padding-inline-start: 12px;
+    }
+  }
+
+  ul {
+    list-style-type: disc;
+  }
+
+  ol {
+    list-style-type: decimal;
+  }
+}
+
+button {
+  cursor: pointer;
+}
+
+li {
+  margin-block: 0;
+  padding-block: 0;
+  line-height: 1.5;
+}
+
+li + li {
+  margin-top: 18px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 600;
+  line-height: var(--heading-line-height);
+}
+
+h1 {
+  font-family: "MLB Clarendon", var(--font-family);
+  font-size: var(--heading-font-size-xxl);
+  font-weight: 700;
+  font-stretch: 100%;
+}
+h2 { font-size: var(--heading-font-size-xl); }
+h3 { font-size: var(--heading-font-size-l); }
+h4 { font-size: var(--heading-font-size-m); }
+h5 { font-size: var(--heading-font-size-s); }
+h6 { font-size: var(--heading-font-size-xs); }
+
+strong {
+  font-weight: 600;
+}
+
+/* Detail Large text style - C1/Detail/L */
+.detail-large {
+  color: var(--C1-Text-text, #2c2c2c);
+  font-size: var(--body-font-size-m, 16px);
+  font-style: normal;
+  font-weight: 700;
+  line-height: 125%; /* 20px */
+  text-transform: uppercase;
+}
+
+input,
+textarea,
+select,
+button {
+  font: inherit;
+}
+
+img {
+  width: 100%;
+  height: auto;
+}
+
+svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* @media (width >= 600px) {} */
+
+/* @media (width >= 900px) {} */
+
+/* @media (width >= 1200px) {} */
+
+@media (width >= 1440px) {
+  :root {
+    --grid-container-width: 1200px;
+  }
+}
+
+main > div,
+.has-template,
+div[data-status] {
+  display: none;
+}
+
+aem-sidekick {
+  display: none;
+
+  &[open="true"].is-ready {
+    display: block;
+  }
+}
