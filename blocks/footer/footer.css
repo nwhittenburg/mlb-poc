@@ -15,8 +15,40 @@ footer {
     list-style: none;
   }
 
-  .section-copyright p {
-    margin: 0;
+  .section-copyright {
+    background-color: #2d2d2d;
+    padding: 24px;
+    text-align: center;
+
+    p {
+      margin: 0;
+      color: #fff;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    picture {
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    img {
+      display: block;
+      height: auto;
+      max-height: 40px;
+    }
+
+    .icon {
+      display: inline-block;
+      vertical-align: middle;
+      width: 20px;
+      height: 20px;
+      margin: 0 16px;
+
+      svg {
+        fill: #fff;
+      }
+    }
   }
 
   .section {
@@ -50,8 +82,17 @@ footer {
 
     .section-copyright {
       display: flex;
-      justify-content: end;
-      gap: var(--spacing-xl);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      padding: 32px 24px;
+
+      p:first-of-type {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
     }
   }
 }
