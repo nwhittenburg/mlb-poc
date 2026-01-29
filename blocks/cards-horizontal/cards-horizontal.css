@@ -1,0 +1,89 @@
+/* Import component-specific tokens */
+@import './cards-horizontal-tokens.css';
+
+/* cards-horizontal block styles */
+/* Migrated from Figma: MLB Horizontal Cards - 3up (node 22229:46195) */
+
+.cards-horizontal {
+  max-width: var(--cards-horizontal-max-width);
+  margin: 0 auto;
+  padding-top: var(--cards-horizontal-padding-top);
+  padding-right: var(--cards-horizontal-padding-right);
+  padding-bottom: var(--cards-horizontal-padding-bottom);
+  padding-left: var(--cards-horizontal-padding-left);
+  background: var(--cards-horizontal-background);
+}
+
+.cards-horizontal > ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(var(--cards-horizontal-columns), 1fr);
+  gap: var(--cards-horizontal-gap);
+}
+
+/* Responsive: stack on smaller screens */
+@media (max-width: 900px) {
+  .cards-horizontal > ul {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .cards-horizontal > ul {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cards-horizontal > ul > li {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: var(--cards-horizontal-card-height);
+  background-color: var(--cards-horizontal-card-background);
+  border-width: var(--cards-horizontal-card-border-width);
+  border-style: var(--cards-horizontal-card-border-style);
+  border-color: var(--cards-horizontal-card-border-color);
+  border-radius: var(--cards-horizontal-card-border-radius);
+  box-shadow: var(--cards-horizontal-card-shadow);
+}
+
+.cards-horizontal .cards-horizontal-card-body {
+  padding: var(--cards-horizontal-card-padding-y) var(--cards-horizontal-card-padding-x);
+}
+
+.cards-horizontal .cards-horizontal-eyebrow {
+  font-family: var(--cards-horizontal-eyebrow-font-family);
+  font-size: var(--cards-horizontal-eyebrow-font-size);
+  font-weight: var(--cards-horizontal-eyebrow-font-weight);
+  font-style: var(--cards-horizontal-eyebrow-font-style);
+  line-height: var(--cards-horizontal-eyebrow-line-height);
+  letter-spacing: var(--cards-horizontal-eyebrow-letter-spacing);
+  text-transform: var(--cards-horizontal-eyebrow-text-transform);
+  color: var(--cards-horizontal-eyebrow-color);
+  margin: 0 0 var(--cards-horizontal-eyebrow-margin-bottom);
+}
+
+.cards-horizontal .cards-horizontal-heading {
+  font-family: var(--cards-horizontal-heading-font-family);
+  font-size: var(--cards-horizontal-heading-font-size);
+  font-weight: var(--cards-horizontal-heading-font-weight);
+  font-style: var(--cards-horizontal-heading-font-style);
+  line-height: var(--cards-horizontal-heading-line-height);
+  letter-spacing: var(--cards-horizontal-heading-letter-spacing);
+  text-transform: var(--cards-horizontal-heading-text-transform);
+  color: var(--cards-horizontal-heading-color);
+  margin: 0 0 var(--cards-horizontal-heading-margin-bottom);
+}
+
+/* Card image variant support (if images are added) */
+.cards-horizontal .cards-horizontal-card-image {
+  line-height: 0;
+}
+
+.cards-horizontal .cards-horizontal-card-image img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
