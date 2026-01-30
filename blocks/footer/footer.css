@@ -1,98 +1,58 @@
 footer {
+  background-color: var(--mlb-gray-40);
+}
+
+footer {
   a {
     text-decoration: none;
   }
 
-  .footer-content {
-    max-width: var(--grid-container-width);
-    margin: 48px auto;
-    font-size: 14px;
-  }
-
-  .section-legal ul {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .section-copyright {
-    background-color: #2d2d2d;
-    padding: 24px;
-    text-align: center;
-
-    p {
-      margin: 0;
-      color: #fff;
-      font-size: 12px;
-      line-height: 1.5;
-    }
-
-    picture {
-      display: inline-block;
-      vertical-align: middle;
-    }
-
-    img {
-      display: block;
-      height: auto;
-      max-height: 40px;
-    }
-
-    .icon {
-      display: inline-block;
-      vertical-align: middle;
-      width: 20px;
-      height: 20px;
-      margin: 0 16px;
-
-      svg {
-        fill: #fff;
-      }
-    }
-  }
-
   .section {
-    .default-content {
-      max-width: initial;
-      margin: initial;
-    }
-  }
-}
-
-@media (width >= 900px) {
-  footer {
+    max-width: initial;
     margin: 0;
+    padding: 80px 0px;
+  }
 
-    .section-legal {
-      display: flex;
-      justify-content: end;
-      gap: var(--spacing-xl);
-      margin-bottom: 24px;
+  .footer-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
 
-      ul {
-        display: flex;
-        justify-content: end;
-        gap: var(--spacing-xl);
-      }
+  .footer-logos {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 46.136px;
+  }
 
-      li {
-        margin: 0;
-      }
-    }
 
-    .section-copyright {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 16px;
-      padding: 32px 24px;
+  .footer-logos .icon:first-child {
+    width: 85px;
+    height: 45px;
+  }
 
-      p:first-of-type {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-      }
-    }
+  .footer-logos .icon:last-child{
+    width: 95px;
+    height: 30px;
+  }
+
+  .footer-separator {
+    width: 1px;
+    height: 50px;
+    background-color: var(--mlb-white);
+    flex-shrink: 0;
+  }
+
+  .footer-copyright {
+    color: var(--mlb-white);
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.25;
+    text-transform: uppercase;
+    font-family: var(--body-font-family);
+    text-align: center;
   }
 }
