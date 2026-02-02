@@ -8,6 +8,7 @@ const HEADER_PATH = '/fragments/nav/header';
 const HEADER_ACTIONS = [
   '/tools/widgets/scheme',
   '/tools/widgets/language',
+  '/tools/widgets/search',
   '/tools/widgets/toggle',
 ];
 
@@ -93,7 +94,7 @@ async function decorateAction(header, pattern) {
   const icon = link.querySelector('.icon');
   const text = link.textContent;
   const btn = document.createElement('button');
-  if (icon) btn.append(icon);
+  if (icon) btn.append(icon.cloneNode(true));
   if (text) {
     const textSpan = document.createElement('span');
     textSpan.className = 'text';
@@ -101,9 +102,12 @@ async function decorateAction(header, pattern) {
     btn.append(textSpan);
   }
   const wrapper = document.createElement('div');
-  wrapper.className = `action-wrapper ${icon.classList[1].replace('icon-', '')}`;
+  const iconClass = icon?.classList[1]?.replace('icon-', '') || pattern.split('/').pop();
+  wrapper.className = `action-wrapper ${iconClass}`;
   wrapper.append(btn);
-  link.parentElement.parentElement.replaceChild(wrapper, link.parentElement);
+
+  // Replace just the link, not the entire parent structure
+  link.replaceWith(wrapper);
 
   if (pattern === '/tools/widgets/language') decorateLanguage(btn);
   if (pattern === '/tools/widgets/scheme') decorateScheme(btn);
@@ -127,24 +131,44 @@ function decorateMegaMenu(li) {
 
 function decorateNavItem(li) {
   li.classList.add('main-nav-item');
-  const link = li.querySelector(':scope > p > a');
+  // Support both <li><p><a> and <li><a> structures
+  let link = li.querySelector(':scope > p > a');
+  if (!link) link = li.querySelector(':scope > a');
   if (link) link.classList.add('main-nav-link');
   const menu = decorateMegaMenu(li) || decorateMenu(li);
   if (!(menu || link)) return;
-  link.addEventListener('click', (e) => {
-    e.preventDefault();
-    toggleMenu(li);
-  });
+  // Only add click handler if there's a menu
+  if (menu) {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      toggleMenu(li);
+    });
+  }
 }
 
 function decorateBrandSection(section) {
   section.classList.add('brand-section');
   const brandLink = section.querySelector('a');
+  if (!brandLink) return;
+
+  // Check if there are multiple pictures (dual logo setup like MLB + Adobe)
+  const pictures = brandLink.querySelectorAll('picture');
+  if (pictures.length > 1) {
+    // Add separator between logos
+    const separator = document.createElement('span');
+    separator.className = 'brand-separator';
+    pictures[0].after(separator);
+    return;
+  }
+
+  // Original behavior: wrap text in brand-text span
   const [, text] = brandLink.childNodes;
-  const span = document.createElement('span');
-  span.className = 'brand-text';
-  span.append(text);
-  brandLink.append(span);
+  if (text && text.nodeType === Node.TEXT_NODE) {
+    const span = document.createElement('span');
+    span.className = 'brand-text';
+    span.append(text);
+    brandLink.append(span);
+  }
 }
 
 function decorateNavSection(section) {

@@ -1,0 +1,4 @@
+- [WHAT IT IS](#what-it-is)
+- [HOW TO USE IT](#how-to-use-it)
+- [WHAT WE'RE DOING](#what-were-doing)
+- [GET HELP](#get-help)

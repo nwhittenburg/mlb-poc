@@ -180,8 +180,28 @@
   --body-line-height: 1.5;
 
   /* misc */
-  --header-height: 64px;
+  --header-height: 90px;
   --breadcrumb-height: 24px;
+
+  /* MLB Header tokens */
+  --header-background: #002D72;
+  --header-nav-font-size: 20px;
+  --header-nav-font-weight: 700;
+  --header-nav-line-height: 25px;
+  --header-nav-text-color: #fff;
+  --header-nav-gap: 24px;
+  --header-nav-item-padding-x: 16px;
+  --header-nav-item-padding-y: 8px;
+  --header-logo-gap: 32px;
+  --header-brand-nav-gap: 80px;
+  --header-active-border-width: 3px;
+  --header-active-border-color: #bc0022;
+  --header-dropdown-icon-size: 14px;
+  --header-separator-color: #fff;
+  --mlb-logo-width: 59px;
+  --mlb-logo-height: 32px;
+  --adobe-logo-width: 66px;
+  --adobe-logo-height: 36px;
 }
 
 .light-scheme {
