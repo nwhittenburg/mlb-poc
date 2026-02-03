@@ -271,8 +271,8 @@ function decorateDoc() {
   loadTemplate();
 
   // Setup scheme
-  const scheme = localStorage.getItem('color-scheme');
-  if (scheme) document.body.classList.add(scheme);
+ // const scheme = localStorage.getItem('color-scheme');
+ // if (scheme) document.body.classList.add(scheme);
 
   // Detect Hash
   const pageId = window.location.hash?.replace('#', '');
