@@ -303,14 +303,6 @@ header .brand-section .action-wrapper {
      }
 */
 
-/* Mobile Menu Open State */
-header.is-mobile-open {
-  height: 100vh;
-  max-height: 100vh;
-  overflow-y: auto;
-  bottom: 0;
-}
-
 header.is-mobile-open .header-content {
   height: auto;
   min-height: 100%;
