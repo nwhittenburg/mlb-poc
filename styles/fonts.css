@@ -1,0 +1,53 @@
+/* HEX Franklin MLB - Regular */
+@font-face {
+  font-family: "HEX Franklin MLB";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/styles/fonts/HEXFranklinMLBVariable-Regular.woff2') format('woff2');
+}
+
+/* HEX Franklin MLB - Italic */
+@font-face {
+  font-family: "HEX Franklin MLB";
+  font-style: italic;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/styles/fonts/HEXFranklinMLBVariable-Italic.woff2') format('woff2');
+}
+
+/* HEX Franklin MLB - Condensed */
+@font-face {
+  font-family: "HEX Franklin MLB Condensed";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/styles/fonts/HEXFranklinMLBCondensed-Regular.woff2') format('woff2');
+}
+
+/* MLB Clarendon - Variable */
+@font-face {
+  font-family: "MLB Clarendon";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/styles/fonts/MLBClarendonVariable.woff2') format('woff2');
+}
+
+/* Montserrat - Fallback Variable Font */
+@font-face {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/styles/fonts/montserrat.woff2') format('woff2');
+}
+
+/* Montserrat - Fallback Variable Font Italic */
+@font-face {
+  font-family: "Montserrat";
+  font-style: italic;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/styles/fonts/montserrat-italic.woff2') format('woff2');
+}
