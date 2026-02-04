@@ -1,15 +1,9 @@
 import { getConfig, getMetadata } from '../../scripts/ak.js';
 import { loadFragment } from '../fragment/fragment.js';
-import { setColorScheme } from '../section-metadata/section-metadata.js';
 
 const { locale } = getConfig();
 
 const HEADER_PATH = '/fragments/nav/header';
-const HEADER_ACTIONS = [
-  '/tools/widgets/scheme',
-  '/tools/widgets/language',
-  '/tools/widgets/toggle',
-];
 
 function closeAllMenus() {
   const openMenus = document.body.querySelectorAll('header .is-open');
@@ -36,83 +30,25 @@ function toggleMenu(menu) {
   menu.classList.add('is-open');
 }
 
-function decorateLanguage(btn) {
-  const section = btn.closest('.section');
-  btn.addEventListener('click', async () => {
-    let menu = section.querySelector('.language.menu');
-    if (!menu) {
-      const content = document.createElement('div');
-      content.classList.add('block-content');
-      const fragment = await loadFragment(`${locale.prefix}${HEADER_PATH}/languages`);
-      menu = document.createElement('div');
-      menu.className = 'language menu';
-      menu.append(fragment);
-      content.append(menu);
-      section.append(content);
-    }
-    toggleMenu(section);
-  });
-}
-
-function decorateScheme(btn) {
-  btn.addEventListener('click', async () => {
-    const { body } = document;
-
-    let currPref = localStorage.getItem('color-scheme');
-    if (!currPref) {
-      currPref = matchMedia('(prefers-color-scheme: dark)')
-        .matches ? 'dark-scheme' : 'light-scheme';
-    }
-
-    const theme = currPref === 'dark-scheme'
-      ? { add: 'light-scheme', remove: 'dark-scheme' }
-      : { add: 'dark-scheme', remove: 'light-scheme' };
-
-    body.classList.remove(theme.remove);
-    body.classList.add(theme.add);
-    localStorage.setItem('color-scheme', theme.add);
-    // Re-calculatie section schemes
-    const sections = document.querySelectorAll('.section');
-    for (const section of sections) {
-      setColorScheme(section);
-    }
-  });
-}
-
 function decorateNavToggle(btn) {
   btn.addEventListener('click', () => {
     const header = document.body.querySelector('header');
-    if (header) header.classList.toggle('is-mobile-open');
+    if (header) {
+      const isOpen = header.classList.toggle('is-mobile-open');
+      btn.setAttribute('aria-expanded', isOpen.toString());
+    }
   });
 }
 
-async function decorateAction(header, pattern) {
-  const link = header.querySelector(`[href*="${pattern}"]`);
-  if (!link) return;
+function decorateMenu(li) {
+  const nestedList = li.querySelector(':scope > ul');
+  if (!nestedList) return null;
 
-  const icon = link.querySelector('.icon');
-  const text = link.textContent;
-  const btn = document.createElement('button');
-  if (icon) btn.append(icon);
-  if (text) {
-    const textSpan = document.createElement('span');
-    textSpan.className = 'text';
-    textSpan.textContent = text;
-    btn.append(textSpan);
-  }
   const wrapper = document.createElement('div');
-  wrapper.className = `action-wrapper ${icon.classList[1].replace('icon-', '')}`;
-  wrapper.append(btn);
-  link.parentElement.parentElement.replaceChild(wrapper, link.parentElement);
-
-  if (pattern === '/tools/widgets/language') decorateLanguage(btn);
-  if (pattern === '/tools/widgets/scheme') decorateScheme(btn);
-  if (pattern === '/tools/widgets/toggle') decorateNavToggle(btn);
-}
-
-function decorateMenu() {
-  // TODO: finish single menu support
-  return null;
+  wrapper.className = 'menu';
+  wrapper.append(nestedList);
+  li.append(wrapper);
+  return wrapper;
 }
 
 function decorateMegaMenu(li) {
@@ -128,23 +64,50 @@ function decorateMegaMenu(li) {
 function decorateNavItem(li) {
   li.classList.add('main-nav-item');
   const link = li.querySelector(':scope > p > a');
-  if (link) link.classList.add('main-nav-link');
+  const textNode = li.querySelector(':scope > p');
+
   const menu = decorateMegaMenu(li) || decorateMenu(li);
-  if (!(menu || link)) return;
-  link.addEventListener('click', (e) => {
-    e.preventDefault();
-    toggleMenu(li);
-  });
+
+  // If there's a menu (submenu exists), style and make it clickable
+  if (menu) {
+    // Add styling class to the text node (not the link)
+    if (textNode) {
+      textNode.classList.add('main-nav-link');
+      textNode.addEventListener('click', (e) => {
+        e.preventDefault();
+        toggleMenu(li);
+      });
+    }
+  } else if (link) {
+    // If no menu and it's just a link, add link styling without chevron
+    link.classList.add('main-nav-link');
+  }
 }
 
 function decorateBrandSection(section) {
   section.classList.add('brand-section');
-  const brandLink = section.querySelector('a');
-  const [, text] = brandLink.childNodes;
-  const span = document.createElement('span');
-  span.className = 'brand-text';
-  span.append(text);
-  brandLink.append(span);
+
+  // Check if there are multiple icons (dual logo setup like MLB + Adobe)
+  const icons = section.querySelectorAll('.icon');
+
+  if (icons.length > 1) {
+    // Add separator between logos
+    const separator = document.createElement('span');
+    separator.className = 'brand-separator';
+    icons[0].after(separator);
+  }
+
+  // Create hamburger button for mobile
+  const hamburger = document.createElement('button');
+  hamburger.className = 'nav-toggle';
+  hamburger.setAttribute('aria-label', 'Toggle navigation menu');
+  hamburger.setAttribute('aria-expanded', 'false');
+  hamburger.innerHTML = '&#9776;';
+
+  const defaultContent = section.querySelector('.default-content');
+  defaultContent.append(hamburger);
+
+  decorateNavToggle(hamburger);
 }
 
 function decorateNavSection(section) {
@@ -173,10 +136,6 @@ async function decorateHeader(fragment) {
   if (sections[0]) decorateBrandSection(sections[0]);
   if (sections[1]) decorateNavSection(sections[1]);
   if (sections[2]) decorateActionSection(sections[2]);
-
-  for (const pattern of HEADER_ACTIONS) {
-    decorateAction(fragment, pattern);
-  }
 }
 
 /**
