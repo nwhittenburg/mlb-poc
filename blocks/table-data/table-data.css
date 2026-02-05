@@ -1,0 +1,95 @@
+.table-data {
+  --table-data-max-width: 800px;
+  --table-data-first-col-width: 200px;
+  --table-data-header-bg: #f8f8f8;
+  --table-data-cell-bg: #fff;
+  --table-data-text-color: #2c2c2c;
+  --table-data-border-color: #dadada;
+  --table-data-header-padding-x: 24px;
+  --table-data-header-padding-y: 16px;
+  --table-data-cell-padding-x: 24px;
+  --table-data-cell-padding-y: 16px;
+  --table-data-row-heading-padding-left: 40px;
+  --table-data-header-font-size: 18px;
+  --table-data-header-font-weight: 700;
+  --table-data-cell-font-size: 12px;
+  --table-data-cell-font-weight: 400;
+  --table-data-row-heading-font-weight: 600;
+
+  width: 100%;
+  max-width: var(--table-data-max-width);
+  overflow-x: auto;
+
+  table {
+    width: 100%;
+    max-width: 100%;
+    border-collapse: collapse;
+    border: 1px solid var(--table-data-border-color);
+  }
+
+  thead tr {
+    background-color: var(--table-data-header-bg);
+  }
+
+  th {
+    font-size: var(--table-data-header-font-size);
+    font-weight: var(--table-data-header-font-weight);
+    line-height: 23px;
+    color: var(--table-data-text-color);
+    padding: var(--table-data-header-padding-y) var(--table-data-header-padding-x);
+    text-align: left;
+    border: 1px solid var(--table-data-border-color);
+  }
+
+  th:first-child {
+    width: var(--table-data-first-col-width);
+    min-width: var(--table-data-first-col-width);
+  }
+
+  tbody tr {
+    border-bottom: 1px solid var(--table-data-border-color);
+  }
+
+  td {
+    font-size: var(--table-data-cell-font-size);
+    font-weight: var(--table-data-cell-font-weight);
+    line-height: 18px;
+    color: var(--table-data-text-color);
+    padding: var(--table-data-cell-padding-y) var(--table-data-cell-padding-x);
+    background-color: var(--table-data-cell-bg);
+    border: 1px solid var(--table-data-border-color);
+    text-align: left;
+    vertical-align: top;
+  }
+
+  td:first-child {
+    background-color: var(--table-data-header-bg);
+    font-weight: var(--table-data-row-heading-font-weight);
+    padding-left: var(--table-data-row-heading-padding-left);
+    width: var(--table-data-first-col-width);
+    min-width: var(--table-data-first-col-width);
+  }
+
+  td:only-child {
+    background-color: var(--table-data-header-bg);
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 20px;
+    padding: 24px;
+  }
+
+  th p,
+  td p {
+    margin: 0;
+  }
+
+  td p + p {
+    margin-top: 0.25em;
+  }
+}
+
+@media (width >= 900px) {
+  .table-data {
+    max-width: none;
+  }
+}

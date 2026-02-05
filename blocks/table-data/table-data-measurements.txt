@@ -1,0 +1,75 @@
+VISUAL MEASUREMENT CHECKLIST FOR table-data
+================================================
+Extracted from Figma node: 22229:50246
+Date: 2026-02-05
+
+LAYOUT & DIMENSIONS
+☑ Container width: 800px (source: metadata width="800.166015625")
+☑ Container height: 1285px (source: metadata height="1285")
+☑ Container padding: 0px (source: no padding on main container)
+☑ Grid/Flex gap: -1px (source: gap-[-1px] for border collapse effect)
+☑ Column count: 4 (source: visual inspection - Attribute, OneView, Description, Sample Value)
+☑ First column width: 200px (source: w-[200px] on Row Heading)
+☑ Data column width: flexible (source: w-full on data columns)
+
+SPACING (EXACT PIXELS)
+☑ Header cell padding: 24px horizontal, 16px vertical (source: px-[24px] py-[16px])
+☑ Section header padding: 24px all sides (source: p-[24px])
+☑ Row heading padding: 40px left, 24px right, 16px top/bottom (source: pt-[16px] pr-[24px] pb-[16px] pl-[40px])
+☑ Data cell padding: 24px horizontal, 16px vertical (source: px-[24px] py-[16px])
+☑ Footer padding: 24px vertical (source: py-[24px])
+☑ Section header gap: 8px (source: gap-[8px])
+
+COLORS (EXACT HEX + OPACITY)
+☑ Header background: #f8f8f8 (opacity: 100%) (source: bg-[#f8f8f8])
+☑ Section header background: #f8f8f8 (source: bg-[#f8f8f8])
+☑ Row heading background: #f8f8f8 (source: bg-[#f8f8f8])
+☑ Data cell background: #ffffff (source: bg-[#ffffff])
+☑ Text color: #2c2c2c (source: text-[#2c2c2c])
+☑ Border color: #dadada (source: border-[#dadada])
+☑ Hover background: N/A (source: no hover states in extraction)
+
+TYPOGRAPHY (ALL PROPERTIES)
+☑ Header heading font-family: HEX_Franklin_MLB (source: font-['HEX_Franklin_MLB',sans-serif])
+☑ Header heading font-size: 18px (source: text-[18px])
+☑ Header heading font-weight: 700/bold (source: font-bold)
+☑ Header heading line-height: 23px (source: leading-[23px])
+☑ Header heading letter-spacing: normal (source: no letter-spacing class)
+☑ Header heading text-transform: none (source: no text-transform class)
+
+☑ Section header font-family: HEX_Franklin_MLB (source: font-['HEX_Franklin_MLB',sans-serif])
+☑ Section header font-size: 16px (source: text-[16px])
+☑ Section header font-weight: 700/bold (source: font-bold)
+☑ Section header line-height: 20px (source: leading-[20px])
+
+☑ Row heading font-family: HEX_Franklin_MLB (source: font-['HEX_Franklin_MLB',sans-serif])
+☑ Row heading font-size: 12px (source: text-[12px])
+☑ Row heading font-weight: 600/semibold (source: font-semibold)
+☑ Row heading line-height: 18px (source: leading-[18px])
+
+☑ Data cell font-family: HEX_Franklin_MLB (source: font-['HEX_Franklin_MLB',sans-serif])
+☑ Data cell font-size: 12px (source: text-[12px])
+☑ Data cell font-weight: 400/normal (source: font-normal)
+☑ Data cell line-height: 18px (source: leading-[18px])
+
+☑ Footer font-family: Adobe_Clean (source: font-['Adobe_Clean',sans-serif])
+☑ Footer font-size: 14px (source: text-[14px])
+☑ Footer font-weight: 400/normal (source: font-normal)
+☑ Footer line-height: 21px (source: leading-[21px])
+
+BORDERS & RADIUS
+☑ Border width: 1px (source: border-[1px])
+☑ Border style: solid (source: border-solid)
+☑ Border color: #dadada (source: border-[#dadada])
+☑ Border radius: 0px (source: no rounded classes)
+
+SHADOWS (EXACT VALUES)
+☑ Box-shadow: none (source: no shadow classes in extraction)
+
+EFFECTS & TRANSITIONS
+☑ Hover transform: none (source: no hover effects)
+☑ Transition duration: none (source: no transition classes)
+
+ICONS
+☑ Chevron icon size: 23x23px (source: w-[23px] h-[23px])
+☑ Info icon size: 16x16px (source: w-[16px] h-[16px])
