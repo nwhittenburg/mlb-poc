@@ -109,8 +109,6 @@
   /* Full width cells (like notes or special rows) */
   .full-width-cell {
     background-color: var(--table-header-bg);
-    font-size: var(--body-font-size-xs);
-    font-style: italic;
   }
 
   /* Add chevron indicator to accordion headers */
