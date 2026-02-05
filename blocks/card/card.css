@@ -10,18 +10,25 @@
 
   .card-inner {
     display: grid;
-    grid-template-rows: auto 1fr auto;
+    grid-template-columns: auto 1fr;
     height: 100%;
+
+    @media (width < 600px) {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto 1fr;
+    }
   }
 
   &:not(.quiet) {
-    .card-picture-container {
+    .card-image-container {
       position: relative;
-      padding-bottom: 60%;
+      width: 100%;
+      min-height: 100%;
 
       picture {
-        position: absolute;
-        inset: 0;
+        display: block;
+        width: 100%;
+        height: 100%;
         opacity: 0.85;
         transition: opacity 0.25s ease-in-out;
       }
@@ -30,6 +37,16 @@
         object-fit: cover;
         width: 100%;
         height: 100%;
+      }
+
+      @media (width < 600px) {
+        min-height: auto;
+        padding-bottom: 60%;
+
+        picture {
+          position: absolute;
+          inset: 0;
+        }
       }
     }
   }
@@ -48,19 +65,12 @@
     p{
       font-size: var(--body-font-size-l);
     }
-
-    &:has(+ .card-cta-container) {
-      padding: var(--spacing-default) var(--spacing-default) var(--spacing-m) var(--spacing-default);
-    }
-
-   
   }
 
   .card-cta-container {
-    padding: 0 var(--spacing-default) var(--spacing-default) var(--spacing-default);
-    margin: 0;
+    padding: 0;
+    margin: var(--spacing-m) 0 0 0;
     display: flex;
-    justify-content: end;
   }
 
   &:not(.quiet):hover {
@@ -100,6 +110,13 @@
     }
   }
 
+  /* Background color variation */
+  &[class*='background-color-']:not(.background-image) {
+    .card-inner.has-background-color {
+      background-color: var(--background-color);
+    }
+  }
+
   &.background-image {
     .card-inner {
       position: relative;
@@ -110,14 +127,12 @@
       background: linear-gradient(0deg, rgba(0, 0, 0, 0.50) 0%, rgba(0, 0, 0, 0.50) 100%), var(--background-image-url) lightgray 50% / cover no-repeat;
     }
 
-    .card-content-container {
-      position: relative;
-      z-index: 1;
-      max-width: 600px;
-      margin: 0 auto;
+    /* If background color is also specified with background-image, use it as fallback */
+    &[class*='background-color-'] .card-inner.has-background-color {
+      background: linear-gradient(0deg, rgba(0, 0, 0, 0.50) 0%, rgba(0, 0, 0, 0.50) 100%), var(--background-image-url) var(--background-color, lightgray) 50% / cover no-repeat;
     }
 
-    .card-cta-container {
+    .card-content-container {
       position: relative;
       z-index: 1;
       max-width: 600px;
@@ -139,8 +154,6 @@
   /* Tooltip variation - compact horizontal layout */
   &.tooltip {
     /* Respect section container width */
-    max-width: var(--section-container-width, var(--grid-container-width));
-    margin: 0 auto;
     box-shadow: none;
     background-color: transparent;
 
@@ -233,3 +246,6 @@
     }
   }
 }
+
+
+
