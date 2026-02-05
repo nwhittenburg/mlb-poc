@@ -2,6 +2,10 @@
  * Table Data Block
  * Custom table variant for MLB data documentation
  * Based on Figma design: MLB-Microsite-Working-File node 22229:50246
+ *
+ * Features:
+ * - Accordion functionality for rows marked with <strong>
+ * - Rows below accordion headers are collapsible
  */
 
 /**
@@ -12,28 +16,111 @@ export default async function decorate(block) {
   const thead = document.createElement('thead');
   const tbody = document.createElement('tbody');
   const header = !block.classList.contains('no-header');
+  const rows = [...block.children];
 
-  [...block.children].forEach((row, i) => {
+  // Build table rows and identify accordion sections
+  const bodyRows = [];
+
+  rows.forEach((row, i) => {
     const tr = document.createElement('tr');
+    const cells = [...row.children];
 
-    [...row.children].forEach((cell, j) => {
-      const td = document.createElement(i === 0 && header ? 'th' : 'td');
+    // Check if this is an accordion header (has <strong> in first cell)
+    const firstCell = cells[0];
+    const isAccordionHeader = firstCell?.querySelector('strong') !== null;
 
-      if (i === 0) td.setAttribute('scope', 'column');
-
-      // First column gets special styling class
-      if (j === 0) {
-        td.classList.add('attribute-cell');
-      }
-
-      td.innerHTML = cell.innerHTML;
+    if (i === 0 && header) {
+      // Table header row
+      cells.forEach((cell, j) => {
+        const th = document.createElement('th');
+        th.setAttribute('scope', 'column');
+        if (j === 0) {
+          th.classList.add('attribute-cell');
+        }
+        th.innerHTML = cell.innerHTML;
+        tr.append(th);
+      });
+      thead.append(tr);
+    } else if (isAccordionHeader) {
+      // Accordion header - create single cell spanning all columns
+      const columnCount = thead.children[0]?.children.length || 4;
+      const td = document.createElement('td');
+      td.setAttribute('colspan', columnCount);
+      td.innerHTML = cells[0].innerHTML;
+      td.classList.add('accordion-header-cell');
       tr.append(td);
-    });
+      tr.classList.add('accordion-header');
+      tr.setAttribute('aria-expanded', 'true');
+      tr.setAttribute('role', 'button');
+      tr.setAttribute('tabindex', '0');
+      bodyRows.push({ element: tr, isAccordionHeader: true });
+      tbody.append(tr);
+    } else if (cells.length === 1) {
+      // Single cell row (like notes) - span all columns
+      const columnCount = thead.children[0]?.children.length || 4;
+      const td = document.createElement('td');
+      td.setAttribute('colspan', columnCount);
+      td.innerHTML = cells[0].innerHTML;
+      td.classList.add('full-width-cell');
+      tr.append(td);
+      bodyRows.push({ element: tr, isAccordionHeader: false });
+      tbody.append(tr);
+    } else {
+      // Regular data row
+      cells.forEach((cell, j) => {
+        const td = document.createElement('td');
+        if (j === 0) {
+          td.classList.add('attribute-cell');
+        }
+        td.innerHTML = cell.innerHTML;
+        tr.append(td);
+      });
+      bodyRows.push({ element: tr, isAccordionHeader: false });
+      tbody.append(tr);
+    }
+  });
 
-    if (i === 0 && header) thead.append(tr);
-    else tbody.append(tr);
+  // Group rows into accordion sections and mark content as expanded by default
+  let currentSection = null;
+  bodyRows.forEach((rowData) => {
+    if (rowData.isAccordionHeader) {
+      currentSection = rowData.element;
+    } else if (currentSection) {
+      rowData.element.classList.add('accordion-content', 'expanded');
+      rowData.element.setAttribute('data-accordion-parent', currentSection.rowIndex);
+    }
   });
 
   table.append(thead, tbody);
   block.replaceChildren(table);
+
+  // Add click handlers for accordion functionality
+  const accordionHeaders = tbody.querySelectorAll('.accordion-header');
+  accordionHeaders.forEach((accordionHeader) => {
+    const toggleAccordion = () => {
+      const isExpanded = accordionHeader.getAttribute('aria-expanded') === 'true';
+      accordionHeader.setAttribute('aria-expanded', !isExpanded);
+
+      // Toggle content rows
+      let nextRow = accordionHeader.nextElementSibling;
+      while (nextRow && nextRow.classList.contains('accordion-content')) {
+        if (isExpanded) {
+          nextRow.classList.remove('expanded');
+        } else {
+          nextRow.classList.add('expanded');
+        }
+        nextRow = nextRow.nextElementSibling;
+      }
+    };
+
+    accordionHeader.addEventListener('click', toggleAccordion);
+
+    // Keyboard support
+    accordionHeader.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggleAccordion();
+      }
+    });
+  });
 }

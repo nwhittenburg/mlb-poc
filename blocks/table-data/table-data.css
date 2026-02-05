@@ -1,81 +1,64 @@
+.default-content:has(+ .block-content .table-data) h3 {
+  font-family: "HEX Franklin MLB Condensed", sans-serif;
+}
+
 .table-data {
-  --table-data-max-width: 800px;
-  --table-data-first-col-width: 200px;
-  --table-data-header-bg: #f8f8f8;
-  --table-data-cell-bg: #fff;
-  --table-data-text-color: #2c2c2c;
-  --table-data-border-color: #dadada;
-  --table-data-header-padding-x: 24px;
-  --table-data-header-padding-y: 16px;
-  --table-data-cell-padding-x: 24px;
-  --table-data-cell-padding-y: 16px;
-  --table-data-row-heading-padding-left: 40px;
-  --table-data-header-font-size: 18px;
-  --table-data-header-font-weight: 700;
-  --table-data-cell-font-size: 12px;
-  --table-data-cell-font-weight: 400;
-  --table-data-row-heading-font-weight: 600;
+  --table-header-bg: #f8f8f8;
+  --table-border: #c6c6c6;
+  --cell-border: #dadada;
 
   width: 100%;
-  max-width: var(--table-data-max-width);
+  max-width: 800px;
   overflow-x: auto;
+  color: var(--color-text);
 
   table {
     width: 100%;
-    max-width: 100%;
-    border-collapse: collapse;
-    border: 1px solid var(--table-data-border-color);
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid var(--table-border);
+    border-radius: 16px;
+    overflow: hidden;
   }
 
-  thead tr {
-    background-color: var(--table-data-header-bg);
+  th,
+  td {
+    padding: var(--spacing-l);
+    text-align: left;
+    border-right: 1px solid var(--cell-border);
+    border-bottom: 1px solid var(--cell-border);
+    background-color: var(--mlb-white);
   }
 
   th {
-    font-size: var(--table-data-header-font-size);
-    font-weight: var(--table-data-header-font-weight);
-    line-height: 23px;
-    color: var(--table-data-text-color);
-    padding: var(--table-data-header-padding-y) var(--table-data-header-padding-x);
-    text-align: left;
-    border: 1px solid var(--table-data-border-color);
-  }
-
-  th:first-child {
-    width: var(--table-data-first-col-width);
-    min-width: var(--table-data-first-col-width);
-  }
-
-  tbody tr {
-    border-bottom: 1px solid var(--table-data-border-color);
+    font-size: var(--body-font-size-l);
+    font-weight: 700;
+    width: 25%;
   }
 
   td {
-    font-size: var(--table-data-cell-font-size);
-    font-weight: var(--table-data-cell-font-weight);
-    line-height: 18px;
-    color: var(--table-data-text-color);
-    padding: var(--table-data-cell-padding-y) var(--table-data-cell-padding-x);
-    background-color: var(--table-data-cell-bg);
-    border: 1px solid var(--table-data-border-color);
-    text-align: left;
+    font-size: var(--body-font-size-xs);
+    padding: var(--spacing-m) var(--spacing-l);
     vertical-align: top;
   }
 
+  th:first-child,
   td:first-child {
-    background-color: var(--table-data-header-bg);
-    font-weight: var(--table-data-row-heading-font-weight);
-    padding-left: var(--table-data-row-heading-padding-left);
-    width: var(--table-data-first-col-width);
-    min-width: var(--table-data-first-col-width);
+    background-color: var(--table-header-bg);
   }
 
-  td:only-child {
-    background-color: var(--table-data-header-bg);
-    font-weight: 700;
-    font-size: 16px;
-    line-height: 20px;
-    padding: 24px;
+  td:first-child {
+    font-weight: 600;
+    padding-left: 40px;
+  }
+
+  th:last-child,
+  td:last-child {
+    border-right: none;
+  }
+
+  tbody tr:last-child td {
+    border-bottom: none;
   }
 
   th p,
@@ -85,6 +68,75 @@
 
   td p + p {
     margin-top: 0.25em;
+  }
+
+  em {
+    font-family: "HEX Franklin MLB Condensed", sans-serif;
+    text-transform: uppercase;
+    font-style: normal;
+  }
+
+  sup {
+    color: var(--mlb-primary-red);
+  }
+
+  /* Accordion styles */
+  .accordion-header {
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.2s ease;
+  }
+
+  .accordion-header:hover {
+    background-color: #f0f0f0;
+  }
+
+  .accordion-header:focus-visible {
+    outline: 2px solid #06c;
+    outline-offset: -2px;
+  }
+
+  /* Accordion header cell spans full width */
+  .accordion-header-cell {
+    background-color: var(--table-header-bg);
+    font-weight: 700;
+    font-size: var(--body-font-size-m);
+    padding: var(--spacing-l);
+    padding-left: calc(var(--spacing-l) + var(--body-font-size-xl) + var(--spacing-s));
+    position: relative;
+  }
+
+  /* Full width cells (like notes or special rows) */
+  .full-width-cell {
+    background-color: var(--table-header-bg);
+    font-size: var(--body-font-size-xs);
+    font-style: italic;
+  }
+
+  /* Add chevron indicator to accordion headers */
+  .accordion-header-cell::before {
+    content: "";
+    position: absolute;
+    left: var(--spacing-s);
+    top: 50%;
+    width: 22.5px;
+    height: 22.5px;
+    background: url("/img/icons/down-dark.svg") center / contain no-repeat;
+    transform: translateY(-50%) rotate(-90deg);
+    transition: transform 0.3s ease;
+  }
+
+  .accordion-header[aria-expanded="true"] .accordion-header-cell::before {
+    transform: translateY(-50%) rotate(0deg);
+  }
+
+  /* Hide accordion content by default */
+  .accordion-content {
+    display: none;
+  }
+
+  .accordion-content.expanded {
+    display: table-row;
   }
 }
 
