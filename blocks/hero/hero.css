@@ -82,6 +82,7 @@
       max-height: 56px;
       width: auto;
     }
+
     p {
       margin: 8px 0;
     }
@@ -119,6 +120,7 @@
 
     .hero-heading {
       margin: 0;
+      font-family: "HEX Franklin MLB Condensed";
       font-size: var(--typography-heading-2xl, 44px);
       font-weight: 700;
       line-height: 1.25;
@@ -155,7 +157,7 @@
 
       /* Add chevron icon */
       &::after {
-        content: '';
+        content: "";
         display: block;
         width: 24px;
         height: 24px;

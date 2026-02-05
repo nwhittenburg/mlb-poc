@@ -1,19 +1,33 @@
 export default function init(el) {
   const inner = el.querySelector(':scope > div');
   const isTooltip = el.classList.contains('tooltip');
+  const isBackgroundImage = el.classList.contains('background-image');
 
   inner.classList.add(isTooltip ? 'tooltip-container' : 'card-inner');
 
   // Handle picture
   const pic = el.querySelector('picture');
   if (pic) {
-    const picPara = pic.closest('p');
-    if (picPara) {
-      const picDiv = document.createElement('div');
-      picDiv.className = isTooltip ? 'tooltip-image' : 'card-picture-container';
-      picDiv.append(pic);
-      inner.insertAdjacentElement('afterbegin', picDiv);
-      picPara.remove();
+    // If background-image variation, apply as background
+    if (isBackgroundImage) {
+      const img = pic.querySelector('img');
+      if (img) {
+        inner.style.setProperty('--background-image-url', `url('${img.src}')`);
+      }
+      // Remove the picture element and its parent (whether p or div)
+      const picParent = pic.parentElement;
+      if (picParent) {
+        picParent.remove();
+      }
+    } else {
+      const picPara = pic.closest('p');
+      if (picPara) {
+        const picDiv = document.createElement('div');
+        picDiv.className = isTooltip ? 'tooltip-image' : 'card-picture-container';
+        picDiv.append(pic);
+        inner.insertAdjacentElement('afterbegin', picDiv);
+        picPara.remove();
+      }
     }
   }
 

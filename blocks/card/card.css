@@ -4,8 +4,9 @@
   box-shadow: 0 1px 6px 0 rgba(0 0 0 / 12%);
   overflow: hidden;
   background-color: light-dark(var(--color-gray-100), var(--color-gray-900));
-  color: light-dark(var(--color-dark), var(--color-light));
   transition: all 0.25s ease-in-out;
+  border-radius: 16px;
+  border: 0 solid #e8e8e8;
 
   .card-inner {
     display: grid;
@@ -38,16 +39,21 @@
 
     :first-child {
       margin-top: 0;
-      font-size: 16px;
     }
 
     :last-child {
       margin-bottom: 0;
     }
 
+    p{
+      font-size: var(--body-font-size-l);
+    }
+
     &:has(+ .card-cta-container) {
       padding: var(--spacing-default) var(--spacing-default) var(--spacing-m) var(--spacing-default);
     }
+
+   
   }
 
   .card-cta-container {
@@ -69,6 +75,54 @@
   /* Variations */
   &.center {
     text-align: center;
+  }
+
+  &.text-white {
+    color: var(--color-light);
+
+    .card-content-container {
+      color: var(--color-light);
+    }
+  }
+
+  &.text-center {
+    .card-inner {
+      text-align: center;
+    }
+
+    .card-content-container {
+      text-align: center;
+    }
+
+    .card-cta-container {
+      justify-content: center;
+      text-align: center;
+    }
+  }
+
+  &.background-image {
+    .card-inner {
+      position: relative;
+      min-height: 400px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: linear-gradient(0deg, rgba(0, 0, 0, 0.50) 0%, rgba(0, 0, 0, 0.50) 100%), var(--background-image-url) lightgray 50% / cover no-repeat;
+    }
+
+    .card-content-container {
+      position: relative;
+      z-index: 1;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .card-cta-container {
+      position: relative;
+      z-index: 1;
+      max-width: 600px;
+      margin: 0 auto;
+    }
   }
 
   &.quiet {
@@ -94,9 +148,9 @@
       display: flex;
       align-items: center;
       min-height: 130px;
-      
+
       /* White background */
-      background-color: #ffffff;
+      background-color: #fff;
       border: 1px solid var(--c1-stroke-card-caas, #e8e8e8);
       border-radius: 4px;
       overflow: hidden;
@@ -107,13 +161,13 @@
       width: 115px;
       height: 130px;
       overflow: hidden;
-      
+
       picture {
         display: block;
         width: 100%;
         height: 100%;
       }
-      
+
       img {
         display: block;
         width: 100%;
@@ -129,7 +183,7 @@
       justify-content: center;
       padding: 24px;
       min-width: 0;
-      
+
       p,
       h3,
       h4,
@@ -167,12 +221,12 @@
         flex-direction: column;
         min-height: auto;
       }
-      
+
       .tooltip-image {
         width: 100%;
         height: 200px;
       }
-      
+
       .tooltip-copy {
         padding: 16px;
       }

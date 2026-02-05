@@ -48,6 +48,7 @@ header .header-content {
     "nav"
     "actions";
   grid-template-rows: minmax(var(--header-height), auto) auto 1fr;
+
   /* min-height: 100%; */
 }
 
@@ -114,14 +115,6 @@ header .action-wrapper button:hover {
   opacity: 0.8;
 }
 
-header .brand-section a {
-  display: flex;
-  align-items: center;
-  font-size: var(--heading-font-size-m);
-  font-weight: 700;
-  color: var(--color-brand);
-}
-
 header .brand-section .brand-text {
   position: absolute;
   width: 1px;
@@ -174,9 +167,8 @@ header .main-nav-section {
 
 header .main-nav-item {
   border-bottom: 1px solid rgb(255 255 255 / 10%);
-  padding: 20px 0px;
+  padding: 20px 0;
 }
-
 
 header .main-nav-link {
   display: block;
@@ -197,30 +189,30 @@ header .main-nav-link a {
 }
 
 /* Chevron only for items with submenus - Mobile */
-header .main-nav-item:has(.menu) .main-nav-link::after{
+header .main-nav-item:has(.menu) .main-nav-link::after {
   content: "";
   position: absolute;
   right: 24px;
   top: 50%;
   transform: translateY(-50%);
   width: 14px;
-height: 7px;
-  background: url('/img/icons/down.svg') center / contain no-repeat;
+  height: 7px;
+  background: url("/img/icons/down.svg") center / contain no-repeat;
   transition: transform 0.3s ease;
 }
 
 /* Menus - Mobile Styles */
-header .menu{
+header .menu {
   display: none;
   padding: 20px 16px;
   background-color: var(--mlb-white);
 }
 
-header .menu .default-content > :first-child{
+header .menu .default-content > :first-child {
   margin-top: 0;
 }
 
-header .menu .default-content > :last-child{
+header .menu .default-content > :last-child {
   margin-bottom: 0;
 }
 
@@ -229,12 +221,12 @@ header .menu ul {
   padding: 0;
 }
 
-header .menu li{
+header .menu li {
   margin: 0;
   line-height: 1.6;
 }
 
-header .menu a{
+header .menu a {
   display: block;
   padding: 10px 0;
   font-size: 15px;
@@ -243,16 +235,15 @@ header .menu a{
   overflow-wrap: break-word;
 }
 
-
-header .menu .section{
+header .menu .section {
   margin-block: 20px;
 }
 
-header .menu .section:first-child{
+header .menu .section:first-child {
   margin-top: 0;
 }
 
-header .menu .section > p:first-child{
+header .menu .section > p:first-child {
   font-weight: 700;
   font-size: 11px;
   text-transform: uppercase;
@@ -264,15 +255,15 @@ header .menu .section > p:first-child{
 }
 
 /* Open State for Mobile Navigation Items */
-header .main-nav-item.is-open:has(.menu) .main-nav-link{
+header .main-nav-item.is-open:has(.menu) .main-nav-link {
   border-bottom: none;
 }
 
-header .main-nav-item.is-open:has(.menu) .main-nav-link::after{
+header .main-nav-item.is-open:has(.menu) .main-nav-link::after {
   transform: translateY(-50%) rotate(180deg);
 }
 
-header .main-nav-item.is-open > .menu{
+header .main-nav-item.is-open > .menu {
   display: block;
 }
 
@@ -404,7 +395,7 @@ header.is-mobile-open .main-nav-section {
     margin-left: 12px;
     width: 14px;
     height: 7px;
-    background: url('/img/icons/down.svg') center / contain no-repeat;
+    background: url("/img/icons/down.svg") center / contain no-repeat;
   }
 
   /* Desktop Menus */
@@ -424,11 +415,11 @@ header.is-mobile-open .main-nav-section {
     margin: 0;
   }
 
-  header .menu .section{
+  header .menu .section {
     margin-block: 0;
   }
 
-  header .menu li{
+  header .menu li {
     margin: 0;
     line-height: 1.8;
   }
@@ -441,17 +432,17 @@ header.is-mobile-open .main-nav-section {
     transition: color 0.2s ease;
   }
 
-  header .menu a:hover{
+  header .menu a:hover {
     color: var(--mlb-primary-red);
   }
 
-  header .menu .section > p:first-child{
+  header .menu .section > p:first-child {
     font-size: 13px;
     margin: 0 0 12px;
     color: var(--mlb-primary-navy);
   }
 
-  header .menu > ul > li:last-child a{
+  header .menu > ul > li:last-child a {
     font-weight: 700;
   }
 
@@ -475,8 +466,8 @@ header.is-mobile-open .main-nav-section {
     transform: rotate(180deg);
   }
 
-  header .main-nav-item.is-open > .menu{
-        display: block;
+  header .main-nav-item.is-open > .menu {
+    display: block;
   }
 
   /* Actions Section Desktop */
