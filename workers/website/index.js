@@ -86,34 +86,6 @@ const formatRequest = (env, request, url) => {
   return req;
 };
 
-const getSchedule = async (pathname, response) => {
-  if (!(pathname.includes('/schedules/') && pathname.endsWith('json'))) return null;
-
-  const schedule2Response = (json) => new Response(JSON.stringify(json), response);
-
-  const json = await response.json();
-  if (!json.data?.[0]?.fragment) return schedule2Response(json);
-
-  const data = [];
-  for (const [idx, schedule] of json.data.entries()) {
-    const { start, end } = schedule;
-
-    // Presumably the default fragment
-    if (!start && !end) {
-      data.push(json.data[idx]);
-    } else {
-      const now = Date.now();
-      const startDate = new Date(start);
-      const endDate = new Date(end);
-      if (startDate < now && endDate > now) data.push(json.data[idx]);
-    }
-  }
-
-  return schedule2Response({ ...json, data });
-};
-
-const getCachability = ({ pathname }) => !(pathname.includes('/schedules/') && pathname.endsWith('json'));
-
 const fetchFromOrigin = async (req, cacheEverything, savedSearch) => {
   let resp = await fetch(req, { method: req.method, cf: { cacheEverything } });
   resp = new Response(resp.body, resp);
@@ -146,14 +118,9 @@ export default {
 
     const request = formatRequest(env, req, url);
 
-    const cacheable = getCachability(url);
-
     const savedSearch = formatSearchParams(url);
 
-    const originResp = await fetchFromOrigin(request, cacheable, savedSearch);
-
-    const scheduleResp = await getSchedule(url.pathname, originResp);
-    if (scheduleResp) return scheduleResp;
+    const originResp = await fetchFromOrigin(request, true, savedSearch);
 
     return originResp;
   },
