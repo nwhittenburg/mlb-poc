@@ -1,6 +1,4 @@
 .card {
-  --spacing-default: var(--spacing-l);
-
   box-shadow: 0 1px 6px 0 rgba(0 0 0 / 12%);
   overflow: hidden;
   background-color: light-dark(var(--color-gray-100), var(--color-gray-900));
@@ -52,7 +50,7 @@
   }
 
   .card-content-container {
-    padding: var(--spacing-default);
+    padding: var(--spacing-xl);
 
     :first-child {
       margin-top: 0;
