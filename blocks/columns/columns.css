@@ -1,5 +1,5 @@
 .columns {
-  --columns-gap: 0;
+  --columns-gap: var(--spacing-l);
 
   display: grid;
   gap: var(--columns-gap);
@@ -10,17 +10,36 @@
 
   .row {
     display: grid;
-    align-items: center;
+    align-items: stretch;
     gap: var(--columns-gap);
   }
 
   .col {
+    min-height: 250px;
+    padding: 40px;
+    flex-shrink: 0;
+    border-radius: 16px;
+    border: 0 solid #e8e8e8;
+    background: var(--mlb-white);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-m);
+
     :first-child {
       margin-top: 0;
     }
 
     :last-child {
       margin-bottom: 0;
+    }
+
+    p {
+      font-size: var(--body-font-size-l);
+      margin: 0;
+    }
+
+    p:has(.btn) {
+      margin-top: 30px;
     }
   }
 
@@ -83,6 +102,9 @@
   .columns {
     .row {
       grid-template-columns: repeat(var(--child-count), 1fr);
+      align-items: flex-start;
+      align-content: flex-start;
+      gap: var(--spacing-l);
     }
 
     &.image-cover {
