@@ -1,0 +1,140 @@
+.default-content:has(+ .block-content .table-data) h3 {
+  font-family: "HEX Franklin MLB Condensed", sans-serif;
+}
+
+.table-data {
+  --table-header-bg: #f8f8f8;
+  --table-border: #c6c6c6;
+  --cell-border: #dadada;
+
+  width: 100%;
+  max-width: 800px;
+  overflow-x: auto;
+  color: var(--color-text);
+
+  table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid var(--table-border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  th,
+  td {
+    padding: var(--spacing-l);
+    text-align: left;
+    border-right: 1px solid var(--cell-border);
+    border-bottom: 1px solid var(--cell-border);
+    background-color: var(--mlb-white);
+  }
+
+  th {
+    font-size: var(--body-font-size-l);
+    font-weight: 700;
+    width: 25%;
+  }
+
+  td {
+    font-size: var(--body-font-size-xs);
+    padding: var(--spacing-m) var(--spacing-l);
+    vertical-align: top;
+  }
+
+  th:first-child,
+  td:first-child {
+    background-color: var(--table-header-bg);
+  }
+
+  td:first-child {
+    font-weight: 600;
+    padding-left: 40px;
+  }
+
+  th:last-child,
+  td:last-child {
+    border-right: none;
+  }
+
+  tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  th p,
+  td p {
+    margin: 0;
+  }
+
+  td p + p {
+    margin-top: 0.25em;
+  }
+
+  em {
+    font-family: "HEX Franklin MLB Condensed", sans-serif;
+    text-transform: uppercase;
+    font-style: normal;
+  }
+
+  sup {
+    color: var(--mlb-primary-red);
+  }
+
+  /* Accordion styles */
+  .accordion-header {
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.2s ease;
+  }
+
+  .accordion-header:hover {
+    background-color: #f0f0f0;
+  }
+
+  .accordion-header:focus-visible {
+    outline: 2px solid #06c;
+    outline-offset: -2px;
+  }
+
+  /* Accordion header cell spans full width */
+  .accordion-header-cell {
+    background-color: var(--table-header-bg);
+    font-weight: 700;
+    font-size: var(--body-font-size-m);
+    padding: var(--spacing-l);
+    padding-left: calc(var(--spacing-l) + var(--body-font-size-xl) + var(--spacing-s));
+    position: relative;
+  }
+
+  /* Add chevron indicator to accordion headers */
+  .accordion-header-cell::before {
+    content: "";
+    position: absolute;
+    left: var(--spacing-s);
+    top: 50%;
+    width: 22.5px;
+    height: 22.5px;
+    background: url("/img/icons/down-dark.svg") center / contain no-repeat;
+    transform: translateY(-50%) rotate(-90deg);
+    transition: transform 0.3s ease;
+  }
+
+  .accordion-header[aria-expanded="true"] .accordion-header-cell::before {
+    transform: translateY(-50%) rotate(0deg);
+  }
+
+  /* Hide accordion content by default */
+  .accordion-content {
+    display: none;
+  }
+
+  .accordion-content.expanded {
+    display: table-row;
+  }
+}
+
+@media (width >= 900px) {
+  .table-data {
+    max-width: none;
+  }
+}
