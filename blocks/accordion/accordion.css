@@ -15,7 +15,7 @@
 }
 
 .accordion details:first-of-type {
-  border-top-color: #6e6e6e;
+  border-top-color: #909090;
 }
 
 .accordion details[open] {
