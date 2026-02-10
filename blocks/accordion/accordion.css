@@ -1,3 +1,11 @@
+.accordion {
+  display: flex;
+  padding: var(--spacing-xl) 0;
+  flex-direction: column;
+  align-items: flex-start;
+  align-self: stretch;
+}
+
 .accordion details {
   width: 100%;
   border-bottom: 1px solid #6e6e6e;
@@ -7,7 +15,7 @@
 }
 
 .accordion details:first-of-type {
-  border-top-color: #909090;
+  border-top-color: #6e6e6e;
 }
 
 .accordion details[open] {
@@ -61,13 +69,14 @@
   display: grid;
   grid-template-rows: 0fr;
   background: var(--mlb-white);
-  transition: grid-template-rows 0.4s ease-out;
+  transition: grid-template-rows 0.3s ease-in-out;
 }
 
 .accordion details .accordion-item-body-content {
+  min-height: 0;
   overflow: hidden;
   padding: 0 var(--spacing-m);
-  transition: padding 0.4s ease-out;
+  transition: padding 0.3s ease-in-out;
   font-size: var(--body-font-size-m);
 }
 
