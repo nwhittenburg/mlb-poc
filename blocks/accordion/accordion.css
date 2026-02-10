@@ -1,21 +1,13 @@
-.accordion {
-  display: flex;
-  padding: var(--spacing-xl) 0;
-  flex-direction: column;
-  align-items: flex-start;
-  align-self: stretch;
-}
-
 .accordion details {
   width: 100%;
-  border-bottom: 1px solid #6e6e6e;
+  border-bottom: 1px solid #909090;
   border-top: 1px solid transparent;
   background: #f5f5f5;
   transition: border-color 0.3s ease-out;
 }
 
 .accordion details:first-of-type {
-  border-top-color: #6e6e6e;
+  border-top-color: #909090;
 }
 
 .accordion details[open] {
