@@ -151,13 +151,15 @@ a {
   }
 
   &.btn-secondary {
-    color: light-dark(var(--color-light), var(--color-dark));
-    background-color: var(--color-gray-500);
-    border: 2px solid var(--color-gray-500);
+    color: var(--mlb-secondary-blue-10);
+    background-color: none;
+    text-decoration: underline;
+    border: none;
 
-    &.btn-outline {
-      color: var(--color-gray-500);
+    &:hover {
+      color: var(--mlb-secondary-blue-20);
     }
+    
   }
 
   &.btn-negative {

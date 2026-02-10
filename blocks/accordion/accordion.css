@@ -1,0 +1,99 @@
+.accordion details {
+  width: 100%;
+  border-bottom: 1px solid #909090;
+  border-top: 1px solid transparent;
+  background: #f5f5f5;
+  transition: border-color 0.3s ease-out;
+}
+
+.accordion details:first-of-type {
+  border-top-color: #909090;
+}
+
+.accordion details[open] {
+  border-top: 1px solid #909090;
+  border-bottom: 1px solid #909090;
+}
+
+.accordion details summary {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-l) var(--spacing-m);
+  cursor: pointer;
+  list-style: none;
+  font-size: var(--heading-font-size-xs);
+  font-weight: 600;
+  line-height: var(--heading-line-height);
+  color: var(--mlb-text-color);
+  transition: background 0.3s ease-out;
+}
+
+.accordion details summary::-webkit-details-marker {
+  display: none;
+}
+
+.accordion details summary::after {
+  content: '+';
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--mlb-text-color);
+  flex-shrink: 0;
+  transition: transform 0.3s ease-out;
+}
+
+.accordion details[open] summary {
+  background: #e6e6e6;
+}
+
+.accordion details[open] summary::after {
+  content: '−';
+}
+
+.accordion details .accordion-item-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  background: var(--mlb-white);
+  transition: grid-template-rows 0.3s ease-in-out;
+}
+
+.accordion details .accordion-item-body-content {
+  min-height: 0;
+  overflow: hidden;
+  padding: 0 var(--spacing-m);
+  transition: padding 0.3s ease-in-out;
+  font-size: var(--body-font-size-m);
+}
+
+.accordion details[open] .accordion-item-body {
+  grid-template-rows: 1fr;
+}
+
+.accordion details[open] .accordion-item-body-content {
+  padding: var(--spacing-l) var(--spacing-m);
+}
+
+.accordion details .accordion-item-body-content img {
+  max-width: 300px;
+}
+
+.accordion details .accordion-item-body-content p {
+  margin-top: 0;
+  font-size: var(--body-font-size-m);   
+}
+
+.accordion details .accordion-item-body-content p:last-child {
+  margin-bottom: 0;
+}
+
+.accordion details .accordion-item-body-content .btn {
+  font-size: var(--body-font-size-s);
+  padding: 5px 18px;
+}
