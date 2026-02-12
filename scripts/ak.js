@@ -177,6 +177,12 @@ function decorateLink(config, a) {
       const localized = localizeUrl({ config, url });
       if (localized) a.href = localized.href;
     }
+    
+    // Check if link contains icon-frame and open in new tab
+    if (a.querySelector('.icon-frame')) {
+      a.target = '_blank';
+    }
+    
     decorateButton(a);
     if (!dnb) {
       const { href } = a;
@@ -205,10 +211,11 @@ function decorateLinks(el) {
   }, []);
 }
 
-function loadIcons(el) {
+async function loadIcons(el) {
   const icons = el.querySelectorAll('span.icon');
   if (!icons.length) return;
-  import('./utils/icons.js').then((mod) => mod.default(icons));
+  const mod = await import('./utils/icons.js');
+  await mod.default(icons);
 }
 
 function groupChildren(section) {
@@ -287,7 +294,7 @@ export async function loadArea({ area } = { area: document }) {
   if (decorateArea) decorateArea({ area });
   const sections = decorateSections(area, isDoc);
   for (const [idx, section] of sections.entries()) {
-    loadIcons(section);
+    await loadIcons(section);
     await Promise.all(section.widgets.map((block) => loadBlock(block)));
     await Promise.all(section.blocks.map((block) => loadBlock(block)));
     delete section.dataset.status;
