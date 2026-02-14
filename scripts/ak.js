@@ -188,7 +188,23 @@ function decorateLink(config, a) {
       const { href } = a;
       const found = config.widgets.some((pattern) => {
         const key = Object.keys(pattern)[0];
-        if (!href.includes(pattern[key])) return false;
+        const patternValue = pattern[key];
+        
+        // Don't auto-block fragments when already on a fragment page
+        // This allows fragment pages to display their content normally
+        if (key === 'fragment' && window.location.pathname.includes('/fragments/')) {
+          return false;
+        }
+        
+        // For fragments, check if pathname starts with the pattern, not just includes it
+        // This prevents matching anchor links on fragment pages
+        if (key === 'fragment') {
+          const urlObj = new URL(href, window.location.origin);
+          if (!urlObj.pathname.startsWith(patternValue)) return false;
+        } else if (!href.includes(patternValue)) {
+          return false;
+        }
+        
         a.classList.add(key, 'auto-block');
         return true;
       });
@@ -288,7 +304,9 @@ function decorateDoc() {
 
 export async function loadArea({ area } = { area: document }) {
   const isDoc = area === document;
-  if (isDoc) decorateDoc();
+  const isFragmentPage = isDoc && window.location.pathname.includes('/fragments/');
+  
+  if (isDoc && !isFragmentPage) decorateDoc();
   decoratePictures(area);
   const { decorateArea } = getConfig();
   if (decorateArea) decorateArea({ area });
@@ -298,7 +316,13 @@ export async function loadArea({ area } = { area: document }) {
     await Promise.all(section.widgets.map((block) => loadBlock(block)));
     await Promise.all(section.blocks.map((block) => loadBlock(block)));
     delete section.dataset.status;
-    if (isDoc && idx === 0) import('./postlcp.js');
+    // Don't load header on fragment pages
+    if (isDoc && idx === 0 && !isFragmentPage) {
+      import('./postlcp.js');
+    }
   }
-  if (isDoc) import('./lazy.js');
+  // Don't load footer on fragment pages
+  if (isDoc && !isFragmentPage) {
+    import('./lazy.js');
+  }
 }
