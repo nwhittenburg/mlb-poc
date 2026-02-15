@@ -49,6 +49,7 @@
   --heading-font-size-m: 22.78px;
   --heading-font-size-s: 20.25px;
   --heading-font-size-xs: 18px;
+  --heading-font-size-xxs: 16px;
   --heading-line-height: 1.15;
 
   /* body */
@@ -180,7 +181,7 @@ a {
   }
 }
 
-.text-white {
+.light-text {
   color: var(--mlb-white);
   
   a {
@@ -200,6 +201,7 @@ a {
     }
   }  
 }
+
 /* sections */
 .section {
   display: block;
@@ -215,13 +217,30 @@ a {
     margin: 0 auto;
     display: grid;
     gap: var(--spacing-l);
+    padding-top: var(--spacing-xl);
+    padding-bottom: var(--spacing-xl);
+  }
+}
+@media (min-width: 900px) {
+  .section {
+    &.full-width {
+      > .block-content:not(:has(.hero)) {
+        max-width: 1920px;
+      }
+    }
   }
 }
 
-main {
-  padding-top: var(--spacing-xl);
-  padding-bottom: var(--spacing-xl);
+.section {
+  &.full-width { /* Apply max-width to all blocks except hero */
+  > .block-content:not(:has(.hero)) {
+    max-width: 1920px;
+    }
+  }
   
+}
+
+main {
   ul,
   ol {
     padding-inline-start: 24px;
@@ -311,6 +330,18 @@ h4 { font-size: var(--heading-font-size-m); }
 h5 { font-size: var(--heading-font-size-s); }
 h6 { font-size: var(--heading-font-size-xs); }
 
+/* Headings with images */
+h1:has(img),
+h2:has(img),
+h3:has(img),
+h4:has(img),
+h5:has(img),
+h6:has(img) {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-m);
+}
+
 strong {
   font-weight: 600;
 }
@@ -340,6 +371,11 @@ img {
 svg {
   width: 20px;
   height: 20px;
+}
+
+.icon{
+  width: 40px;
+  height: 40px;
 }
 
 /* @media (width >= 600px) {} */

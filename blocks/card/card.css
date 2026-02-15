@@ -1,77 +1,18 @@
 .card {
-  box-shadow: 0 1px 6px 0 rgba(0 0 0 / 12%);
+  /* Base styles */
+  border-radius: 16px;
   overflow: hidden;
   background-color: light-dark(var(--color-gray-100), var(--color-gray-900));
-  transition: all 0.25s ease-in-out;
-  border-radius: 16px;
-  border: 0 solid #e8e8e8;
+  box-shadow: 0 1px 6px 0 rgba(0 0 0 / 12%);
+  transition: box-shadow 0.25s ease-in-out, transform 0.25s ease-in-out;
 
-  .card-inner {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    height: 100%;
+  /* Two-column layout (image + content) */
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 100%;
 
-    @media (width < 600px) {
-      grid-template-columns: 1fr;
-      grid-template-rows: auto 1fr;
-    }
-  }
-
-  &:not(.quiet) {
-    .card-image-container {
-      position: relative;
-      width: 100%;
-      min-height: 100%;
-
-      picture {
-        display: block;
-        width: 100%;
-        height: 100%;
-        opacity: 0.85;
-        transition: opacity 0.25s ease-in-out;
-      }
-
-      img {
-        object-fit: cover;
-        width: 100%;
-        height: 100%;
-      }
-
-      @media (width < 600px) {
-        min-height: auto;
-        padding-bottom: 60%;
-
-        picture {
-          position: absolute;
-          inset: 0;
-        }
-      }
-    }
-  }
-
-  .card-content-container {
-    padding: var(--spacing-xl);
-
-    :first-child {
-      margin-top: 0;
-    }
-
-    :last-child {
-      margin-bottom: 0;
-    }
-
-    p{
-      font-size: var(--body-font-size-l);
-    }
-  }
-
-  .card-cta-container {
-    padding: 0;
-    margin: var(--spacing-m) 0 0 0;
-    display: flex;
-  }
-
-  &:not(.quiet):hover {
+  /* Hover effect */
+  &:hover {
     transform: scale(1.005);
     box-shadow: 0 2px 8px 0 rgba(0 0 0 / 16%);
 
@@ -80,170 +21,160 @@
     }
   }
 
-  /* Variations */
-  &.center {
-    text-align: center;
+  /* Background image variation */
+  &.background-image {
+    grid-template-columns: 1fr;
+    min-height: 400px;
+    background:
+      linear-gradient(0deg, rgb(0 0 0 / 50%) 0%, rgb(0 0 0 / 50%) 100%),
+      var(--card-bg-image, var(--card-bg-color, lightgray)) 50% / cover no-repeat;
+    justify-content: center;
+    align-content: center;
   }
 
-  &.text-white {
-    color: var(--color-light);
+  /* Single column layout (content only) */
+  &:has(.card-content:only-child) {
+    grid-template-columns: 1fr;
+  }
 
-    .card-content-container {
-      color: var(--color-light);
+  /* Mobile: always stack */
+  @media (width < 600px) {
+    grid-template-columns: 1fr;
+  }
+
+  /* Card image */
+  .card-image {
+    position: relative;
+    width: 100%;
+    min-height: 100%;
+
+    picture,
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    picture {
+      opacity: 0.85;
+      transition: opacity 0.25s ease-in-out;
+    }
+
+    @media (width < 600px) {
+      min-height: auto;
+      padding-bottom: 60%;
+
+      picture {
+        position: absolute;
+        inset: 0;
+      }
     }
   }
 
-  &.text-center {
-    .card-inner {
-      text-align: center;
+  /* Card content */
+  .card-content {
+    padding: var(--spacing-xl);
+
+    > :first-child {
+      margin-top: 0;
     }
 
-    .card-content-container {
-      text-align: center;
+    > :last-child {
+      margin-bottom: 0;
     }
 
-    .card-cta-container {
-      justify-content: center;
-      text-align: center;
+    p {
+      font-size: var(--body-font-size-l);
     }
+  }
+
+  /* CTA styling */
+  .card-cta {
+    margin-top: var(--spacing-m);
   }
 
   /* Background color variation */
-  &[class*='background-color-']:not(.background-image) {
-    .card-inner.has-background-color {
-      background-color: var(--background-color);
-    }
+  &[class*="background-color-"] {
+    background-color: var(--card-bg-color);
   }
 
-  &.background-image {
-    .card-inner {
-      position: relative;
-      min-height: 400px;
+  /* Background image content styling */
+  &.background-image .card-content {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  /* Center variation */
+  &.center {
+    text-align: center;
+
+    .card-cta {
       display: flex;
-      flex-direction: column;
       justify-content: center;
-      background: linear-gradient(0deg, rgba(0, 0, 0, 0.50) 0%, rgba(0, 0, 0, 0.50) 100%), var(--background-image-url) lightgray 50% / cover no-repeat;
-    }
-
-    /* If background color is also specified with background-image, use it as fallback */
-    &[class*='background-color-'] .card-inner.has-background-color {
-      background: linear-gradient(0deg, rgba(0, 0, 0, 0.50) 0%, rgba(0, 0, 0, 0.50) 100%), var(--background-image-url) var(--background-color, lightgray) 50% / cover no-repeat;
-    }
-
-    .card-content-container {
-      position: relative;
-      z-index: 1;
-      max-width: 600px;
-      margin: 0 auto;
     }
   }
 
+  /* Quiet variation */
   &.quiet {
-    --spacing-default: 0;
-
-    box-shadow: initial;
-    background-color: initial;
-
-    .card-content-container * {
-      margin: 6px;
-    }
-  }
-
-  /* Tooltip variation - compact horizontal layout */
-  &.tooltip {
-    /* Respect section container width */
     box-shadow: none;
     background-color: transparent;
 
-    .tooltip-container {
-      display: flex;
-      align-items: center;
-      min-height: 130px;
-
-      /* White background */
-      background-color: #fff;
-      border: 1px solid var(--c1-stroke-card-caas, #e8e8e8);
-      border-radius: 4px;
-      overflow: hidden;
+    .card-content {
+      padding: 0;
     }
+  }
 
-    .tooltip-image {
-      flex-shrink: 0;
-      width: 115px;
-      height: 130px;
-      overflow: hidden;
+  /* Tooltip variation */
+  &.tooltip {
+    grid-template-columns: auto 1fr;
+    min-height: 130px;
+    box-shadow: none;
+    background-color: #fff;
+    border: 1px solid #e8e8e8;
+    border-radius: 4px;
+
+    .card-image {
+      width: 130px;
 
       picture {
-        display: block;
-        width: 100%;
-        height: 100%;
-      }
-
-      img {
-        display: block;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
+        opacity: 1;
       }
     }
 
-    .tooltip-copy {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 24px;
-      min-width: 0;
-
-      p,
+    .card-content {
       h3,
       h4,
       h5,
       h6 {
+        font-size: 14px;
+        font-weight: 400;
+        margin: 0 0 16px;
+        text-transform: uppercase;
+      }
+
+      p {
+        font-size: 18px;
+        font-weight: 700;
+        line-height: 1.25;
         margin: 0;
       }
     }
 
-    /* C1/Body/XS/Regular - applied to .tooltip-heading */
-    .tooltip-heading {
-      font-family: "HEX Franklin MLB", var(--font-family);
-      font-size: 14px;
-      font-weight: 400;
-      line-height: 1.5;
-      color: var(--c1-text-text, #2c2c2c);
-      margin-bottom: 16px;
-      text-transform: uppercase;
+    &:hover {
+      transform: none;
+      box-shadow: none;
     }
 
-    /* C1/Heading/XS - applied to .tooltip-body */
-    .tooltip-body {
-      font-family: "HEX Franklin MLB", var(--font-family);
-      font-size: var(--typography-heading-xs, 18px);
-      font-weight: 700;
-      line-height: 1.25;
-      color: var(--c1-text-text, #2c2c2c);
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    /* Responsive adjustments */
     @media (width < 600px) {
-      .tooltip-container {
-        flex-direction: column;
-        min-height: auto;
-      }
-
-      .tooltip-image {
+      .card-image {
         width: 100%;
         height: 200px;
       }
 
-      .tooltip-copy {
+      .card-content {
         padding: 16px;
       }
     }
   }
 }
-
-
-
