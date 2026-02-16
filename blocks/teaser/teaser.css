@@ -11,16 +11,6 @@
   grid-template-columns: 1fr 1fr;
   height: 100%;
 
-  /* Hover effect */
-  &:hover {
-    transform: scale(1.005);
-    box-shadow: 0 2px 8px 0 rgba(0 0 0 / 16%);
-
-    picture {
-      opacity: 1;
-    }
-  }
-
   /* Background image variation */
   &.background-image {
     grid-template-columns: 1fr;
@@ -122,59 +112,6 @@
 
     .teaser-content {
       padding: 0;
-    }
-  }
-
-  /* Tooltip variation */
-  &.tooltip {
-    grid-template-columns: auto 1fr;
-    min-height: 130px;
-    box-shadow: none;
-    background-color: #fff;
-    border: 1px solid #e8e8e8;
-    border-radius: 4px;
-
-    .teaser-image {
-      width: 130px;
-
-      picture {
-        opacity: 1;
-      }
-    }
-
-    .teaser-content {
-      h3,
-      h4,
-      h5,
-      h6 {
-        font-size: 14px;
-        font-weight: 400;
-        margin: 0 0 16px;
-        text-transform: uppercase;
-      }
-
-      p {
-        font-size: 18px;
-        font-weight: 700;
-        line-height: 1.25;
-        margin: 0;
-      }
-    }
-
-    &:hover {
-      transform: none;
-      box-shadow: none;
-    }
-
-    @media (width < 600px) {
-      .teaser-image {
-        width: 100%;
-        height: 200px;
-      }
-
-      .teaser-content {
-        padding: 16px;
-      }
     }
   }
 }
