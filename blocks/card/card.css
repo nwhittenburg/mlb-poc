@@ -185,6 +185,7 @@
     width: 276px;
     border-radius: 16px;
     height: auto;
+    background: var(--mlb-white);
 
     .card-image {
       min-height: auto;
@@ -198,6 +199,8 @@
     .card-content {
       display: flex;
       flex-direction: column;
+      padding: var(--spacing-xs);
+      gap: var(--spacing-xs);
     }
 
     .card-cta {
