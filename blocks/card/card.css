@@ -173,6 +173,7 @@
 /* Hinting variant - horizontal scroll with peek at next card */
 .section > .block-content.hinting {
   display: flex;
+  flex-direction: row;
   overflow-x: auto;
   gap: 16px;
   scroll-snap-type: x mandatory;
