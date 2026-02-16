@@ -180,15 +180,17 @@
 
   /* Editorial variation - single vertical card */
   &.editorial {
-    grid-template-columns: 1fr;
-    grid-template-rows: 213px 1fr;
+    display: flex;
+    flex-direction: column;
     width: 276px;
     border-radius: 16px;
     height: auto;
     background: var(--mlb-white);
 
     .card-image {
+      height: 213px;
       min-height: auto;
+      flex-shrink: 0;
 
       picture {
         position: static;
