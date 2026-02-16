@@ -25,6 +25,14 @@
   src: url("/styles/fonts/HEXFranklinMLBCondensed-Regular.woff2") format("woff2");
 }
 
+/* HEX Franklin MLB - Narrow */
+@font-face {
+  font-family: "HEX Franklin MLB Narrow";
+  font-style: normal;
+  font-display: swap;
+  src: url("/styles/fonts/HEXFranklinMLBNarrow-Regular.woff2") format("woff2");
+}
+
 /* MLB Clarendon - Variable */
 @font-face {
   font-family: "MLB Clarendon";
@@ -33,6 +41,7 @@
   font-display: swap;
   src: url("/styles/fonts/MLBClarendonVariable.woff2") format("woff2");
 }
+
 
 /* Montserrat - Fallback Variable Font */
 @font-face {

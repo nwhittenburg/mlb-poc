@@ -51,22 +51,12 @@ function decorateMenu(li) {
   return wrapper;
 }
 
-function decorateMegaMenu(li) {
-  const menu = li.querySelector('.fragment-content');
-  if (!menu) return null;
-  const wrapper = document.createElement('div');
-  wrapper.className = 'mega-menu';
-  wrapper.append(menu);
-  li.append(wrapper);
-  return wrapper;
-}
-
 function decorateNavItem(li) {
   li.classList.add('main-nav-item');
   const link = li.querySelector(':scope > p > a');
   const textNode = li.querySelector(':scope > p');
 
-  const menu = decorateMegaMenu(li) || decorateMenu(li);
+  const menu = decorateMenu(li);
 
   // If there's a menu (submenu exists), style and make it clickable
   if (menu) {
@@ -145,11 +135,14 @@ async function decorateHeader(fragment) {
 export default async function init(el) {
   const headerMeta = getMetadata('header');
   const path = headerMeta || HEADER_PATH;
+  
   try {
     const fragment = await loadFragment(`${locale.prefix}${path}`);
-    fragment.classList.add('header-content');
-    await decorateHeader(fragment);
-    el.append(fragment);
+    if (fragment) {
+      fragment.classList.add('header-content');
+      await decorateHeader(fragment);
+      el.append(fragment);
+    }
   } catch (e) {
     throw Error(e);
   }
