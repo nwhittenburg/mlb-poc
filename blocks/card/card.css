@@ -215,7 +215,7 @@
 
       a.btn-primary {
         padding: 6px 18px;
-        border: none;
+        white-space: nowrap;
       }
     }
 
