@@ -263,4 +263,15 @@ export default async function decorate(block) {
   });
 
   block.prepend(tablist);
+
+  // Center video grids when content fits, start-align when scrollable
+  const updateGridAlignment = () => {
+    block.querySelectorAll('.video-grid').forEach((grid) => {
+      const overflows = grid.scrollWidth > grid.clientWidth;
+      grid.style.justifyContent = overflows ? 'start' : 'center';
+    });
+  };
+
+  updateGridAlignment();
+  window.addEventListener('resize', updateGridAlignment);
 }
