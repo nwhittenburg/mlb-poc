@@ -93,6 +93,7 @@
   flex: 0 0 auto;
   width: 226px;
   border-radius: 16px;
+  overflow: hidden;
   background: var(--mlb-white);
   border: none;
   padding: 0;
