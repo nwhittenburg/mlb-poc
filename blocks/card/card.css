@@ -37,7 +37,7 @@
     padding: 16px;
     gap: 8px;
 
-    p {
+    p:not(.card-cta) {
       font-size: 18px;
       line-height: 1.5;
       margin: 0;
