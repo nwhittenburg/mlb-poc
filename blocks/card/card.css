@@ -204,6 +204,20 @@
       margin-top: auto;
       display: flex;
       justify-content: flex-end;
+      border-top: 1px solid #e8e8e8;
+      padding-top: 16px;
+
+      a {
+        background: #2968f7;
+        color: #fff;
+        font-size: 15px;
+        font-weight: 700;
+        line-height: 19px;
+        text-decoration: none;
+        padding: 5px 18px 6px;
+        border-radius: 100px;
+        text-align: center;
+      }
     }
 
     @media (width < 600px) {
