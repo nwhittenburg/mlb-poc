@@ -184,6 +184,7 @@
     grid-template-rows: 213px 1fr;
     width: 276px;
     border-radius: 16px;
+    height: auto;
     background: var(--mlb-white);
 
     .card-image {
@@ -198,6 +199,7 @@
     .card-content {
       display: flex;
       flex-direction: column;
+      flex: 1;
       padding: var(--spacing-tokens-spacing-xs);
       gap: 8px;
 
@@ -234,5 +236,6 @@
 .section > .block-content:has(.editorial) {
   flex-direction: row;
   flex-wrap: wrap;
+  align-items: stretch;
   gap: 24px;
 }
