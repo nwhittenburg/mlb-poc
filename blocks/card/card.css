@@ -207,7 +207,8 @@
       padding-top: 16px;
 
       a.btn-primary {
-        padding: var(--spacing-s) var(--spacing-l);
+        padding: 6px 18px;
+        border: none;
       }
     }
 
