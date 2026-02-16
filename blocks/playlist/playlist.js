@@ -272,6 +272,6 @@ export default async function decorate(block) {
     });
   };
 
-  updateGridAlignment();
+  requestAnimationFrame(updateGridAlignment);
   window.addEventListener('resize', updateGridAlignment);
 }
