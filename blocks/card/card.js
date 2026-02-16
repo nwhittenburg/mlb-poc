@@ -1,4 +1,4 @@
-function decorate4Column(el) {
+function decorateFourColumn(el) {
   const wrapper = el.querySelector(':scope > div');
   const cols = [...wrapper.querySelectorAll(':scope > div')];
   const { parentElement } = el;
@@ -37,8 +37,8 @@ function decorate4Column(el) {
 }
 
 export default function decorate(el) {
-  if (el.classList.contains('4-column')) {
-    decorate4Column(el);
+  if (el.classList.contains('four-column')) {
+    decorateFourColumn(el);
     return;
   }
 

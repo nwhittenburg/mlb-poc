@@ -178,8 +178,8 @@
     }
   }
 
-  /* 4-column variation - single vertical card */
-  &.\34 -column {
+  /* Four column variation - single vertical card */
+  &.four-column {
     display: flex;
     flex-direction: column;
     width: 276px;
@@ -234,8 +234,8 @@
   }
 }
 
-/* 4-column cards laid out as siblings in their wrapper */
-.section > .block-content:has(.\34 -column) {
+/* Four column cards laid out as siblings in their wrapper */
+.section > .block-content:has(.four-column) {
   flex-direction: row;
   flex-wrap: wrap;
   align-items: stretch;
