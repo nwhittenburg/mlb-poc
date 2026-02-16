@@ -178,24 +178,49 @@
     }
   }
 
-  /* Editorial variation - vertical layout with fixed width */
+  /* Editorial variation - multi-card horizontal layout */
   &.editorial {
-    grid-template-columns: 1fr;
-    grid-template-rows: 156px 1fr;
-    width: 312px;
-    border-radius: 4px;
+    display: flex;
+    gap: 24px;
+    height: auto;
+    overflow: visible;
+    background: transparent;
+    box-shadow: none;
+    border-radius: 0;
+
+    &:hover {
+      transform: none;
+      box-shadow: none;
+    }
+
+    > div {
+      width: 312px;
+      flex-shrink: 0;
+      border-radius: 4px;
+      overflow: hidden;
+      background-color: light-dark(var(--color-gray-100), var(--color-gray-900));
+      box-shadow: 0 1px 6px 0 rgba(0 0 0 / 12%);
+      display: flex;
+      flex-direction: column;
+    }
 
     .card-image {
+      height: 156px;
       min-height: auto;
-      padding-bottom: 0;
+      overflow: hidden;
 
       picture {
         position: static;
         opacity: 1;
       }
+
+      img {
+        object-fit: cover;
+      }
     }
 
     .card-content {
+      flex: 1;
       display: flex;
       flex-direction: column;
     }
@@ -207,7 +232,11 @@
     }
 
     @media (width < 600px) {
-      width: 100%;
+      flex-direction: column;
+
+      > div {
+        width: 100%;
+      }
     }
   }
 }

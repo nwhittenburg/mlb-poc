@@ -1,4 +1,38 @@
+function decorateEditorial(el) {
+  [...el.querySelectorAll(':scope > div')].forEach((row) => {
+    const col = row.querySelector(':scope > div');
+    if (!col) return;
+
+    // Extract picture into card-image
+    const pic = col.querySelector('picture');
+    if (pic) {
+      const picParent = pic.parentElement;
+      const imgDiv = document.createElement('div');
+      imgDiv.classList.add('card-image');
+      imgDiv.appendChild(pic);
+      row.prepend(imgDiv);
+      if (picParent.tagName === 'P' && !picParent.textContent.trim()) {
+        picParent.remove();
+      }
+    }
+
+    // Content
+    col.classList.add('card-content');
+
+    // CTA - last paragraph with a link
+    const ctaPara = col.querySelector('p:last-of-type');
+    if (ctaPara?.querySelector('a')) {
+      ctaPara.classList.add('card-cta');
+    }
+  });
+}
+
 export default function decorate(el) {
+  if (el.classList.contains('editorial')) {
+    decorateEditorial(el);
+    return;
+  }
+
   const wrapper = el.querySelector(':scope > div');
   const divs = Array.from(wrapper.querySelectorAll(':scope > div'));
 
