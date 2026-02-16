@@ -187,6 +187,11 @@
     flex: 0 0 calc(100% - 48px);
     scroll-snap-align: start;
     max-width: 420px;
+
+    @media (width >= 900px) {
+      flex-basis: calc(50% - 24px);
+      max-width: 420px;
+    }
   }
 
   /* 2 columns: grid at 600px+ */
