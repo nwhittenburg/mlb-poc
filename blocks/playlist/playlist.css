@@ -68,6 +68,7 @@
 /* Video Grid Layout - horizontal scroll */
 .playlist .video-grid {
   display: flex;
+  justify-content: center;
   overflow-x: auto;
   gap: 24px;
   scroll-snap-type: x mandatory;
