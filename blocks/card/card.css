@@ -186,6 +186,7 @@
   > .card {
     flex: 0 0 calc(100% - 48px);
     scroll-snap-align: start;
+    max-width: 560px;
   }
 
   /* 2 columns: grid at 600px+ */
