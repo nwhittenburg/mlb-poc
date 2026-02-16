@@ -172,7 +172,7 @@ async function fetchVideoData() {
 }
 
 /**
- * Loads and decorates the tabs block with video content
+ * Loads and decorates the playlist block with video content
  * @param {Element} block The block element
  */
 export default async function decorate(block) {
@@ -200,10 +200,10 @@ export default async function decorate(block) {
 
   // Build tablist
   const tablist = document.createElement('div');
-  tablist.className = 'tabs-list';
+  tablist.className = 'playlist-list';
   tablist.setAttribute('role', 'tablist');
 
-  // Create tabs and panels for each authored category
+  // Create playlist tabs and panels for each authored category
   categories.forEach((category, i) => {
     const id = toClassName(category);
     
@@ -212,7 +212,7 @@ export default async function decorate(block) {
 
     // Create tab button
     const button = document.createElement('button');
-    button.className = 'tabs-tab';
+    button.className = 'playlist-tab';
     button.id = `tab-${id}`;
     button.textContent = category;
     button.setAttribute('aria-controls', `tabpanel-${id}`);
@@ -222,7 +222,7 @@ export default async function decorate(block) {
 
     // Create tab panel
     const tabpanel = document.createElement('div');
-    tabpanel.className = 'tabs-panel';
+    tabpanel.className = 'playlist-panel';
     tabpanel.id = `tabpanel-${id}`;
     tabpanel.setAttribute('aria-hidden', i !== 0);
     tabpanel.setAttribute('aria-labelledby', `tab-${id}`);
