@@ -37,13 +37,15 @@ function decorateFourColumn(el) {
 }
 
 export default function decorate(el) {
-  if (el.classList.contains('four-column')) {
+  const wrapper = el.querySelector(':scope > div');
+  const divs = Array.from(wrapper.querySelectorAll(':scope > div'));
+
+  // Auto-detect multi-column cards (4+ columns in a single row)
+  if (divs.length >= 4) {
+    el.classList.add('four-column');
     decorateFourColumn(el);
     return;
   }
-
-  const wrapper = el.querySelector(':scope > div');
-  const divs = Array.from(wrapper.querySelectorAll(':scope > div'));
 
   // Handle background-color-{color} class
   const backgroundColorClass = Array.from(el.classList).find((cls) => cls.startsWith('background-color-'));
