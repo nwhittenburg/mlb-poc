@@ -204,18 +204,17 @@
       margin-top: auto;
       display: flex;
       justify-content: flex-end;
-      border-top: 1px solid #e8e8e8;
       padding-top: 16px;
 
       a {
-        background: #2968f7;
+        background: var(--mlb-secondary-blue-10);
         color: #fff;
-        font-size: 15px;
+        font-size: var(--body-font-size-m);
         font-weight: 700;
-        line-height: 19px;
+        line-height: var(--body-line-height);
         text-decoration: none;
-        padding: 5px 18px 6px;
-        border-radius: 100px;
+        padding: var(--spacing-s) var(--spacing-l);
+        border-radius: 20px;
         text-align: center;
       }
     }
