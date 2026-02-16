@@ -32,7 +32,9 @@ function createJumplink(heading) {
 }
 
 function getPageHeadings() {
-  return [...document.querySelectorAll('main h1, main h2, main h3')];
+  const headings = [...document.querySelectorAll('main h1, main h2, main h3')];
+  // Exclude headings from hero section
+  return headings.filter((heading) => !heading.closest('.hero'));
 }
 
 function updateActiveLink(block) {

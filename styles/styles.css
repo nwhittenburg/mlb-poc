@@ -269,10 +269,18 @@ main {
     @media (min-width: 900px) {
       display: grid;
       grid-template-columns: minmax(auto, 350px) 1fr;
-      gap: var(--spacing-xl);
+      gap: 0 var(--spacing-xl);
       max-width: var(--grid-container-width);
       margin: 0 auto;
       align-items: start;
+
+      /* Hero section spans full width outside the grid */
+      > .section:has(.hero) {
+        grid-column: 1 / -1;
+        max-width: 100vw;
+        margin-left: calc(50% - 50vw);
+        margin-right: calc(50% - 50vw);
+      }
 
       /* First section with jumplinks stays on the left */
       > .section:has(.jumplinks) {
@@ -287,7 +295,7 @@ main {
       }
 
       /* All other sections flow in the right column */
-      > .section:not(:has(.jumplinks)) {
+      > .section:not(:has(.jumplinks)):not(:has(.hero)) {
         grid-column: 2;
       }
     }
