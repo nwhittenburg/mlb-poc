@@ -1,4 +1,4 @@
-function decorateFourColumn(el) {
+function decorateMultiCard(el) {
   const wrapper = el.querySelector(':scope > div');
   const cols = [...wrapper.querySelectorAll(':scope > div')];
   const { parentElement } = el;
@@ -42,8 +42,7 @@ export default function decorate(el) {
 
   // Auto-detect multi-column cards (3+ columns means each column is a card)
   if (divs.length >= 3) {
-    if (divs.length >= 4) el.classList.add('four-column');
-    decorateFourColumn(el);
+    decorateMultiCard(el);
     return;
   }
 
