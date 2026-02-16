@@ -1,62 +1,47 @@
-export default function init(el) {
-  const inner = el.querySelector(':scope > div');
-  const isTooltip = el.classList.contains('tooltip');
-  const isBackgroundImage = el.classList.contains('background-image');
+export default function decorate(el) {
+  const wrapper = el.querySelector(':scope > div');
+  const divs = Array.from(wrapper.querySelectorAll(':scope > div'));
 
-  inner.classList.add(isTooltip ? 'tooltip-container' : 'card-inner');
-
-  // Handle background-color-* classes
+  // Handle background-color-{color} class
   const backgroundColorClass = Array.from(el.classList).find((cls) => cls.startsWith('background-color-'));
   if (backgroundColorClass) {
-    const color = backgroundColorClass.split('-').pop();
-    inner.style.setProperty('--background-color', color);
-    inner.classList.add('has-background-color');
+    const color = backgroundColorClass.replace('background-color-', '');
+    el.style.setProperty('--card-bg-color', color);
   }
 
-  // Get all child divs
-  const divs = Array.from(inner.querySelectorAll(':scope > div'));
-  
-  // Handle picture
+  // Handle picture (image or background-image)
   const pic = el.querySelector('picture');
-  if (pic && isBackgroundImage) {
-    // Background-image variation: apply as background and remove picture div
+  if (pic) {
     const img = pic.querySelector('img');
-    if (img) {
-      inner.style.setProperty('--background-image-url', `url('${img.src}')`);
-    }
     const picDiv = divs.find((div) => div.contains(pic));
-    if (picDiv) picDiv.remove();
-  } else if (pic) {
-    // Standard card: create card-image-container
-    const imageDiv = document.createElement('div');
-    imageDiv.className = isTooltip ? 'tooltip-image' : 'card-image-container';
-    imageDiv.append(pic);
-    inner.insertAdjacentElement('afterbegin', imageDiv);
-    
-    // Remove the original div that contained the picture
-    const picDiv = divs.find((div) => div.querySelector('picture') || !div.textContent.trim());
-    if (picDiv) picDiv.remove();
-  }
 
-  // Decorate content container
-  const con = inner.querySelector(':scope > div:not([class])');
-  if (!con) return;
-  con.classList.add(isTooltip ? 'tooltip-copy' : 'card-content-container');
-
-  if (isTooltip) {
-    const heading = con.querySelector('h3, h4, h5, h6');
-    if (heading) heading.classList.add('tooltip-heading');
-    con.querySelectorAll('p').forEach((p) => p.classList.add('tooltip-body'));
-    return;
-  }
-
-  // Decorate CTA
-  const ctaPara = con.querySelector('p:last-of-type');
-  if (ctaPara && ctaPara.querySelector('a')) {
-    if (el.classList.contains('hash-aware')) {
-      const cta = ctaPara.querySelector('a');
-      cta.href = `${cta.getAttribute('href')}${window.location.hash}`;
+    if (el.classList.contains('background-image')) {
+      // Background image variation
+      if (img) el.style.setProperty('--card-bg-image', `url('${img.src}')`);
+      if (picDiv) picDiv.remove();
+    } else {
+      // Standard image - wrap and detect position
+      picDiv.classList.add('card-image');
+      const isImageRight = divs.indexOf(picDiv) > 0;
+      if (isImageRight) picDiv.style.order = '2';
     }
-    ctaPara.classList.add('card-cta-container');
   }
+
+  // Decorate content
+  const contentDiv = wrapper.querySelector(':scope > div:not(.card-image)');
+  if (contentDiv) {
+    contentDiv.classList.add('card-content');
+
+    // Decorate CTA link
+    const ctaPara = contentDiv.querySelector('p:last-of-type');
+    if (ctaPara?.querySelector('a')) {
+      ctaPara.classList.add('card-cta');
+    }
+  }
+
+  // Flatten structure - move children up and remove wrapper
+  while (wrapper.firstChild) {
+    el.appendChild(wrapper.firstChild);
+  }
+  wrapper.remove();
 }

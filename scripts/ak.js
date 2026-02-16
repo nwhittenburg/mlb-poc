@@ -177,12 +177,34 @@ function decorateLink(config, a) {
       const localized = localizeUrl({ config, url });
       if (localized) a.href = localized.href;
     }
+    
+    // Check if link contains icon-frame and open in new tab
+    if (a.querySelector('.icon-frame')) {
+      a.target = '_blank';
+    }
+    
     decorateButton(a);
     if (!dnb) {
       const { href } = a;
       const found = config.widgets.some((pattern) => {
         const key = Object.keys(pattern)[0];
-        if (!href.includes(pattern[key])) return false;
+        const patternValue = pattern[key];
+        
+        // Don't auto-block fragments when already on a fragment page
+        // This allows fragment pages to display their content normally
+        if (key === 'fragment' && window.location.pathname.includes('/fragments/')) {
+          return false;
+        }
+        
+        // For fragments, check if pathname starts with the pattern, not just includes it
+        // This prevents matching anchor links on fragment pages
+        if (key === 'fragment') {
+          const urlObj = new URL(href, window.location.origin);
+          if (!urlObj.pathname.startsWith(patternValue)) return false;
+        } else if (!href.includes(patternValue)) {
+          return false;
+        }
+        
         a.classList.add(key, 'auto-block');
         return true;
       });
@@ -205,10 +227,11 @@ function decorateLinks(el) {
   }, []);
 }
 
-function loadIcons(el) {
+async function loadIcons(el) {
   const icons = el.querySelectorAll('span.icon');
   if (!icons.length) return;
-  import('./utils/icons.js').then((mod) => mod.default(icons));
+  const mod = await import('./utils/icons.js');
+  await mod.default(icons);
 }
 
 function groupChildren(section) {
@@ -281,17 +304,25 @@ function decorateDoc() {
 
 export async function loadArea({ area } = { area: document }) {
   const isDoc = area === document;
-  if (isDoc) decorateDoc();
+  const isFragmentPage = isDoc && window.location.pathname.includes('/fragments/');
+  
+  if (isDoc && !isFragmentPage) decorateDoc();
   decoratePictures(area);
   const { decorateArea } = getConfig();
   if (decorateArea) decorateArea({ area });
   const sections = decorateSections(area, isDoc);
   for (const [idx, section] of sections.entries()) {
-    loadIcons(section);
+    await loadIcons(section);
     await Promise.all(section.widgets.map((block) => loadBlock(block)));
     await Promise.all(section.blocks.map((block) => loadBlock(block)));
     delete section.dataset.status;
-    if (isDoc && idx === 0) import('./postlcp.js');
+    // Don't load header on fragment pages
+    if (isDoc && idx === 0 && !isFragmentPage) {
+      import('./postlcp.js');
+    }
   }
-  if (isDoc) import('./lazy.js');
+  // Don't load footer on fragment pages
+  if (isDoc && !isFragmentPage) {
+    import('./lazy.js');
+  }
 }

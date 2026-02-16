@@ -7,7 +7,11 @@ import loadIcons from '../../scripts/utils/icons.js';
  */
 export default async function decorate(el) {
   const fragment = await loadFragment('/fragments/nav/footer');
+  if (!fragment) return;
+  
   const ul = fragment.querySelector('ul');
+  if (!ul) return;
+  
   const listItems = ul.querySelectorAll('li');
   
   // Load icons before moving them
@@ -36,11 +40,14 @@ export default async function decorate(el) {
   
   container.appendChild(logosRow);
 
-  // Add copyright text
+  // Add copyright text if available
   const copyright = document.createElement('div');
   copyright.className = 'footer-copyright';
-  copyright.textContent = listItems[1].querySelectorAll('p')[1].textContent;
-  container.appendChild(copyright);
+  const copyrightText = listItems[1]?.querySelectorAll('p')[1]?.textContent;
+  if (copyrightText) {
+    copyright.textContent = copyrightText;
+    container.appendChild(copyright);
+  }
 
   ul.replaceWith(container);
   el.append(fragment);
