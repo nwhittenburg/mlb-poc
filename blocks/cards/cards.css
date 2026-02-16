@@ -1,4 +1,4 @@
-.card {
+.cards {
   /* Base styles - vertical card layout */
   display: flex;
   flex-direction: column;
@@ -152,7 +152,7 @@
 }
 
 /* Multi-card layouts in their wrapper */
-.section > .block-content:has(.card + .card):not(.hinting) {
+.section > .block-content:has(.cards + .cards):not(.hinting) {
   display: grid;
   gap: 32px;
   grid-template-columns: 1fr;
@@ -183,7 +183,7 @@
     display: none;
   }
 
-  > .card {
+  > .cards {
     flex: 0 0 calc(100% - 48px);
     scroll-snap-align: start;
     max-width: 380px;
