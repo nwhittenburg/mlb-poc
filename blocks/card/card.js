@@ -40,8 +40,8 @@ export default function decorate(el) {
   const wrapper = el.querySelector(':scope > div');
   const divs = Array.from(wrapper.querySelectorAll(':scope > div'));
 
-  // Auto-detect multi-column cards (4+ columns in a single row)
-  if (divs.length >= 4) {
+  // Auto-detect multi-column cards (3+ columns means each column is a card)
+  if (divs.length >= 3) {
     el.classList.add('four-column');
     decorateFourColumn(el);
     return;
