@@ -199,11 +199,11 @@
     .card-content {
       display: flex;
       flex-direction: column;
-      padding: 16px;
-      gap: 16px;
+      padding: var(--spacing-tokens-spacing-xs);
+      gap: 8px;
 
       h1, h2, h3, h4, h5, h6 {
-        margin-bottom: var(--spacing-s);
+        margin-bottom: 8px;
       }
     }
 
@@ -211,7 +211,7 @@
       margin-top: auto;
       display: flex;
       justify-content: flex-end;
-      padding-top: 16px;
+      padding-top: var(--spacing-tokens-spacing-xs);
 
       a.btn-primary {
         padding: 6px 18px;
