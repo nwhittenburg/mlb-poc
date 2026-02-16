@@ -152,7 +152,7 @@
 }
 
 /* Multi-card layouts in their wrapper */
-.section > .block-content:has(.card + .card) {
+.section > .block-content:has(.card + .card):not(.hinting) {
   display: grid;
   gap: 32px;
   grid-template-columns: 1fr;
@@ -167,5 +167,53 @@
 
   @media (width >= 1200px) {
     grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Hinting variant - horizontal scroll with peek at next card */
+.section > .block-content.hinting {
+  display: flex;
+  overflow-x: auto;
+  gap: 16px;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  > .card {
+    flex: 0 0 calc(100% - 48px);
+    scroll-snap-align: start;
+  }
+
+  /* 2 columns: grid at 600px+ */
+  &.hint-sm {
+    @media (width >= 600px) {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+      overflow: visible;
+    }
+  }
+
+  /* 3 columns: grid at 900px+ */
+  &.hint-md {
+    @media (width >= 900px) {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      overflow: visible;
+    }
+  }
+
+  /* 4+ columns: grid at 1200px+ */
+  &.hint-lg {
+    @media (width >= 1200px) {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px;
+      overflow: visible;
+    }
   }
 }

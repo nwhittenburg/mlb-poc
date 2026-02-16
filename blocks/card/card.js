@@ -2,6 +2,7 @@ function decorateMultiCard(el) {
   const wrapper = el.querySelector(':scope > div');
   const cols = [...wrapper.querySelectorAll(':scope > div')];
   const { parentElement } = el;
+  const isHinting = el.classList.contains('hinting');
 
   cols.forEach((col) => {
     const card = document.createElement('div');
@@ -33,6 +34,15 @@ function decorateMultiCard(el) {
     parentElement.insertBefore(card, el);
   });
 
+  // Configure hinting on wrapper based on column count
+  if (isHinting) {
+    parentElement.classList.add('hinting');
+    const count = cols.length;
+    if (count <= 2) parentElement.classList.add('hint-sm');
+    else if (count === 3) parentElement.classList.add('hint-md');
+    else parentElement.classList.add('hint-lg');
+  }
+
   el.remove();
 }
 
@@ -40,8 +50,9 @@ export default function decorate(el) {
   const wrapper = el.querySelector(':scope > div');
   const divs = Array.from(wrapper.querySelectorAll(':scope > div'));
 
-  // Auto-detect multi-column cards (3+ columns means each column is a card)
-  if (divs.length >= 3) {
+  // Auto-detect multi-column cards (3+ columns, or 2+ with hinting)
+  const isHinting = el.classList.contains('hinting');
+  if (divs.length >= 3 || (isHinting && divs.length >= 2)) {
     decorateMultiCard(el);
     return;
   }
