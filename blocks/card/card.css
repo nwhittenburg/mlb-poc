@@ -181,7 +181,7 @@
   /* Editorial variation - single vertical card */
   &.editorial {
     grid-template-columns: 1fr;
-    grid-template-rows: 156px 1fr;
+    grid-template-rows: 1fr;
     width: 312px;
     border-radius: 4px;
     height: auto;
