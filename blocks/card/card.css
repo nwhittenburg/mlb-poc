@@ -213,7 +213,7 @@
 }
 
 /* Editorial cards laid out as siblings in their wrapper */
-.card-wrapper:has(.editorial) {
+.block-content:has(.editorial) {
   display: flex;
   gap: 24px;
   flex-wrap: wrap;
