@@ -1,7 +1,12 @@
 function decorateEditorial(el) {
-  [...el.querySelectorAll(':scope > div')].forEach((row) => {
-    const col = row.querySelector(':scope > div');
-    if (!col) return;
+  const rows = [...el.querySelectorAll(':scope > div')];
+  const { parentElement } = el;
+
+  rows.forEach((row) => {
+    const card = document.createElement('div');
+    [...el.classList].forEach((cls) => card.classList.add(cls));
+
+    const col = row.querySelector(':scope > div') || row;
 
     // Extract picture into card-image
     const pic = col.querySelector('picture');
@@ -10,7 +15,7 @@ function decorateEditorial(el) {
       const imgDiv = document.createElement('div');
       imgDiv.classList.add('card-image');
       imgDiv.appendChild(pic);
-      row.prepend(imgDiv);
+      card.appendChild(imgDiv);
       if (picParent.tagName === 'P' && !picParent.textContent.trim()) {
         picParent.remove();
       }
@@ -18,13 +23,18 @@ function decorateEditorial(el) {
 
     // Content
     col.classList.add('card-content');
+    card.appendChild(col);
 
     // CTA - last paragraph with a link
     const ctaPara = col.querySelector('p:last-of-type');
     if (ctaPara?.querySelector('a')) {
       ctaPara.classList.add('card-cta');
     }
+
+    parentElement.insertBefore(card, el);
   });
+
+  el.remove();
 }
 
 export default function decorate(el) {
