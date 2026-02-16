@@ -203,11 +203,11 @@ export default async function decorate(block) {
   tablist.className = 'playlist-list';
   tablist.setAttribute('role', 'tablist');
 
-  // Center video grids when content fits, start-align when scrollable
-  const updateGridAlignment = () => {
-    block.querySelectorAll('.video-grid').forEach((grid) => {
-      const overflows = grid.scrollWidth > grid.clientWidth;
-      grid.style.justifyContent = overflows ? 'start' : 'center';
+  // Center scrollable containers when content fits, start-align when overflowing
+  const updateScrollAlignment = () => {
+    block.querySelectorAll('.video-grid, .playlist-list').forEach((el) => {
+      const overflows = el.scrollWidth > el.clientWidth;
+      el.style.justifyContent = overflows ? 'start' : 'center';
     });
   };
 
@@ -264,7 +264,7 @@ export default async function decorate(block) {
       });
       tabpanel.setAttribute('aria-hidden', false);
       button.setAttribute('aria-selected', true);
-      requestAnimationFrame(updateGridAlignment);
+      requestAnimationFrame(updateScrollAlignment);
     });
 
     tablist.appendChild(button);
@@ -272,6 +272,6 @@ export default async function decorate(block) {
   });
 
   block.prepend(tablist);
-  requestAnimationFrame(updateGridAlignment);
-  window.addEventListener('resize', updateGridAlignment);
+  requestAnimationFrame(updateScrollAlignment);
+  window.addEventListener('resize', updateScrollAlignment);
 }
