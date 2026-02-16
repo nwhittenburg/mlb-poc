@@ -42,7 +42,7 @@ export default function decorate(el) {
 
   // Auto-detect multi-column cards (3+ columns means each column is a card)
   if (divs.length >= 3) {
-    el.classList.add('four-column');
+    if (divs.length >= 4) el.classList.add('four-column');
     decorateFourColumn(el);
     return;
   }

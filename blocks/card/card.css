@@ -166,9 +166,15 @@
 }
 
 /* Multi-card layouts in their wrapper */
-.section > .block-content:has(.four-column) {
+.section > .block-content:has(.card + .card) {
   flex-direction: row;
   flex-wrap: wrap;
   align-items: stretch;
-  gap: 24px;
+  gap: 32px;
+}
+
+/* Flex-fill for cards without a fixed width */
+.section > .block-content:has(.card + .card) > .card:not(.four-column) {
+  flex: 1;
+  min-width: 0;
 }
