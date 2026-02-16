@@ -1,12 +1,11 @@
 function decorateEditorial(el) {
-  const rows = [...el.querySelectorAll(':scope > div')];
+  const wrapper = el.querySelector(':scope > div');
+  const cols = [...wrapper.querySelectorAll(':scope > div')];
   const { parentElement } = el;
 
-  rows.forEach((row) => {
+  cols.forEach((col) => {
     const card = document.createElement('div');
     [...el.classList].forEach((cls) => card.classList.add(cls));
-
-    const col = row.querySelector(':scope > div') || row;
 
     // Extract picture into card-image
     const pic = col.querySelector('picture');
