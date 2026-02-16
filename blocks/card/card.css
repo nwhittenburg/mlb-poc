@@ -206,16 +206,8 @@
       justify-content: flex-end;
       padding-top: 16px;
 
-      a {
-        background: var(--mlb-secondary-blue-10);
-        color: #fff;
-        font-size: var(--body-font-size-m);
-        font-weight: 700;
-        line-height: var(--body-line-height);
-        text-decoration: none;
-        padding: var(--spacing-s) var(--spacing-l);
-        border-radius: 20px;
-        text-align: center;
+      a.btn-primary {
+        padding: var(--spacing-xs) var(--spacing-m);
       }
     }
 
