@@ -180,43 +180,29 @@
 
   /* Editorial variation - vertical layout with fixed width */
   &.editorial {
+    grid-template-columns: 1fr;
+    grid-template-rows: 156px 1fr;
     width: 312px;
     border-radius: 4px;
 
-    .card-inner {
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-    }
-
-    .card-image-container {
-      height: 156px;
-      overflow: hidden;
-      flex-shrink: 0;
+    .card-image {
+      min-height: auto;
+      padding-bottom: 0;
 
       picture {
-        display: block;
-        width: 100%;
-        height: 100%;
-      }
-
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: center;
+        position: static;
+        opacity: 1;
       }
     }
 
-    .card-content-container {
-      flex: 1;
+    .card-content {
       display: flex;
       flex-direction: column;
-      padding: 24px;
     }
 
-    .card-cta-container {
+    .card-cta {
       margin-top: auto;
+      display: flex;
       justify-content: flex-end;
     }
 
