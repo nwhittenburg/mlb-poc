@@ -1,4 +1,4 @@
-function decorateEditorial(el) {
+function decorate4Column(el) {
   const wrapper = el.querySelector(':scope > div');
   const cols = [...wrapper.querySelectorAll(':scope > div')];
   const { parentElement } = el;
@@ -37,8 +37,8 @@ function decorateEditorial(el) {
 }
 
 export default function decorate(el) {
-  if (el.classList.contains('editorial')) {
-    decorateEditorial(el);
+  if (el.classList.contains('4-column')) {
+    decorate4Column(el);
     return;
   }
 

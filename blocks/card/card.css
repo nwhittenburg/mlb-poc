@@ -178,8 +178,8 @@
     }
   }
 
-  /* Editorial variation - single vertical card */
-  &.editorial {
+  /* 4-column variation - single vertical card */
+  &.\34 -column {
     display: flex;
     flex-direction: column;
     width: 276px;
@@ -234,8 +234,8 @@
   }
 }
 
-/* Editorial cards laid out as siblings in their wrapper */
-.section > .block-content:has(.editorial) {
+/* 4-column cards laid out as siblings in their wrapper */
+.section > .block-content:has(.\34 -column) {
   flex-direction: row;
   flex-wrap: wrap;
   align-items: stretch;
