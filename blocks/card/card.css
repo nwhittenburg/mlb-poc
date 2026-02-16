@@ -199,8 +199,8 @@
     .card-content {
       display: flex;
       flex-direction: column;
-      padding: var(--spacing-xs);
-      gap: var(--spacing-xs);
+      padding: 16px;
+      gap: 16px;
     }
 
     .card-cta {
