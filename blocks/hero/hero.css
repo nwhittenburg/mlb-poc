@@ -5,7 +5,7 @@
   --min-height: var(--default-min-height);
 
   position: relative;
-  color: var(--color-mlb-white);
+  color: var(--mlb-white);
   overflow: hidden;
   margin-bottom: var(--spacing-tokens-spacing-xxl, 80px);
 
@@ -148,7 +148,7 @@
       gap: 8px;
       padding: 12px 24px 14px;
       background-color: #3b63fb;
-      color: white;
+      color: var(--mlb-white);
       font-size: 17px;
       font-weight: 700;
       line-height: 21px;
