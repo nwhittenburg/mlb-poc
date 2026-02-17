@@ -11,7 +11,7 @@
 .longform.numbered .longform-item {
   display: flex;
   align-items: center;
-  padding: var(--spacing-s, 24px) 0;
+  padding: var(--spacing-tokens-spacing-s, 24px) 0;
   border-bottom: 2px solid var(--c1-content-divider-400, #b6b6b6);
 }
 
@@ -20,20 +20,19 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
   max-height: 40px;
-  font-size: 28px;
+  padding: 0 32px;
+  font-size: var(--body-font-size-xxxl, 28px);
   font-weight: 400;
-  line-height: 1.5;
+  line-height: var(--body-line-height, 1.5);
   color: var(--c1-content-icon, #2c2c2c);
 }
 
 .longform.numbered .longform-content {
   flex: 1;
-  min-width: 0;
-  font-size: 20px;
+  font-size: var(--body-font-size-xl, 20px);
   font-weight: 400;
-  line-height: 1.5;
+  line-height: var(--body-line-height, 1.5);
   color: var(--c1-text-text, #2c2c2c);
 }
 
