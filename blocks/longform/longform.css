@@ -48,13 +48,16 @@
 .longform.numbered .longform-content ul,
 .longform.numbered .longform-content ol {
   margin: 20px 0 0 0;
-  padding-left: 20px;
+  padding-left: 16px;
+  list-style-position: outside;
 }
 
 .longform.numbered .longform-content li {
+  margin-top: 0;
   margin-bottom: 0;
   line-height: 1.5;
 }
+
 
 .longform.numbered .longform-content li:not(:last-child) {
   margin-bottom: 8px;
