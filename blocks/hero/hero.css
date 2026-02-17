@@ -205,25 +205,23 @@
   }
 
   &.split-view {
-    background: url('/img/media/use-case-background-image.png') center/cover;
+    /* Mobile first: stacked, content above image */
     display: flex;
-    align-items: center;
-    justify-content: center;
-
-    .split-view-content {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: var(--spacing-xxl);
-      max-width: var(--grid-container-width);
-      align-items: center;
-    }
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: var(--spacing-l);
+    max-width: var(--grid-container-width);
+    margin: 0 auto;
+    padding: var(--spacing-l);
 
     .hero-foreground {
-      grid-column: 1;
+      order: -1;
+      min-width: 0;
     }
 
     .hero-background {
-      grid-column: 2;
+      order: 0;
 
       > div {
         position: static;
@@ -240,7 +238,7 @@
       }
 
       img {
-        display: block;     
+        display: block;
         object-fit: cover;
         min-height: 365px;
         aspect-ratio: 3/2;
@@ -251,23 +249,19 @@
       }
     }
 
-    @media (width < 900px) {
-      padding: var(--spacing-l);
-      min-height: auto;
-
-      .split-view-content {
-        grid-template-columns: 1fr;
-        gap: var(--spacing-l);
-      }
+    @media (width >= 600px) {
+      flex-direction: row;
+      align-items: center;
+      gap: var(--spacing-xxl);
+      padding: 0;
 
       .hero-foreground {
-        grid-column: 1;
-        grid-row: 2;
+        flex: 1 1 0;
+        min-height: 0;
       }
 
       .hero-background {
-        grid-column: 1;
-        grid-row: 1;
+        flex: 1 1 0;
       }
     }
   }

@@ -80,20 +80,9 @@ export default async function init(el) {
   const fg = rows.pop();
   fg.classList.add('hero-foreground');
   decorateForeground(fg);
-  
-  let bg;
   if (rows.length) {
-    bg = rows.pop();
+    const bg = rows.pop();
     bg.classList.add('hero-background');
     decorateBackground(bg);
-  }
-
-  // For split-view, wrap background and foreground in container
-  if (el.classList.contains('split-view') && bg && fg) {
-    const wrapper = document.createElement('div');
-    wrapper.classList.add('split-view-content');
-    el.appendChild(wrapper);
-    wrapper.appendChild(fg);
-    wrapper.appendChild(bg);
   }
 }
