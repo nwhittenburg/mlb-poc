@@ -47,7 +47,7 @@
 /* Multi-column content within a numbered item */
 .longform.numbered .longform-columns {
   display: grid;
-  gap: 24px;
+  gap: 16px;
   align-items: center;
   width: 100%;
 }
