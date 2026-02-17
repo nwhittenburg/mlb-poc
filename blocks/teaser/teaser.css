@@ -9,7 +9,6 @@
   /* Two-column layout (image + content) */
   display: grid;
   grid-template-columns: 1fr 1fr;
-  height: 100%;
 
   /* Background image variation */
   &.background-image {
@@ -113,7 +112,6 @@
   /* Background color variation */
   &[class*="background-color-"] {
     background-color: var(--teaser-bg-color);
-    min-height: 384px;
     padding: 40px;
     gap: 80px;
     align-items: center;
