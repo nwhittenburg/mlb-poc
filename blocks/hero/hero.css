@@ -5,7 +5,7 @@
   --min-height: var(--default-min-height);
 
   position: relative;
-  color: #fff;
+  color: var(--color-mlb-white);
   overflow: hidden;
   margin-bottom: var(--spacing-tokens-spacing-xxl, 80px);
 
@@ -120,7 +120,6 @@
 
     .hero-heading {
       margin: 0;
-      color: var(--color-mlb-white);
 
       /* MLB/Heading XXXL - D */
       font-family: "HEX Franklin MLB Condensed";
@@ -128,13 +127,15 @@
       font-style: normal;
       font-weight: 600;
       line-height: 150%; /* 96px */
-      margin-bottom: var(--spacing-tokens-spacing-s, 24px);
+      margin-bottom: var(--spacing-tokens-spacing-xs, 16px);
       text-transform: uppercase;
     }
 
     .hero-body {
+
+      /* MLB/Body XXL */
       font-size: var(--body-font-size-xl);
-      line-height: var(--body-line-height);
+      font-weight: 400;
     }
 
     .button-container {
