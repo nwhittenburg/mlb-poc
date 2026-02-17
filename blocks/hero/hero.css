@@ -120,17 +120,21 @@
 
     .hero-heading {
       margin: 0;
+      color: var(--color-mlb-white);
+
+      /* MLB/Heading XXXL - D */
       font-family: "HEX Franklin MLB Condensed";
-      font-size: var(--typography-heading-2xl, 44px);
-      font-weight: 700;
-      line-height: 1.25;
+      font-size: 64px;
+      font-style: normal;
+      font-weight: 600;
+      line-height: 150%; /* 96px */
+      margin-bottom: var(--spacing-tokens-spacing-s, 24px);
+      text-transform: uppercase;
     }
 
     .hero-body {
-      margin: var(--spacing-tokens-spacing-s, 24px) 0 0 0;
-      font-size: 22px;
-      font-weight: 400;
-      line-height: 1.5;
+      font-size: var(--body-font-size-xl);
+      line-height: var(--body-line-height);
     }
 
     .button-container {
