@@ -10,17 +10,18 @@
 
 .longform.numbered .longform-item {
   display: flex;
-  align-items: flex-start;
-  gap: 0;
+  align-items: center;
   padding: var(--spacing-s, 24px) 0;
   border-bottom: 2px solid var(--c1-content-divider-400, #b6b6b6);
 }
 
 .longform.numbered .longform-number {
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 40px;
-  text-align: center;
-  font-family: var(--font-adobe-clean, "Adobe Clean");
+  max-height: 40px;
   font-size: 28px;
   font-weight: 400;
   line-height: 1.5;
@@ -30,7 +31,6 @@
 .longform.numbered .longform-content {
   flex: 1;
   min-width: 0;
-  font-family: var(--font-adobe-clean, "Adobe Clean");
   font-size: 20px;
   font-weight: 400;
   line-height: 1.5;
@@ -68,7 +68,6 @@
 
 /* Plain longform (no numbers) */
 .longform:not(.numbered) {
-  font-family: var(--font-adobe-clean, "Adobe Clean");
   font-size: 20px;
   font-weight: 400;
   line-height: 1.5;
