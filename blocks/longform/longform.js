@@ -11,40 +11,39 @@ export default function decorate(block) {
     return;
   }
 
-  // Numbered variant: wrap each top-level paragraph in numbered items
-  const inner = block.querySelector(':scope > div');
-  if (!inner) return;
+  // Numbered variant: each authored row becomes a numbered item
+  const rows = [...block.querySelectorAll(':scope > div')];
+  if (!rows.length) return;
 
-  // Get all direct children (paragraphs, lists, etc.)
-  const children = [...inner.children];
-  
-  // Clear the inner container
-  inner.innerHTML = '';
-  inner.classList.add('longform-list');
+  const list = document.createElement('div');
+  list.classList.add('longform-list');
 
   let itemNumber = 1;
 
-  children.forEach((child) => {
-    // Only number direct paragraphs and divs with content
-    if (child.tagName === 'P' || (child.tagName === 'DIV' && child.textContent.trim())) {
-      const item = document.createElement('div');
-      item.classList.add('longform-item');
+  rows.forEach((row) => {
+    const cell = row.querySelector(':scope > div');
+    if (!cell || !cell.textContent.trim()) return;
 
-      // Create number element
-      const numberEl = document.createElement('div');
-      numberEl.classList.add('longform-number');
-      numberEl.textContent = itemNumber;
+    const item = document.createElement('div');
+    item.classList.add('longform-item');
 
-      // Create content element
-      const content = document.createElement('div');
-      content.classList.add('longform-content');
-      content.appendChild(child);
+    const numberEl = document.createElement('div');
+    numberEl.classList.add('longform-number');
+    numberEl.textContent = itemNumber;
 
-      item.appendChild(numberEl);
-      item.appendChild(content);
-      inner.appendChild(item);
-
-      itemNumber += 1;
+    const content = document.createElement('div');
+    content.classList.add('longform-content');
+    while (cell.firstChild) {
+      content.appendChild(cell.firstChild);
     }
+
+    item.appendChild(numberEl);
+    item.appendChild(content);
+    list.appendChild(item);
+
+    itemNumber += 1;
   });
+
+  block.innerHTML = '';
+  block.appendChild(list);
 }
