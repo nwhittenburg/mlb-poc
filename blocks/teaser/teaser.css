@@ -84,8 +84,8 @@
     margin-top: var(--spacing-m);
   }
 
-  /* Text-white variation */
-  &.text-white {
+  /* Dark variation */
+  &.dark {
     color: white;
 
     /* CTA button style */
