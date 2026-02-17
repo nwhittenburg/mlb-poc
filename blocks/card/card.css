@@ -177,4 +177,50 @@
       }
     }
   }
+
+   /* Notification variation */
+   &.notification {
+    grid-template-columns: auto 1fr;
+    box-shadow: none;
+    background-color: var(--mlb-white);
+    border-radius: 16px;
+    padding: var(--spacing-l) var(--spacing-xl);
+    gap: var(--spacing-l);
+    height: auto;
+
+
+    .card-content {
+      padding: 0;
+
+      h3,
+      h4,
+      h5,
+      h6,
+      p {
+        font-size: 20px;
+        font-weight: 400;
+        margin: 0 0 16px;
+        line-height: 1.1.5;
+      }
+    }
+
+    .card-image {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      picture {
+        opacity: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      img {
+        width: 60px;
+        height: 60px;
+        border-radius: 10px;
+      }
+    }
+  }
 }
