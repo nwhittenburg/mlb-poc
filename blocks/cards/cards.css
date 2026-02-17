@@ -65,26 +65,6 @@
     }
   }
 
-  /* Background color variation */
-  &[class*="background-color-"] {
-    background-color: var(--card-bg-color);
-  }
-
-  /* Background image variation */
-  &.background-image {
-    min-height: 400px;
-    background:
-      linear-gradient(0deg, rgb(0 0 0 / 50%) 0%, rgb(0 0 0 / 50%) 100%),
-      var(--card-bg-image, var(--card-bg-color, lightgray)) 50% / cover no-repeat;
-    justify-content: center;
-    align-items: center;
-
-    .card-content {
-      max-width: 600px;
-      margin: 0 auto;
-    }
-  }
-
   /* Center variation */
   &.center {
     text-align: center;
@@ -165,7 +145,10 @@
   @media (width >= 900px) {
     grid-template-columns: repeat(3, 1fr);
   }
+}
 
+/* 4+ cards: extend to 4 columns at 1200px+ */
+.section > .block-content:has(.cards + .cards + .cards + .cards):not(.hinting) {
   @media (width >= 1200px) {
     grid-template-columns: repeat(4, 1fr);
   }
