@@ -39,7 +39,7 @@
   --color-light: rgb(245 245 245);
   --color-dark: rgb(0 0 0);
   --color-text: var(--mlb-text-color);
-  --color-link: var(--mlb-text-color);
+  --color-link: var(--mlb-secondary-blue-10);
 
   /* fonts */
   --font-family: "HEX Franklin MLB", "Adobe Clean", "adobe-clean", -apple-system, blinkmacsystemfont, "Segoe UI", roboto, sans-serif;
@@ -149,6 +149,7 @@ a {
     font-size: var(--body-font-size-m);
     font-weight: 700;
     line-height: var(--body-line-height);
+    border: none;
 
     &:hover {
       background: var(--mlb-secondary-blue-20);
