@@ -88,6 +88,7 @@
   &.text-white {
     color: white;
 
+    /* CTA button style */
     .teaser-cta a {
       display: inline-block;
       border: 2px solid white;
@@ -101,9 +102,8 @@
       background: white;
     }
 
-    /* Outline button when author italicizes the link */
-    .teaser-cta em a,
-    .teaser-cta a em {
+    /* Accent CTA button style */
+    .teaser-cta .btn-accent {
       color: white;
       background: transparent;
       font-style: normal;
