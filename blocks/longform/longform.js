@@ -21,8 +21,8 @@ export default function decorate(block) {
   let itemNumber = 1;
 
   rows.forEach((row) => {
-    const cell = row.querySelector(':scope > div');
-    if (!cell || !cell.textContent.trim()) return;
+    const cells = [...row.querySelectorAll(':scope > div')];
+    if (!cells.length || !cells.some((c) => c.textContent.trim())) return;
 
     const item = document.createElement('div');
     item.classList.add('longform-item');
@@ -33,8 +33,32 @@ export default function decorate(block) {
 
     const content = document.createElement('div');
     content.classList.add('longform-content');
-    while (cell.firstChild) {
-      content.appendChild(cell.firstChild);
+
+    if (cells.length > 1) {
+      const columns = document.createElement('div');
+      columns.classList.add('longform-columns');
+
+      const hasImage = cells.map((c) => !!c.querySelector('picture, img'));
+      const imageCount = hasImage.filter(Boolean).length;
+
+      if (cells.length === 2 && imageCount === 1) {
+        columns.style.gridTemplateColumns = hasImage.map((img) => (img ? '1fr' : '2fr')).join(' ');
+      } else {
+        columns.style.gridTemplateColumns = `repeat(${cells.length}, 1fr)`;
+      }
+
+      cells.forEach((cell) => {
+        const col = document.createElement('div');
+        col.classList.add('longform-col');
+        while (cell.firstChild) col.appendChild(cell.firstChild);
+        columns.appendChild(col);
+      });
+
+      content.appendChild(columns);
+    } else {
+      while (cells[0].firstChild) {
+        content.appendChild(cells[0].firstChild);
+      }
     }
 
     item.appendChild(numberEl);

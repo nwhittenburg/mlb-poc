@@ -44,6 +44,20 @@
   margin-top: 20px;
 }
 
+/* Multi-column content within a numbered item */
+.longform.numbered .longform-columns {
+  display: grid;
+  gap: 8px;
+  align-items: center;
+  width: 100%;
+}
+
+.longform.numbered .longform-col img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
 /* Nested lists */
 .longform.numbered .longform-content ul,
 .longform.numbered .longform-content ol {
