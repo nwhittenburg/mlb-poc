@@ -1,3 +1,5 @@
+import { fetchPlaceholders } from '../../scripts/placeholders.js';
+
 /**
  * Check if a link points to a same-origin page
  */
@@ -48,7 +50,7 @@ async function fetchPageMeta(url) {
       title: getMeta('og:title'),
       description: getMeta('og:description'),
       image,
-      ctaText: getMeta('cta-text') || 'Learn more',
+      ctaText: getMeta('cta-text') || (await fetchPlaceholders()).ctaText || 'Learn more',
     };
   } catch {
     return null;
