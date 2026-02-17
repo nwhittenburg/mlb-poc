@@ -6,7 +6,7 @@ export default function decorate(el) {
   const backgroundColorClass = Array.from(el.classList).find((cls) => cls.startsWith('background-color-'));
   if (backgroundColorClass) {
     const color = backgroundColorClass.replace('background-color-', '');
-    el.style.setProperty('--card-bg-color', color);
+    el.style.setProperty('--teaser-bg-color', `var(--mlb-${color})`);
   }
 
   // Handle picture (image or background-image)
@@ -17,25 +17,25 @@ export default function decorate(el) {
 
     if (el.classList.contains('background-image')) {
       // Background image variation
-      if (img) el.style.setProperty('--card-bg-image', `url('${img.src}')`);
+      if (img) el.style.setProperty('--teaser-bg-image', `url('${img.src}')`);
       if (picDiv) picDiv.remove();
     } else {
       // Standard image - wrap and detect position
-      picDiv.classList.add('card-image');
+      picDiv.classList.add('teaser-image');
       const isImageRight = divs.indexOf(picDiv) > 0;
       if (isImageRight) picDiv.style.order = '2';
     }
   }
 
   // Decorate content
-  const contentDiv = wrapper.querySelector(':scope > div:not(.card-image)');
+  const contentDiv = wrapper.querySelector(':scope > div:not(.teaser-image)');
   if (contentDiv) {
-    contentDiv.classList.add('card-content');
+    contentDiv.classList.add('teaser-content');
 
     // Decorate CTA link
     const ctaPara = contentDiv.querySelector('p:last-of-type');
     if (ctaPara?.querySelector('a')) {
-      ctaPara.classList.add('card-cta');
+      ctaPara.classList.add('teaser-cta');
     }
   }
 
