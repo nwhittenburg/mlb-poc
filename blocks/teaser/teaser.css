@@ -8,7 +8,7 @@
 
   /* Two-column layout (image + content) */
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 2fr;
 
   /* Background image variation */
   &.background-image {
@@ -112,8 +112,8 @@
   /* Background color variation */
   &[class*="background-color-"] {
     background-color: var(--teaser-bg-color);
-    padding: 40px;
-    gap: 80px;
+    padding: var(--spacing-tokens-spacing-l);
+    gap: var(--spacing-tokens-spacing-xxl);
     align-items: center;
 
     .teaser-image {
