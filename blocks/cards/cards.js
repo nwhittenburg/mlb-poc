@@ -93,6 +93,7 @@ async function populateCardFromLink(cell, link) {
   const cta = document.createElement('a');
   cta.href = href;
   cta.textContent = meta.ctaText;
+  cta.classList.add('btn-primary');
   ctaP.appendChild(cta);
   cell.appendChild(ctaP);
 }
