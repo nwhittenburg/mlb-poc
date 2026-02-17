@@ -6,7 +6,7 @@ export default function decorate(el) {
   const backgroundColorClass = Array.from(el.classList).find((cls) => cls.startsWith('background-color-'));
   if (backgroundColorClass) {
     const color = backgroundColorClass.replace('background-color-', '');
-    el.style.setProperty('--teaser-bg-color', color);
+    el.style.setProperty('--teaser-bg-color', `var(--mlb-${color})`);
   }
 
   // Handle picture (image or background-image)
