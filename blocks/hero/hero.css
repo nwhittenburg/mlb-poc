@@ -1,11 +1,9 @@
 .hero {
-  --gradient-start: rgb(var(--color-dark-base) / 80%);
-  --gradient-end: rgb(var(--color-dark-base) / 20%);
   --default-min-height: 360px;
   --min-height: var(--default-min-height);
 
   position: relative;
-  color: #fff;
+  color: var(--mlb-white);
   overflow: hidden;
   margin-bottom: var(--spacing-tokens-spacing-xxl, 80px);
 
@@ -19,16 +17,6 @@
 
   &.full {
     --min-height: calc(100vh - var(--header-height));
-  }
-
-  &.light {
-    --gradient-start: rgb(var(--color-light-base) / 80%);
-
-    color: var(--color-dark);
-  }
-
-  &.dark {
-    color: var(--color-light);
   }
 
   &.hero-text-start {
@@ -66,6 +54,13 @@
       width: 100%;
       height: 100%;
     }
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: color-mix(in srgb, var(--mlb-black) 55%, transparent);
+    }
   }
 
   .hero-foreground {
@@ -76,7 +71,6 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    background: linear-gradient(90deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
 
     img {
       max-height: 56px;
@@ -120,17 +114,22 @@
 
     .hero-heading {
       margin: 0;
+
+      /* MLB/Heading XXXL - D */
       font-family: "HEX Franklin MLB Condensed";
-      font-size: var(--typography-heading-2xl, 44px);
-      font-weight: 700;
-      line-height: 1.25;
+      font-size: 64px;
+      font-style: normal;
+      font-weight: 600;
+      line-height: 150%; /* 96px */
+      margin-bottom: var(--spacing-tokens-spacing-xs, 16px);
+      text-transform: uppercase;
     }
 
     .hero-body {
-      margin: var(--spacing-tokens-spacing-s, 24px) 0 0 0;
-      font-size: 22px;
+
+      /* MLB/Body XXL */
+      font-size: var(--body-font-size-xl);
       font-weight: 400;
-      line-height: 1.5;
     }
 
     .button-container {
@@ -143,7 +142,7 @@
       gap: 8px;
       padding: 12px 24px 14px;
       background-color: #3b63fb;
-      color: white;
+      color: var(--mlb-white);
       font-size: 17px;
       font-weight: 700;
       line-height: 21px;
@@ -185,12 +184,6 @@
       background: #111;
     }
 
-    &.light {
-      .hero-foreground {
-        background: #f9f9f9;
-      }
-    }
-
     &.hero-text-start {
       img {
         object-position: 80% 50%;
@@ -217,7 +210,6 @@
     .hero-foreground {
       max-width: var(--grid-container-width);
       margin: 0 auto;
-      background: unset;
 
       /* Only use grid if there are 2+ columns */
       &:has(> *:nth-child(2)) {
@@ -243,10 +235,6 @@
         > div {
           position: absolute;
         }
-      }
-
-      .hero-foreground {
-        background: unset;
       }
 
       &.hero-text-start {
