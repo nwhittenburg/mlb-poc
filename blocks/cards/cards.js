@@ -1,3 +1,102 @@
+/**
+ * Check if a link points to a same-origin page
+ */
+function isPageLink(link) {
+  try {
+    const url = new URL(link.href, window.location.origin);
+    return url.origin === window.location.origin;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Return the link if the cell contains only a same-origin page link
+ */
+function getLinkOnlyCell(cell) {
+  const links = cell.querySelectorAll('a');
+  if (links.length !== 1) return null;
+  const link = links[0];
+  if (cell.querySelector('picture, img')) return null;
+  return isPageLink(link) ? link : null;
+}
+
+/**
+ * Fetch page metadata from a same-origin URL
+ */
+async function fetchPageMeta(url) {
+  try {
+    const resp = await fetch(url);
+    if (!resp.ok) return null;
+    const html = await resp.text();
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+
+    const getMeta = (name) => {
+      const meta = doc.querySelector(`meta[property="${name}"], meta[name="${name}"]`);
+      return meta?.content || '';
+    };
+
+    let image = getMeta('og:image');
+    if (!image) {
+      const firstImg = doc.querySelector('main img');
+      if (firstImg) {
+        image = new URL(firstImg.getAttribute('src'), url).href;
+      }
+    }
+
+    return {
+      title: getMeta('og:title'),
+      description: getMeta('og:description'),
+      image,
+      ctaText: getMeta('cta-text') || 'Learn more',
+    };
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Replace a link-only cell with card content from page metadata
+ */
+async function populateCardFromLink(cell, link) {
+  const meta = await fetchPageMeta(link.href);
+  if (!meta) return;
+
+  const { href } = link;
+  cell.innerHTML = '';
+
+  if (meta.image) {
+    const p = document.createElement('p');
+    const picture = document.createElement('picture');
+    const img = document.createElement('img');
+    img.src = meta.image;
+    img.alt = meta.title || '';
+    img.loading = 'lazy';
+    picture.appendChild(img);
+    p.appendChild(picture);
+    cell.appendChild(p);
+  }
+
+  if (meta.title) {
+    const h3 = document.createElement('h3');
+    h3.textContent = meta.title;
+    cell.appendChild(h3);
+  }
+
+  if (meta.description) {
+    const p = document.createElement('p');
+    p.textContent = meta.description;
+    cell.appendChild(p);
+  }
+
+  const ctaP = document.createElement('p');
+  const cta = document.createElement('a');
+  cta.href = href;
+  cta.textContent = meta.ctaText;
+  ctaP.appendChild(cta);
+  cell.appendChild(ctaP);
+}
+
 function decorateMultiCard(el) {
   const wrapper = el.querySelector(':scope > div');
   const cols = [...wrapper.querySelectorAll(':scope > div')];
@@ -46,9 +145,21 @@ function decorateMultiCard(el) {
   el.remove();
 }
 
-export default function decorate(el) {
+export default async function decorate(el) {
   const wrapper = el.querySelector(':scope > div');
   const divs = Array.from(wrapper.querySelectorAll(':scope > div'));
+
+  // Populate link-only cells from page metadata
+  const linkPopulations = divs
+    .map((div) => {
+      const link = getLinkOnlyCell(div);
+      return link ? populateCardFromLink(div, link) : null;
+    })
+    .filter(Boolean);
+
+  if (linkPopulations.length > 0) {
+    await Promise.all(linkPopulations);
+  }
 
   // Auto-detect multi-column cards (3+ columns, or 2+ with hinting)
   const isHinting = el.classList.contains('hinting');
