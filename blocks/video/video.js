@@ -18,6 +18,35 @@ function getPosterUrl(uuid) {
 }
 
 /**
+ * Loads Vidyard script if not already loaded
+ */
+function ensureVidyardScript() {
+  return new Promise((resolve) => {
+    if (window.vidyardEmbed) {
+      resolve(window.vidyardEmbed);
+    } else if (window.onVidyardAPIPromise) {
+      window.onVidyardAPIPromise.then(resolve);
+    } else {
+      // Store promise for other blocks to reuse
+      window.onVidyardAPIPromise = new Promise((res) => {
+        window.onVidyardAPI = (vyApi) => {
+          res(vyApi);
+        };
+      });
+      
+      // Load Vidyard script
+      const script = document.createElement('script');
+      script.src = 'https://play.vidyard.com/embed/v4.js';
+      script.type = 'text/javascript';
+      script.async = true;
+      document.head.appendChild(script);
+      
+      window.onVidyardAPIPromise.then(resolve);
+    }
+  });
+}
+
+/**
  * Creates a single video element using Vidyard image embed
  * @param {string} videoUrl - The video URL
  * @param {Element} posterImage - Optional poster image element
@@ -56,6 +85,7 @@ function createVideoItem(videoUrl, posterImage, videoTitle) {
   placeholderImg.style.maxWidth = '100%';
   placeholderImg.style.display = 'block';
   placeholderImg.alt = videoTitle || 'Video player';
+  placeholderImg.loading = 'lazy';
 
   videoContainer.appendChild(placeholderImg);
   videoItem.appendChild(videoContainer);
@@ -140,15 +170,21 @@ export default async function decorate(block) {
   block.innerHTML = '';
   block.appendChild(videoGrid);
 
-  // Render Vidyard players in this block
-  if (window.vidyardEmbed) {
-    window.vidyardEmbed.api.renderDOMPlayers(block);
-  } else if (window.onVidyardAPI) {
-    // API callback already set, will render when ready
-  } else {
-    // Set up callback for when Vidyard API loads
-    window.onVidyardAPI = (vyApi) => {
-      vyApi.api.renderDOMPlayers(block);
-    };
-  }
+  // Load Vidyard script only when video block is in view
+  // Use Intersection Observer to defer script load until needed
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        // Unobserve so we only load once
+        observer.unobserve(entry.target);
+        
+        // Load Vidyard and render players
+        ensureVidyardScript().then((vyApi) => {
+          vyApi.api.renderDOMPlayers(block);
+        });
+      }
+    });
+  }, { rootMargin: '100px' });
+
+  observer.observe(block);
 }
