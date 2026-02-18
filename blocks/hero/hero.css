@@ -269,7 +269,7 @@
     .hero-foreground {
       &:has(> *:nth-child(2)) {
         display: grid;
-        grid-template-columns: 40% 40%;
+        grid-template-columns: 45% 45%;
         justify-content: space-between;
       }
 
