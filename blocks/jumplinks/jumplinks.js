@@ -32,7 +32,7 @@ function createJumplink(heading) {
 }
 
 function getPageHeadings() {
-  const headings = [...document.querySelectorAll('main h1, main h2, main h3')];
+  const headings = [...document.querySelectorAll('main h2')];
   // Exclude headings from hero section
   return headings.filter((heading) => !heading.closest('.hero'));
 }
