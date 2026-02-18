@@ -13,22 +13,55 @@ function isCurrentPage(url) {
   }
 }
 
-function createJumplink(heading) {
+let navigating = false;
+let navTimer = null;
+
+function createJumplink(heading, block) {
   if (!heading.id) heading.id = toId(heading.textContent);
-  
+
   const link = document.createElement('a');
   link.href = `#${heading.id}`;
   link.textContent = heading.textContent.trim();
   link.className = 'jumplinks-link';
   link.dataset.headingId = heading.id;
-  
+
   link.onclick = (e) => {
     e.preventDefault();
+
+    // Lock scroll spy and set final state immediately
+    navigating = true;
+    clearTimeout(navTimer);
+    setActiveById(block, heading.id);
+
     heading.scrollIntoView({ behavior: 'smooth', block: 'start' });
     window.history.pushState(null, '', `#${heading.id}`);
+
+    // Unlock after scroll settles
+    navTimer = setTimeout(() => { navigating = false; }, 800);
   };
-  
+
   return link;
+}
+
+function setActiveById(block, headingId) {
+  const headings = getPageHeadings();
+  const groups = groupHeadings(headings);
+
+  let activeH2Id = null;
+  for (const group of groups) {
+    if (group.h2.id === headingId || group.h3s.some((h) => h.id === headingId)) {
+      activeH2Id = group.h2.id;
+      break;
+    }
+  }
+
+  block.querySelectorAll('.jumplinks-link').forEach((link) => {
+    link.classList.toggle('active', link.dataset.headingId === headingId);
+  });
+
+  block.querySelectorAll('.jumplinks-headings > li').forEach((li) => {
+    li.classList.toggle('expanded', li.dataset.h2Id === activeH2Id);
+  });
 }
 
 function getPageHeadings() {
@@ -53,6 +86,8 @@ function groupHeadings(headings) {
 }
 
 function updateActiveLink(block) {
+  if (navigating) return;
+
   const headings = getPageHeadings();
   if (!headings.length) return;
 
@@ -65,23 +100,7 @@ function updateActiveLink(block) {
     }
   }
 
-  // Determine which H2 group is active
-  const groups = groupHeadings(headings);
-  let activeH2Id = null;
-  for (const group of groups) {
-    if (group.h2 === activeHeading || group.h3s.includes(activeHeading)) {
-      activeH2Id = group.h2.id;
-      break;
-    }
-  }
-
-  block.querySelectorAll('.jumplinks-link').forEach((link) => {
-    link.classList.toggle('active', activeHeading?.id === link.dataset.headingId);
-  });
-
-  block.querySelectorAll('.jumplinks-headings > li').forEach((li) => {
-    li.classList.toggle('expanded', li.dataset.h2Id === activeH2Id);
-  });
+  setActiveById(block, activeHeading.id);
 }
 
 function setupScrollSpy(block) {
@@ -108,7 +127,7 @@ function setupScrollSpy(block) {
   });
 }
 
-function processNavigation(navList) {
+function processNavigation(navList, block) {
   const headings = getPageHeadings();
   const groups = groupHeadings(headings);
 
@@ -128,14 +147,14 @@ function processNavigation(navList) {
           const li = document.createElement('li');
           if (!group.h2.id) group.h2.id = toId(group.h2.textContent);
           li.dataset.h2Id = group.h2.id;
-          li.appendChild(createJumplink(group.h2));
+          li.appendChild(createJumplink(group.h2, block));
 
           if (group.h3s.length) {
             const subUl = document.createElement('ul');
             subUl.className = 'jumplinks-subheadings';
             group.h3s.forEach((h3) => {
               const subLi = document.createElement('li');
-              subLi.appendChild(createJumplink(h3));
+              subLi.appendChild(createJumplink(h3, block));
               subUl.appendChild(subLi);
             });
             li.appendChild(subUl);
@@ -149,7 +168,7 @@ function processNavigation(navList) {
     } else {
       link.classList.add('jumplinks-external');
       const nested = item.querySelector(':scope > ul');
-      if (nested) processNavigation(nested);
+      if (nested) processNavigation(nested, block);
     }
   });
 }
@@ -186,7 +205,7 @@ export default async function decorate(block) {
     nav.setAttribute('aria-label', 'Jump to section');
     
     const ul = navList.cloneNode(true);
-    processNavigation(ul);
+    processNavigation(ul, block);
     nav.appendChild(ul);
     
     block.append(header, nav);
