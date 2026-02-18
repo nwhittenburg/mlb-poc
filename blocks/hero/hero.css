@@ -205,9 +205,19 @@
   }
 
   &.split-view {
+    .hero-foreground {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .fg-text {
+      max-width: 500px;
+    }
+
     .fg-image {
       display: flex;
       justify-content: flex-end;
+      flex: 1;
 
       picture {
         display: block;
@@ -225,6 +235,13 @@
         height: 100%;
         display: block;
         object-fit: cover;
+      }
+    }
+
+    @media (width >= 900px) {
+      .hero-foreground {
+        flex-direction: row;
+        gap: var(--spacing-xxl, 48px);
       }
     }
   }
