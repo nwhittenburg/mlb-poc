@@ -206,22 +206,25 @@
 
   &.split-view {
     .fg-image {
-      width: var(--grid-container-width);
-      margin: 0 auto;
-      overflow: hidden;
-      border: 4px solid var(--mlb-white);
-      border-radius: 40px;
+      display: flex;
+      justify-content: flex-end;
 
       picture {
         display: block;
+        max-width: 550px;
+        width: 100%;
+        aspect-ratio: 3/2;
+        overflow: hidden;
+        border: 4px solid var(--mlb-white);
+        border-radius: 40px;
       }
 
       img {
         max-height: unset;
         width: 100%;
+        height: 100%;
         display: block;
         object-fit: cover;
-        aspect-ratio: 3/2;
       }
     }
   }
