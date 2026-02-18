@@ -71,6 +71,8 @@ function decorateForeground(fg) {
       } else {
         child.closest('.hero').classList.add('hero-text-end');
       }
+    } else if (child.querySelector('picture')) {
+      child.classList.add('fg-image');
     }
   }
 }
