@@ -93,18 +93,19 @@
 .jumplinks-subheadings a {
   font-size: 14px;
   font-weight: 400;
-  padding: 6px var(--spacing-s) 6px 36px;
+  padding: 6px 12px;
+  margin: 2px 8px 2px 16px;
   opacity: 0.7;
   border-left: none;
+  border-radius: 4px;
+  background: transparent;
+  transition: background 0.25s ease, opacity 0.25s ease;
 }
 
 .jumplinks-subheadings a.active {
   opacity: 1;
   font-weight: 600;
   background: var(--mlb-white, #fff);
-  border-radius: 4px;
-  margin: 2px 8px 2px 16px;
-  padding: 6px 12px;
 }
 
 @media (max-width: 900px) {

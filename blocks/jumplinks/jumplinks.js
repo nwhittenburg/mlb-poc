@@ -14,7 +14,17 @@ function isCurrentPage(url) {
 }
 
 let navigating = false;
-let navTimer = null;
+let scrollIdleTimer = null;
+let scrollUnlockHandler = null;
+
+function unlockOnScrollIdle() {
+  clearTimeout(scrollIdleTimer);
+  scrollIdleTimer = setTimeout(() => {
+    navigating = false;
+    window.removeEventListener('scroll', scrollUnlockHandler);
+    scrollUnlockHandler = null;
+  }, 150);
+}
 
 function createJumplink(heading, block) {
   if (!heading.id) heading.id = toId(heading.textContent);
@@ -28,16 +38,17 @@ function createJumplink(heading, block) {
   link.onclick = (e) => {
     e.preventDefault();
 
-    // Lock scroll spy and set final state immediately
     navigating = true;
-    clearTimeout(navTimer);
+    clearTimeout(scrollIdleTimer);
     setActiveById(block, heading.id);
+
+    // Unlock only after scrolling has fully stopped
+    if (scrollUnlockHandler) window.removeEventListener('scroll', scrollUnlockHandler);
+    scrollUnlockHandler = unlockOnScrollIdle;
+    window.addEventListener('scroll', scrollUnlockHandler, { passive: true });
 
     heading.scrollIntoView({ behavior: 'smooth', block: 'start' });
     window.history.pushState(null, '', `#${heading.id}`);
-
-    // Unlock after scroll settles
-    navTimer = setTimeout(() => { navigating = false; }, 800);
   };
 
   return link;
