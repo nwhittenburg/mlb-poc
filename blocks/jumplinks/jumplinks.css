@@ -72,6 +72,33 @@
   border-left-color: var(--mlb-secondary-blue-20);
 }
 
+/* Nested H3 subheadings */
+.jumplinks-subheadings {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.jumplinks-headings > li.expanded > .jumplinks-subheadings {
+  max-height: 500px;
+}
+
+.jumplinks-subheadings a {
+  font-size: 14px;
+  font-weight: 400;
+  padding: 6px var(--spacing-s) 6px 36px;
+  opacity: 0.75;
+  border-left: 2px solid transparent;
+  margin-left: 22px;
+}
+
+.jumplinks-subheadings a.active {
+  opacity: 1;
+  color: var(--mlb-secondary-blue-20);
+  font-weight: 600;
+  border-left-color: var(--mlb-secondary-blue-20);
+}
+
 @media (max-width: 900px) {
   .jumplinks {
     max-height: none;

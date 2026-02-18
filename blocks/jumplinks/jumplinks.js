@@ -32,31 +32,55 @@ function createJumplink(heading) {
 }
 
 function getPageHeadings() {
-  const headings = [...document.querySelectorAll('main h2')];
-  // Exclude headings from hero section
+  const headings = [...document.querySelectorAll('main h2, main h3')];
   return headings.filter((heading) => !heading.closest('.hero'));
+}
+
+function groupHeadings(headings) {
+  const groups = [];
+  let currentH2 = null;
+
+  headings.forEach((h) => {
+    if (h.tagName === 'H2') {
+      currentH2 = { h2: h, h3s: [] };
+      groups.push(currentH2);
+    } else if (h.tagName === 'H3' && currentH2) {
+      currentH2.h3s.push(h);
+    }
+  });
+
+  return groups;
 }
 
 function updateActiveLink(block) {
   const headings = getPageHeadings();
   if (!headings.length) return;
-  
-  // Calculate scroll position accounting for header
+
   const scrollPos = window.scrollY + window.innerHeight / 3;
-  
-  // Find the last heading that's passed the scroll threshold
-  // This gives us the heading currently being viewed
+
   let activeHeading = headings[0];
-  
   for (const heading of headings) {
     if (heading.offsetTop <= scrollPos) {
       activeHeading = heading;
     }
   }
-  
-  // Update active state on all links
+
+  // Determine which H2 group is active
+  const groups = groupHeadings(headings);
+  let activeH2Id = null;
+  for (const group of groups) {
+    if (group.h2 === activeHeading || group.h3s.includes(activeHeading)) {
+      activeH2Id = group.h2.id;
+      break;
+    }
+  }
+
   block.querySelectorAll('.jumplinks-link').forEach((link) => {
     link.classList.toggle('active', activeHeading?.id === link.dataset.headingId);
+  });
+
+  block.querySelectorAll('.jumplinks-headings > li').forEach((li) => {
+    li.classList.toggle('expanded', li.dataset.h2Id === activeH2Id);
   });
 }
 
@@ -86,23 +110,40 @@ function setupScrollSpy(block) {
 
 function processNavigation(navList) {
   const headings = getPageHeadings();
-  
+  const groups = groupHeadings(headings);
+
   navList.querySelectorAll(':scope > li').forEach((item) => {
     const link = item.querySelector(':scope > a');
     if (!link) return;
-    
+
     if (isCurrentPage(link.href)) {
       link.classList.add('jumplinks-current');
       item.querySelector(':scope > ul')?.remove();
-      
-      if (headings.length) {
+
+      if (groups.length) {
         const ul = document.createElement('ul');
         ul.className = 'jumplinks-headings';
-        headings.forEach((h) => {
+
+        groups.forEach((group) => {
           const li = document.createElement('li');
-          li.appendChild(createJumplink(h));
+          if (!group.h2.id) group.h2.id = toId(group.h2.textContent);
+          li.dataset.h2Id = group.h2.id;
+          li.appendChild(createJumplink(group.h2));
+
+          if (group.h3s.length) {
+            const subUl = document.createElement('ul');
+            subUl.className = 'jumplinks-subheadings';
+            group.h3s.forEach((h3) => {
+              const subLi = document.createElement('li');
+              subLi.appendChild(createJumplink(h3));
+              subUl.appendChild(subLi);
+            });
+            li.appendChild(subUl);
+          }
+
           ul.appendChild(li);
         });
+
         item.appendChild(ul);
       }
     } else {
