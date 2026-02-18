@@ -208,6 +208,10 @@ a {
 /* sections */
 .section {
   display: block;
+  
+  &:has(.hero) {
+    margin-bottom: 80px;
+  }
 
   > .default-content {
     max-width: var(--grid-container-width);
