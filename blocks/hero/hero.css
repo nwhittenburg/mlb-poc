@@ -273,6 +273,13 @@
       }
     }
 
+    &.split-view {
+      .hero-foreground,
+      .hero-foreground:has(> *:nth-child(2)) {
+        display: flex;
+      }
+    }
+
     &.stack {
       .hero-background {
         > div {
