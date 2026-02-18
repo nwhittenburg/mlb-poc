@@ -56,9 +56,16 @@ async function fetchPageMeta(url) {
       }
     }
 
+    const title = getMeta('og:title')
+      || doc.querySelector('h1')?.textContent?.trim()
+      || '';
+    const description = getMeta('og:description')
+      || doc.querySelector('main p')?.textContent?.trim()
+      || '';
+
     return {
-      title: getMeta('og:title'),
-      description: getMeta('og:description'),
+      title,
+      description,
       image,
       ctaText: getMeta('cta-text') || (await fetchPlaceholders()).ctaText || 'Learn more',
     };
@@ -116,6 +123,8 @@ function decorateMultiCard(el, allCells, maxCols) {
   const cappedCols = Math.min(maxCols, 4);
 
   allCells.forEach((col) => {
+    if (!col.textContent.trim() && !col.querySelector('picture, img, video')) return;
+
     const card = document.createElement('div');
     [...el.classList].forEach((cls) => card.classList.add(cls));
 

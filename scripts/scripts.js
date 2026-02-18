@@ -35,7 +35,12 @@ const decorateArea = ({ area = document }) => {
   eagerLoad(area, 'img');
 };
 
+function cleanEmptyMetadata() {
+  document.head.querySelectorAll('meta[content=""]').forEach((meta) => meta.remove());
+}
+
 async function loadPage() {
+  cleanEmptyMetadata();
   setConfig({ hostnames, locales, widgets, components, decorateArea });
   await loadArea();
 }
