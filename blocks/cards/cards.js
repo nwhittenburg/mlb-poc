@@ -13,14 +13,24 @@ function isPageLink(link) {
 }
 
 /**
- * Return the link if the cell contains only a same-origin page link
+ * Return the link if the cell contains only a same-origin page link or a local path
  */
 function getLinkOnlyCell(cell) {
-  const links = cell.querySelectorAll('a');
-  if (links.length !== 1) return null;
-  const link = links[0];
   if (cell.querySelector('picture, img')) return null;
-  return isPageLink(link) ? link : null;
+
+  const links = cell.querySelectorAll('a');
+  if (links.length === 1) return isPageLink(links[0]) ? links[0] : null;
+  if (links.length > 1) return null;
+
+  const text = cell.textContent.trim();
+  if (text.startsWith('/') && !text.includes(' ')) {
+    const link = document.createElement('a');
+    link.href = text;
+    link.textContent = text;
+    return link;
+  }
+
+  return null;
 }
 
 /**
