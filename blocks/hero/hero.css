@@ -227,6 +227,11 @@
     }
   }
 
+  &.bright {
+    .hero-background::after {
+      background: none;
+    }
+  }
 }
 
 @media (width >= 600px) {
