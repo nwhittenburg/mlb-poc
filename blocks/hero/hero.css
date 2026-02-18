@@ -59,7 +59,6 @@
       content: "";
       position: absolute;
       inset: 0;
-      background: color-mix(in srgb, var(--mlb-black) 55%, transparent);
     }
   }
 
@@ -227,9 +226,9 @@
     }
   }
 
-  &.bright {
+  &.overlay {
     .hero-background::after {
-      background: none;
+      background: color-mix(in srgb, var(--mlb-black) 55%, transparent);
     }
   }
 }
