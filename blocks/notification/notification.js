@@ -1,8 +1,8 @@
 /**
- * Loads and decorates the tooltip block
+ * Loads and decorates the notification block
  * Supports single-column (image + content in one cell)
  * and two-column (image in first cell, content in second) authoring
- * @param {Element} el The tooltip block element
+ * @param {Element} el The notification block element
  */
 export default function decorate(el) {
   const wrapper = el.querySelector(':scope > div');
@@ -16,7 +16,7 @@ export default function decorate(el) {
   if (pic) {
     const picParent = pic.parentElement;
     const imgDiv = document.createElement('div');
-    imgDiv.classList.add('tooltip-image');
+    imgDiv.classList.add('notification-image');
     imgDiv.appendChild(pic);
     if (picParent.tagName === 'P' && !picParent.textContent.trim()) {
       picParent.remove();
@@ -25,7 +25,7 @@ export default function decorate(el) {
   }
 
   if (contentDiv) {
-    contentDiv.classList.add('tooltip-content');
+    contentDiv.classList.add('notification-content');
     el.insertBefore(contentDiv, wrapper);
   }
 
