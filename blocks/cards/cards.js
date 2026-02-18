@@ -110,13 +110,12 @@ async function populateCardFromLink(cell, link) {
   cell.appendChild(ctaP);
 }
 
-function decorateMultiCard(el) {
-  const wrapper = el.querySelector(':scope > div');
-  const cols = [...wrapper.querySelectorAll(':scope > div')];
+function decorateMultiCard(el, allCells, maxCols) {
   const { parentElement } = el;
   const isHinting = el.classList.contains('hinting');
+  const cappedCols = Math.min(maxCols, 4);
 
-  cols.forEach((col) => {
+  allCells.forEach((col) => {
     const card = document.createElement('div');
     [...el.classList].forEach((cls) => card.classList.add(cls));
 
@@ -146,12 +145,12 @@ function decorateMultiCard(el) {
     parentElement.insertBefore(card, el);
   });
 
-  // Configure hinting on wrapper based on column count
+  parentElement.style.setProperty('--card-columns', cappedCols);
+
   if (isHinting) {
     parentElement.classList.add('hinting');
-    const count = cols.length;
-    if (count <= 2) parentElement.classList.add('hint-sm');
-    else if (count === 3) parentElement.classList.add('hint-md');
+    if (cappedCols <= 2) parentElement.classList.add('hint-sm');
+    else if (cappedCols === 3) parentElement.classList.add('hint-md');
     else parentElement.classList.add('hint-lg');
   }
 
@@ -159,11 +158,12 @@ function decorateMultiCard(el) {
 }
 
 export default async function decorate(el) {
-  const wrapper = el.querySelector(':scope > div');
-  const divs = Array.from(wrapper.querySelectorAll(':scope > div'));
+  const rows = Array.from(el.querySelectorAll(':scope > div'));
+  const allCells = rows.flatMap((row) => Array.from(row.querySelectorAll(':scope > div')));
+  const maxCols = Math.max(1, ...rows.map((row) => row.querySelectorAll(':scope > div').length));
 
   // Populate link-only cells from page metadata
-  const linkPopulations = divs
+  const linkPopulations = allCells
     .map((div) => {
       const link = getLinkOnlyCell(div);
       return link ? populateCardFromLink(div, link) : null;
@@ -174,13 +174,14 @@ export default async function decorate(el) {
     await Promise.all(linkPopulations);
   }
 
-  // Multi-column cards (2+): split into individual card siblings
-  if (divs.length >= 2) {
-    decorateMultiCard(el);
+  // Multi-card: split all cells into individual card siblings
+  if (allCells.length >= 2) {
+    decorateMultiCard(el, allCells, maxCols);
     return;
   }
 
-  // Single-column card: decorate in place
+  // Single card: decorate in place
+  const wrapper = rows[0];
   const pic = el.querySelector('picture');
   if (pic) {
     const picParent = pic.parentElement;
