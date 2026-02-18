@@ -1,0 +1,41 @@
+.video {
+  width: 100%;
+}
+
+.video .video-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-xl);
+}
+
+@media (min-width: 900px) {
+  .video .video-grid.video-grid-multi {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Multi-grid video items: white background with border-radius */
+.video .video-grid.video-grid-multi .video-item {
+  background-color: var(--mlb-white);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.video .video-container {
+  width: 100%;
+  overflow: hidden;
+  background-color: #000;
+}
+
+.video .video-container img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
+
+.video .video-title {
+  font-size: var(--body-font-size-m);
+  padding: 16px;
+  margin: 0;
+}

@@ -12,11 +12,12 @@ const locales = {
   '/zh': { lang: 'zh' },
 };
 
-// Widget patterns to look for
+// Widget patterns to look for (video block handles both YouTube and Vidyard)
 const widgets = [
   { fragment: '/fragments/' },
   { schedule: '/schedules/' },
-  { youtube: 'https://www.youtube' },
+  { video: 'vidyard.com' },
+  { video: 'https://www.youtube' },
 ];
 
 // Blocks with self-managed styles
