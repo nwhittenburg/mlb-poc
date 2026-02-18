@@ -71,7 +71,7 @@ function decorateForeground(fg) {
       } else {
         child.closest('.hero').classList.add('hero-text-end');
       }
-    } else if (child.querySelector('picture')) {
+    } else if (child.querySelector('picture, video, a[href*=".mp4"]')) {
       child.classList.add('fg-image');
     }
   }
