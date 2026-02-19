@@ -412,10 +412,70 @@ div[data-status] {
   display: none;
 }
 
+/* Ensure search results are always visible with white background */
+header .search-results {
+  display: block !important;
+  background: #ffffff !important;
+}
+
+header .search-results-container {
+  display: block !important;
+  background: #ffffff !important;
+}
+
 aem-sidekick {
   display: none;
 
   &[open="true"].is-ready {
     display: block;
   }
+}
+
+/* Search Results Styles */
+.search-results {
+  padding: var(--spacing-xl) 0;
+}
+
+.search-results h1 {
+  margin-bottom: var(--spacing-xl);
+  color: var(--mlb-text-color);
+}
+
+.search-results-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+.search-result-item {
+  padding-bottom: var(--spacing-l);
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.search-result-item:last-child {
+  border-bottom: none;
+}
+
+.search-result-category {
+  font-size: var(--body-font-size-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--color-gray-500);
+  margin: 0 0 var(--spacing-s);
+}
+
+.search-result-item h3 {
+  margin: 0;
+  font-size: var(--heading-font-size-m);
+  line-height: var(--heading-line-height);
+}
+
+.search-result-item h3 a {
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.search-result-item h3 a:hover {
+  color: var(--mlb-primary-red) !important;
 }

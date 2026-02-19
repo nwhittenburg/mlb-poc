@@ -12,6 +12,37 @@ function closeAllMenus() {
   }
 }
 
+function closeSearch() {
+  const header = document.body.querySelector('header');
+  if (header && window.innerWidth >= 900) {
+    header.classList.remove('search-open');
+  }
+}
+
+function docCloseSearch(e) {
+  if (e.target.closest('header .search-section') || e.target.closest('header .search-button')) return;
+  closeSearch();
+}
+
+function toggleSearch() {
+  const header = document.body.querySelector('header');
+  if (!header || window.innerWidth < 900) return;
+
+  const isOpen = header.classList.contains('search-open');
+  
+  if (isOpen) {
+    closeSearch();
+    return;
+  }
+
+  header.classList.add('search-open');
+  const searchInput = header.querySelector('.search-input');
+  if (searchInput) {
+    setTimeout(() => searchInput.focus(), 100);
+  }
+  document.addEventListener('click', docCloseSearch);
+}
+
 function docClose(e) {
   if (e.target.closest('header')) return;
   closeAllMenus();
@@ -119,13 +150,94 @@ function decorateNavSection(section) {
 
 async function decorateActionSection(section) {
   section.classList.add('actions-section');
+  
+  // Look for search icon and make it a clickable button
+  const searchIcon = section.querySelector('.icon-search');
+  if (searchIcon) {
+    const searchButton = document.createElement('button');
+    searchButton.className = 'search-button';
+    searchButton.setAttribute('aria-label', 'Search');
+    searchButton.setAttribute('type', 'button');
+    searchButton.appendChild(searchIcon.cloneNode(true));
+    searchIcon.parentNode.replaceChild(searchButton, searchIcon);
+    searchButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      toggleSearch();
+    });
+  }
+}
+
+  async function handleSearchSubmit(form) {
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const searchInput = form.querySelector('.search-input');
+    const searchTerm = searchInput.value.trim();
+    
+    if (searchTerm && searchTerm.length >= 2) {
+      try {
+        const { performSearch } = await import('/blocks/search-results/search-results.js');
+        await performSearch(searchTerm);
+      } catch (error) {
+        console.error('Failed to load search results:', error);
+      }
+    }
+  });
+}
+
+async function createSearchSection() {
+  const searchSection = document.createElement('div');
+  searchSection.className = 'search-section';
+  
+  const form = document.createElement('form');
+  form.className = 'search-form';
+  
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.id = 'search-input';
+  input.className = 'search-input';
+  input.placeholder = 'Search';
+  input.setAttribute('aria-label', 'Search');
+  
+  const submitBtn = document.createElement('button');
+  submitBtn.type = 'submit';
+  submitBtn.className = 'search-submit';
+  submitBtn.setAttribute('aria-label', 'Submit search');
+  
+  try {
+    const iconResponse = await fetch('/img/icons/arrow.svg');
+    const iconSvg = await iconResponse.text();
+    submitBtn.innerHTML = iconSvg;
+    const svg = submitBtn.querySelector('svg');
+    if (svg) svg.classList.add('icon', 'icon-arrow');
+  } catch (e) {
+    submitBtn.innerHTML = '→';
+  }
+  
+  form.append(input, submitBtn);
+  searchSection.append(form);
+  
+  await handleSearchSubmit(form);
+  
+  return searchSection;
 }
 
 async function decorateHeader(fragment) {
   const sections = fragment.querySelectorAll(':scope > .section');
   if (sections[0]) decorateBrandSection(sections[0]);
   if (sections[1]) decorateNavSection(sections[1]);
-  if (sections[2]) decorateActionSection(sections[2]);
+  if (sections[2]) await decorateActionSection(sections[2]);
+  
+  const searchSection = await createSearchSection();
+  fragment.append(searchSection);
+  
+  // Create a close button for desktop header (top right)
+  const desktopCloseBtn = document.createElement('button');
+  desktopCloseBtn.type = 'button';
+  desktopCloseBtn.className = 'search-close search-close-desktop';
+  desktopCloseBtn.setAttribute('aria-label', 'Close search');
+  desktopCloseBtn.textContent = '×';
+  desktopCloseBtn.addEventListener('click', closeSearch);
+  fragment.append(desktopCloseBtn);
 }
 
 /**

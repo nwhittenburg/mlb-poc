@@ -45,11 +45,11 @@ header .header-content {
   display: grid;
   grid-template-areas:
     "brand"
+    "search"
     "nav"
     "actions";
-  grid-template-rows: minmax(var(--header-height), auto) auto 1fr;
-
-  /* min-height: 100%; */
+  grid-template-rows: minmax(var(--header-height), auto) auto auto 1fr;
+  max-height: 100vh;
 }
 
 /* Action Buttons */
@@ -294,6 +294,125 @@ header .brand-section .action-wrapper {
      }
 */
 
+/* Search Section - Mobile (always visible, appears above nav) */
+header .search-section {
+  grid-area: search;
+  display: none;
+  padding: 16px;
+  background: var(--mlb-primary-navy);
+  border-top: 1px solid rgb(255 255 255 / 10%);
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+header.is-mobile-open .search-section {
+  display: block;
+}
+
+header .search-form {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+header .search-input {
+  flex: 1;
+  padding: 12px 40px 12px 40px;
+  border: none;
+  border-radius: 24px;
+  font-size: var(--body-font-size-m);
+  font-family: var(--font-family);
+  background-color: var(--mlb-white);
+  background-image: url('/img/icons/search-dark.svg');
+  background-position: 12px center;
+  background-size: 18px 18px;
+  background-repeat: no-repeat;
+  color: var(--mlb-text-color);
+}
+
+header .search-input::placeholder {
+  color: var(--color-gray-500);
+}
+
+header .search-input:focus {
+  outline: none;
+}
+
+header .search-submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  width: 48px;
+  height: 48px;
+  margin-left: -48px;
+  position: relative;
+  z-index: 1;
+}
+
+header .search-submit:hover {
+  opacity: 0.8;
+}
+
+header .search-submit svg.icon {
+  width: 48px;
+  height: 48px;
+}
+
+header .search-submit:hover {
+  opacity: 0.8;
+}
+
+header .search-submit svg.icon {
+  width: 48px;
+  height: 48px;
+  fill: #2968F7;
+}
+
+header .search-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  background: transparent;
+  border: none;
+  color: var(--mlb-white);
+  cursor: pointer;
+  font-size: 24px;
+  line-height: 1;
+  transition: opacity 0.2s ease;
+}
+
+header .search-close:hover {
+  opacity: 0.7;
+}
+
+/* Search Button - Hidden on mobile, shown on desktop */
+header .search-button {
+  display: none;
+}
+
+/* Mobile: Hide the extra close button - use hamburger close instead */
+header .search-close-desktop {
+  display: none;
+}
+
+/* Mobile: Hide close button inside search form */
+header .search-form .search-close {
+  display: none;
+}
+
+/* Desktop: Hide search button when search is open, show close button in header */
+@media (width >= 900px) {
+  header.search-open .search-button {
+    display: none !important;
+  }
+}
+
 header.is-mobile-open .header-content {
   height: auto;
   min-height: 100%;
@@ -498,6 +617,97 @@ header.is-mobile-open .main-nav-section {
 
   header .actions-section .block-content {
     border-bottom: none;
+  }
+
+  /* Desktop Search Button */
+  header .search-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    padding: 0;
+    background-color: transparent;
+    min-height: var(--header-height);
+    width: 48px;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+  }
+
+  header .search-button:hover {
+    opacity: 0.8;
+  }
+
+  header .search-button .icon-search {
+    width: 20px;
+    height: 20px;
+    fill: var(--mlb-white);
+  }
+
+  /* Desktop Close Button - Shows in top right when search is open */
+  header .search-close-desktop {
+    display: none;
+    position: absolute;
+    top: 48px;
+    right: 48px;
+    width: auto;
+    padding: 8px;
+    z-index: 102;
+  }
+
+  header.search-open .search-close-desktop {
+    display: flex;
+  }
+
+  /* Hide the close button inside search form on desktop */
+  header .search-form .search-close {
+    display: none;
+  }
+
+  /* Desktop Search Section */
+  header .search-section {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    padding: 24px 48px;
+    background: var(--mlb-primary-navy);
+    border-top: 1px solid rgb(255 255 255 / 10%);
+    box-shadow: 0 4px 20px rgb(0 0 0 / 15%);
+    z-index: 101;
+    max-height: 500px;
+    overflow-y: auto;
+  }
+
+  header.search-open .search-section {
+    display: block;
+  }
+
+  header .search-form {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  header .search-input {
+    padding: 16px 40px 16px 50px;
+    font-size: var(--body-font-size-l);
+    background-color: var(--mlb-white);
+    background-image: url('/img/icons/search-dark.svg');
+    background-position: 16px center;
+    background-size: 20px 20px;
+    background-repeat: no-repeat;
+  }
+
+  header .search-submit {
+    display: flex;
+    width: 56px;
+    height: 56px;
+    margin-left: -56px;
+  }
+
+  header .search-submit svg.icon {
+    width: 56px;
+    height: 56px;
   }
 
   /* Reset Mobile Open State on Desktop */
