@@ -1,0 +1,69 @@
+.latest-feed .latest-feed-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.latest-feed .latest-feed-entry {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  padding: var(--spacing-l) 0;
+  border-bottom: 1px solid #B6B6B6;
+}
+
+.latest-feed .latest-feed-entry:hover .latest-feed-title {
+  color: var(--mlb-secondary-blue-10);
+}
+
+.latest-feed .latest-feed-date {
+  display: block;
+  margin-bottom: var(--spacing-s);
+  color: var(--mlb-gray-30);
+  font-family: "HEX Franklin MLB Condensed";
+  font-size: var(--body-font-size-m);
+  font-weight: 700;
+  line-height: 125%;
+  text-transform: uppercase;
+}
+
+.latest-feed .latest-feed-title {
+  line-height: var(--heading-line-height);
+  margin: 0;
+  font-size: var(--heading-font-size-m);
+  font-weight: 600;
+  line-height: var(--heading-line-height);
+}
+
+.latest-feed .latest-feed-load-more {
+  display: flex;
+  justify-content: center;
+  padding-top: var(--spacing-xl);
+}
+
+.latest-feed .latest-feed-load-more[hidden] {
+  display: none;
+}
+
+.latest-feed .latest-feed-load-more button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-s);
+  background: var(--mlb-gray-40);
+  color: var(--mlb-white);
+  border: none;
+  border-radius: 100px;
+  padding: var(--spacing-m) var(--spacing-l);
+  font-size: var(--body-font-size-m);
+  font-weight: 700;
+  transition: background 0.2s ease;
+}
+
+.latest-feed .latest-feed-load-more button{
+  background-color: var(--mlb-black);
+}
+
+.latest-feed .latest-feed-load-more button svg {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+}

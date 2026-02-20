@@ -9,7 +9,6 @@ header {
   z-index: 100;
   min-height: var(--header-height);
   background: var(--mlb-primary-navy);
-  box-shadow: 0 2px 0 var(--mlb-primary-navy);
 }
 
 header svg.icon {
