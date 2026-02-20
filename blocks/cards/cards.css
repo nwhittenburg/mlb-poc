@@ -59,9 +59,13 @@
     justify-content: flex-end;
     padding-top: 16px;
 
-    a.btn-primary {
-      padding: 6px 18px;
-      font-size: 15px;
+    a {
+      text-decoration: none;
+
+      &.btn-primary {
+        padding: 6px 18px;
+        font-size: 15px;
+      }
     }
   }
 
@@ -72,6 +76,11 @@
     .card-cta {
       justify-content: center;
     }
+  }
+
+  /* Fit-image variation - contain image instead of covering */
+  &.fit-image .card-image img {
+    object-fit: contain;
   }
 
   /* Quiet variation */
@@ -87,25 +96,22 @@
 
 }
 
-/* Multi-card layouts in their wrapper */
+/* Multi-card grid driven by authored column count (--card-columns set by JS) */
 .section > .block-content:has(.cards + .cards):not(.hinting) {
   display: grid;
   gap: 32px;
   grid-template-columns: 1fr;
 
   @media (width >= 600px) {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(min(var(--card-columns, 3), 2), 1fr);
   }
 
   @media (width >= 900px) {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(min(var(--card-columns, 3), 3), 1fr);
   }
-}
 
-/* 4+ cards: extend to 4 columns at 1200px+ */
-.section > .block-content:has(.cards + .cards + .cards + .cards):not(.hinting) {
   @media (width >= 1200px) {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(min(var(--card-columns, 3), 4), 1fr);
   }
 }
 
