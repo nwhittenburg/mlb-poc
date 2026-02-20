@@ -3,4 +3,9 @@
   import('./utils/lazyhash.js');
   import('./utils/footer.js').then(({ default: footer }) => footer());
   import('../tools/sidekick/sidekick.js');
+
+  const searchCSS = document.createElement('link');
+  searchCSS.rel = 'stylesheet';
+  searchCSS.href = '/blocks/search-results/search-results.css';
+  document.head.appendChild(searchCSS);
 }());

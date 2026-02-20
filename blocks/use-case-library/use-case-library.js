@@ -39,7 +39,7 @@ function closeAllDropdowns(bar, except) {
   });
 }
 
-function createDropdown(label, key, options) {
+function createDropdown(label, key, options, ph) {
   const group = document.createElement('div');
   group.classList.add('use-case-library-filter');
 
@@ -59,7 +59,7 @@ function createDropdown(label, key, options) {
 
   const triggerText = document.createElement('span');
   triggerText.classList.add('ucl-dropdown-text');
-  triggerText.textContent = label;
+  triggerText.textContent = ph.all || 'All';
   trigger.appendChild(triggerText);
 
   const chevron = document.createElement('span');
@@ -76,7 +76,7 @@ function createDropdown(label, key, options) {
   allItem.setAttribute('role', 'option');
   allItem.setAttribute('aria-selected', 'true');
   allItem.dataset.value = '';
-  allItem.textContent = label;
+  allItem.textContent = ph.all || 'All';
   allItem.classList.add('selected');
   list.appendChild(allItem);
 
@@ -96,11 +96,11 @@ function createDropdown(label, key, options) {
   return group;
 }
 
-function buildFilterBar(filterDefs, data) {
+function buildFilterBar(filterDefs, data, ph) {
   const bar = document.createElement('div');
   bar.classList.add('use-case-library-filters');
   filterDefs.forEach(({ label, key }) => {
-    bar.appendChild(createDropdown(label, key, getDistinctValues(data, key)));
+    bar.appendChild(createDropdown(label, key, getDistinctValues(data, key), ph));
   });
 
   document.addEventListener('click', (e) => {
@@ -206,7 +206,7 @@ export default async function decorate(block) {
   const activeFilters = {};
   filterDefs.forEach(({ key }) => { activeFilters[key] = ''; });
 
-  const filterBar = buildFilterBar(filterDefs, data);
+  const filterBar = buildFilterBar(filterDefs, data, ph);
   const grid = document.createElement('div');
   grid.classList.add('use-case-library-grid');
   const loadMore = buildLoadMore(ph);
