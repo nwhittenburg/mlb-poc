@@ -412,3 +412,10 @@ div[data-status] {
   display: none;
 }
 
+aem-sidekick {
+  display: none;
+
+  &[open="true"].is-ready {
+    display: block;
+  }
+}
