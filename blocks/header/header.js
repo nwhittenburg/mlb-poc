@@ -200,6 +200,20 @@ async function createSearchSection() {
   const form = document.createElement('form');
   form.className = 'search-form';
 
+  const searchBtn = document.createElement('button');
+  searchBtn.type = 'submit';
+  searchBtn.className = 'search-icon-btn';
+  searchBtn.setAttribute('aria-label', 'Submit search');
+
+  try {
+    const resp = await fetch('/img/icons/search-dark.svg');
+    searchBtn.innerHTML = await resp.text();
+    const svg = searchBtn.querySelector('svg');
+    if (svg) svg.classList.add('icon', 'icon-search-dark');
+  } catch {
+    searchBtn.textContent = '\uD83D\uDD0D';
+  }
+
   const input = document.createElement('input');
   input.type = 'text';
   input.id = 'search-input';
@@ -208,24 +222,21 @@ async function createSearchSection() {
   input.setAttribute('aria-label', 'Search');
   input.setAttribute('autocomplete', 'off');
 
-  const submitBtn = document.createElement('button');
-  submitBtn.type = 'submit';
-  submitBtn.className = 'search-submit';
-  submitBtn.setAttribute('aria-label', 'Submit search');
+  const clearBtn = document.createElement('button');
+  clearBtn.type = 'button';
+  clearBtn.className = 'search-clear';
+  clearBtn.setAttribute('aria-label', 'Clear search');
+  clearBtn.textContent = '\u00d7';
 
-  try {
-    const resp = await fetch('/img/icons/arrow.svg');
-    submitBtn.innerHTML = await resp.text();
-    const svg = submitBtn.querySelector('svg');
-    if (svg) svg.classList.add('icon', 'icon-arrow');
-  } catch {
-    submitBtn.textContent = '\u2192';
-  }
-
-  form.append(input, submitBtn);
+  form.append(searchBtn, input, clearBtn);
   searchSection.append(form);
 
   input.addEventListener('input', () => handleSearchInput(input));
+
+  clearBtn.addEventListener('click', () => {
+    clearSearchUI();
+    input.focus();
+  });
 
   form.addEventListener('submit', (e) => {
     e.preventDefault();
