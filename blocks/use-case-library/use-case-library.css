@@ -231,7 +231,7 @@
   .use-case-library-empty {
     grid-column: 1 / -1;
     text-align: center;
-    color: var(--color-gray-500);
+    color: var(--mlb-gray-50);
     padding: var(--spacing-xxl) 0;
     font-size: var(--body-font-size-l);
   }

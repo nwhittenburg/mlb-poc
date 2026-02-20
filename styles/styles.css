@@ -22,8 +22,9 @@
   --spacing-tokens-spacing-xxxl: var(--spacing-block-section-responsive-spacer-xxxl, 104px);
 
   /* color tokens */
-  --color-gray-500: #7d7d7d;
+  --mlb-gray-50: #7d7d7d;
   --mlb-gray-40: #262626;
+  --mlb-gray-30: #7a7a7a;
   --mlb-white: #fff;
   --mlb-black: #000;
   --mlb-primary-navy: #041e42;
@@ -65,7 +66,7 @@
   --body-line-height: 1.5;
 
   /* header */
-  --header-height: 80px;
+  --header-height: 90px;
 }
 
 html {
@@ -210,6 +211,7 @@ a {
   display: block;
   
   &:has(.hero) {
+    padding-top: 0;
     margin-bottom: 80px;
   }
 

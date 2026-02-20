@@ -47,13 +47,121 @@ function ensureVidyardScript() {
 }
 
 /**
- * Creates a single video element using Vidyard image embed
+ * Opens a video modal with a Vidyard iframe
+ * @param {string} uuid - The Vidyard video UUID
+ * @param {string} title - The video title
+ */
+function openVideoModal(uuid, title) {
+  const modal = document.createElement('div');
+  modal.className = 'video-modal';
+  modal.setAttribute('role', 'dialog');
+  modal.setAttribute('aria-modal', 'true');
+  modal.setAttribute('aria-label', title || 'Video');
+
+  const modalContent = document.createElement('div');
+  modalContent.className = 'video-modal-content';
+
+  const closeButton = document.createElement('button');
+  closeButton.className = 'video-modal-close';
+  closeButton.setAttribute('type', 'button');
+  closeButton.setAttribute('aria-label', 'Close video');
+  closeButton.innerHTML = '&times;';
+
+  const videoContainer = document.createElement('div');
+  videoContainer.className = 'video-modal-player';
+
+  const iframe = document.createElement('iframe');
+  iframe.src = `https://play.vidyard.com/${uuid}?autoplay=1&type=inline`;
+  iframe.loading = 'eager';
+  iframe.allow = 'autoplay; fullscreen';
+  iframe.allowFullscreen = true;
+  iframe.setAttribute('frameborder', '0');
+
+  videoContainer.appendChild(iframe);
+  modalContent.appendChild(closeButton);
+  modalContent.appendChild(videoContainer);
+  modal.appendChild(modalContent);
+
+  const closeModal = () => {
+    modal.classList.add('closing');
+    document.removeEventListener('keydown', handleEscape);
+    setTimeout(() => {
+      modal.remove();
+      document.body.style.overflow = '';
+    }, 300);
+  };
+
+  const handleEscape = (e) => {
+    if (e.key === 'Escape') closeModal();
+  };
+
+  closeButton.addEventListener('click', (e) => {
+    e.stopPropagation();
+    closeModal();
+  });
+
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeModal();
+  });
+
+  document.addEventListener('keydown', handleEscape);
+  document.body.appendChild(modal);
+  document.body.style.overflow = 'hidden';
+  requestAnimationFrame(() => modal.classList.add('show'));
+}
+
+/**
+ * Creates a video item that plays in a modal on click
  * @param {string} videoUrl - The video URL
  * @param {Element} posterImage - Optional poster image element
  * @param {string} videoTitle - Optional video title text
  * @returns {Element} The video item element
  */
-function createVideoItem(videoUrl, posterImage, videoTitle) {
+function createModalVideoItem(videoUrl, posterImage, videoTitle) {
+  const videoUuid = getVidyardUuid(videoUrl);
+  if (!videoUuid) return null;
+
+  const videoItem = document.createElement('div');
+  videoItem.className = 'video-item';
+
+  const btn = document.createElement('button');
+  btn.className = 'video-container';
+  btn.type = 'button';
+  btn.setAttribute('aria-label', `Play video: ${videoTitle || 'Video'}`);
+
+  const posterUrl = posterImage?.querySelector('img')?.src || getPosterUrl(videoUuid);
+  const img = document.createElement('img');
+  img.src = posterUrl;
+  img.alt = videoTitle || 'Video player';
+  img.loading = 'lazy';
+
+  const playIcon = document.createElement('div');
+  playIcon.className = 'video-play-icon';
+
+  btn.appendChild(img);
+  btn.appendChild(playIcon);
+  videoItem.appendChild(btn);
+
+  btn.addEventListener('click', () => openVideoModal(videoUuid, videoTitle));
+
+  if (videoTitle) {
+    const titleElement = document.createElement('h3');
+    titleElement.className = 'video-title';
+    titleElement.textContent = videoTitle;
+    videoItem.appendChild(titleElement);
+  }
+
+  return videoItem;
+}
+
+/**
+ * Creates a single video element using Vidyard image embed (inline playback)
+ * @param {string} videoUrl - The video URL
+ * @param {Element} posterImage - Optional poster image element
+ * @param {string} videoTitle - Optional video title text
+ * @returns {Element} The video item element
+ */
+function createInlineVideoItem(videoUrl, posterImage, videoTitle) {
   const videoUuid = getVidyardUuid(videoUrl);
   if (!videoUuid) {
     return null;
@@ -65,16 +173,7 @@ function createVideoItem(videoUrl, posterImage, videoTitle) {
   const videoContainer = document.createElement('div');
   videoContainer.className = 'video-container';
 
-  // Create the Vidyard embed placeholder image
-  // Use custom poster if provided, otherwise use Vidyard's thumbnail
-  let posterUrl = posterImage ? null : getPosterUrl(videoUuid);
-  
-  if (posterImage) {
-    const img = posterImage.querySelector('img');
-    if (img) {
-      posterUrl = img.src;
-    }
-  }
+  const posterUrl = posterImage?.querySelector('img')?.src || getPosterUrl(videoUuid);
 
   const placeholderImg = document.createElement('img');
   placeholderImg.className = 'vidyard-player-embed';
@@ -90,7 +189,6 @@ function createVideoItem(videoUrl, posterImage, videoTitle) {
   videoContainer.appendChild(placeholderImg);
   videoItem.appendChild(videoContainer);
 
-  // Add optional video title
   if (videoTitle) {
     const titleElement = document.createElement('h3');
     titleElement.className = 'video-title';
@@ -145,46 +243,41 @@ export default async function decorate(block) {
   const videoGrid = document.createElement('div');
   videoGrid.className = 'video-grid';
 
-  // Process each row as a potential video
-  const videoItems = [];
-  rows.forEach((row) => {
-    const { videoUrl, posterImage, title } = parseVideoRow(row);
-    
-    if (videoUrl) {
-      const videoItem = createVideoItem(videoUrl, posterImage, title);
-      if (videoItem) {
-        videoItems.push(videoItem);
-        videoGrid.appendChild(videoItem);
-      }
-    }
-  });
+  // Collect parsed video data
+  const videoData = rows
+    .map((row) => parseVideoRow(row))
+    .filter(({ videoUrl }) => videoUrl);
 
-  // Add class based on number of videos
-  if (videoItems.length === 1) {
-    videoGrid.classList.add('video-grid-single');
-  } else if (videoItems.length >= 2) {
+  const isMulti = videoData.length >= 2;
+
+  if (isMulti) {
     videoGrid.classList.add('video-grid-multi');
+  } else if (videoData.length === 1) {
+    videoGrid.classList.add('video-grid-single');
   }
 
-  // Clear the block and add the grid
+  const createItem = isMulti ? createModalVideoItem : createInlineVideoItem;
+  videoData.forEach(({ videoUrl, posterImage, title }) => {
+    const videoItem = createItem(videoUrl, posterImage, title);
+    if (videoItem) videoGrid.appendChild(videoItem);
+  });
+
   block.innerHTML = '';
   block.appendChild(videoGrid);
 
-  // Load Vidyard script only when video block is in view
-  // Use Intersection Observer to defer script load until needed
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        // Unobserve so we only load once
-        observer.unobserve(entry.target);
-        
-        // Load Vidyard and render players
-        ensureVidyardScript().then((vyApi) => {
-          vyApi.api.renderDOMPlayers(block);
-        });
-      }
-    });
-  }, { rootMargin: '100px' });
+  // Only load Vidyard embed script for inline (single) videos
+  if (!isMulti) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          observer.unobserve(entry.target);
+          ensureVidyardScript().then((vyApi) => {
+            vyApi.api.renderDOMPlayers(block);
+          });
+        }
+      });
+    }, { rootMargin: '100px' });
 
-  observer.observe(block);
+    observer.observe(block);
+  }
 }
