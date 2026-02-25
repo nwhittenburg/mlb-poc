@@ -50,7 +50,7 @@ header .search-result-item a:focus {
 
 header .search-result-excerpt {
   font-size: var(--body-font-size-s);
-  color: var(--color-gray-500);
+  color: var(--mlb-gray-50);
   line-height: var(--body-line-height);
   margin: var(--spacing-xs) 0 0;
 }
@@ -110,7 +110,7 @@ header .search-results-nav .search-nav-dot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--color-gray-500);
+  background: var(--mlb-gray-50);
   transition: background 0.2s ease;
   flex-shrink: 0;
 }
