@@ -166,6 +166,30 @@ function decorateHash(a, url) {
   return { dnt, dnb };
 }
 
+function isExternalLink(a) {
+  try {
+    const href = a.getAttribute('href');
+    if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:')) return false;
+    const url = new URL(href, window.location.origin);
+    return url.origin !== window.location.origin;
+  } catch {
+    return false;
+  }
+}
+
+function decorateExternalLink(a) {
+  a.target = '_blank';
+  a.rel = (a.rel ? `${a.rel} ` : '') + 'noopener noreferrer';
+  if (!a.querySelector('.ext-link-icon')) {
+    const { codeBase } = getConfig();
+    const icon = document.createElement('span');
+    icon.className = 'ext-link-icon';
+    icon.setAttribute('aria-hidden', 'true');
+    icon.innerHTML = `<svg class="ext-link-icon"><use href="${codeBase}/img/icons/ext.svg#ext"></use></svg>`;
+    a.appendChild(icon);
+  }
+}
+
 function decorateLink(config, a) {
   try {
     const url = new URL(a.href);
@@ -201,6 +225,7 @@ function decorateLinks(el) {
   return anchors.reduce((acc, a) => {
     const decorated = decorateLink(config, a);
     if (decorated) acc.push(decorated);
+    if (isExternalLink(a)) decorateExternalLink(a);
     return acc;
   }, []);
 }
