@@ -253,9 +253,9 @@ a {
 main {
   /* 2-column layout when jumplinks is present */
   &:has(.jumplinks) {
-    @media (min-width: 900px) {
+    @media (width >= 900px) {
       display: grid;
-      grid-template-columns: minmax(auto, 350px) 1fr;
+      grid-template-columns: minmax(auto, 250px) 1fr;
       gap: 0 var(--spacing-xl);
       max-width: var(--grid-container-width);
       margin: 0 auto 80px;
@@ -285,6 +285,10 @@ main {
       > .section:not(:has(.jumplinks)):not(:has(.hero)) {
         grid-column: 2;
       }
+    }
+
+    @media (width >= 1200px) {
+      grid-template-columns: minmax(auto, 350px) 1fr;
     }
   }
 }
