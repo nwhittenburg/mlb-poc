@@ -42,11 +42,8 @@
   display: block;
   padding: var(--spacing-m) var(--spacing-s);
   text-decoration: none;
-  overflow: hidden;
   color: inherit;
   opacity: 0.9;
-  text-overflow: ellipsis;
-  white-space: nowrap;
   font-size: var(--body-font-size-l);
 }
 
