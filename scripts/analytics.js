@@ -37,8 +37,7 @@ function getContentType(pathname) {
   if (pathname.includes('/use-cases/')) return 'Use Case';
   if (pathname.includes('/data-dictionary/')) return 'Data Dictionary';
   if (pathname.includes('/capabilities/')) return 'Capability';
-  if (document.querySelector('video, [data-video]')) return 'Video';
-  return 'Content';
+  return 'Home';
 }
 
 /**
