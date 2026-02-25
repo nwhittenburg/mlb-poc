@@ -77,7 +77,7 @@ function setActiveById(block, headingId) {
 
 function getPageHeadings() {
   const headings = [...document.querySelectorAll('main h2, main h3')];
-  return headings.filter((heading) => !heading.closest('.hero'));
+  return headings.filter((heading) => !heading.closest('.hero, .cards'));
 }
 
 function groupHeadings(headings) {
