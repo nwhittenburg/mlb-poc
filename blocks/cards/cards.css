@@ -107,11 +107,22 @@
   }
 
   @media (width >= 900px) {
-    grid-template-columns: repeat(min(var(--card-columns, 3), 3), 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
 
   @media (width >= 1200px) {
-    grid-template-columns: repeat(min(var(--card-columns, 3), 4), 1fr);
+    grid-template-columns: repeat(max(var(--card-columns, 3), 3), 1fr);
+  }
+}
+
+/* When jumplinks narrow the content area, 2-col cards can fill it */
+main:has(.jumplinks) .section > .block-content:has(.cards + .cards):not(.hinting) {
+  @media (width >= 900px) {
+    grid-template-columns: repeat(min(var(--card-columns, 3), 2), 1fr);
+  }
+
+  @media (width >= 1200px) {
+    grid-template-columns: repeat(min(var(--card-columns, 3), 3), 1fr);
   }
 }
 
