@@ -8,4 +8,10 @@
   searchCSS.rel = 'stylesheet';
   searchCSS.href = '/blocks/search-results/search-results.css';
   document.head.appendChild(searchCSS);
+
+  window.setTimeout(() => {
+    import('./martech.js').then(({ martechDelayed, isMartechInitialized }) => {
+      if (isMartechInitialized()) martechDelayed();
+    });
+  }, 3000);
 }());

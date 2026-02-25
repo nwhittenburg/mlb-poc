@@ -1,27 +1,20 @@
 import { loadArea, setConfig } from './ak.js';
+import { attachNavigationTracking, pushPageContext } from './analytics.js';
+import { initAndEager, isMartechInitialized, martechLazy } from './martech.js';
 
-const hostnames = ['authorkit.dev'];
+const hostnames = ['aep-docs.mlb.com'];
 
-const locales = {
-  '': { lang: 'en' },
-  '/de': { lang: 'de' },
-  '/es': { lang: 'es' },
-  '/fr': { lang: 'fr' },
-  '/hi': { lang: 'hi' },
-  '/ja': { lang: 'ja' },
-  '/zh': { lang: 'zh' },
-};
+const locales = { '': { lang: 'en' } };
 
 // Widget patterns to look for (video block handles both YouTube and Vidyard)
 const widgets = [
   { fragment: '/fragments/' },
-  { schedule: '/schedules/' },
   { video: 'vidyard.com' },
   { video: 'https://www.youtube' },
 ];
 
 // Blocks with self-managed styles
-const components = ['fragment', 'schedule'];
+const components = ['fragment'];
 
 // How to decorate an area before loading it
 const decorateArea = ({ area = document }) => {
@@ -42,7 +35,17 @@ function cleanEmptyMetadata() {
 async function loadPage() {
   cleanEmptyMetadata();
   setConfig({ hostnames, locales, widgets, components, decorateArea });
-  await loadArea();
+
+  await Promise.all([
+    initAndEager(),
+    loadArea(),
+  ]);
+
+  if (isMartechInitialized()) {
+    await martechLazy();
+    pushPageContext();
+    attachNavigationTracking();
+  }
 }
 await loadPage();
 

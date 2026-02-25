@@ -1,9 +1,11 @@
+import { trackVideoComplete } from '../../scripts/analytics.js';
+
 /**
  * Extracts the video UUID from a Vidyard share URL
  * @param {string} url - The Vidyard share URL
  * @returns {string} The video UUID
  */
-function getVidyardUuid(url) {
+export function getVidyardUuid(url) {
   const match = url.match(/(?:share\.vidyard\.com\/watch\/|play\.vidyard\.com\/?)([a-zA-Z0-9]+)/);
   return match ? match[1] : null;
 }
@@ -20,7 +22,7 @@ function getPosterUrl(uuid) {
 /**
  * Loads Vidyard script if not already loaded
  */
-function ensureVidyardScript() {
+export function ensureVidyardScript() {
   return new Promise((resolve) => {
     if (window.vidyardEmbed) {
       resolve(window.vidyardEmbed);
@@ -33,25 +35,27 @@ function ensureVidyardScript() {
           res(vyApi);
         };
       });
-      
+
       // Load Vidyard script
       const script = document.createElement('script');
       script.src = 'https://play.vidyard.com/embed/v4.js';
       script.type = 'text/javascript';
       script.async = true;
       document.head.appendChild(script);
-      
+
       window.onVidyardAPIPromise.then(resolve);
     }
   });
 }
 
 /**
- * Opens a video modal with a Vidyard iframe
+ * Opens a video modal with Vidyard API (enables progress tracking)
  * @param {string} uuid - The Vidyard video UUID
  * @param {string} title - The video title
  */
 function openVideoModal(uuid, title) {
+  const videoName = title || 'Video';
+
   const modal = document.createElement('div');
   modal.className = 'video-modal';
   modal.setAttribute('role', 'dialog');
@@ -70,29 +74,27 @@ function openVideoModal(uuid, title) {
   const videoContainer = document.createElement('div');
   videoContainer.className = 'video-modal-player';
 
-  const iframe = document.createElement('iframe');
-  iframe.src = `https://play.vidyard.com/${uuid}?autoplay=1&type=inline`;
-  iframe.loading = 'eager';
-  iframe.allow = 'autoplay; fullscreen';
-  iframe.allowFullscreen = true;
-  iframe.setAttribute('frameborder', '0');
-
-  videoContainer.appendChild(iframe);
   modalContent.appendChild(closeButton);
   modalContent.appendChild(videoContainer);
   modal.appendChild(modalContent);
 
-  const closeModal = () => {
+  let closeModal;
+  const handleEscape = (e) => {
+    if (e.key === 'Escape') closeModal();
+  };
+  closeModal = () => {
     modal.classList.add('closing');
     document.removeEventListener('keydown', handleEscape);
+    if (uuid) {
+      ensureVidyardScript().then((vyApi) => {
+        const players = vyApi.api.getPlayersByUUID(uuid);
+        players.forEach((player) => vyApi.api.destroyPlayer(player));
+      });
+    }
     setTimeout(() => {
       modal.remove();
       document.body.style.overflow = '';
     }, 300);
-  };
-
-  const handleEscape = (e) => {
-    if (e.key === 'Escape') closeModal();
   };
 
   closeButton.addEventListener('click', (e) => {
@@ -108,6 +110,21 @@ function openVideoModal(uuid, title) {
   document.body.appendChild(modal);
   document.body.style.overflow = 'hidden';
   requestAnimationFrame(() => modal.classList.add('show'));
+
+  if (uuid) {
+    ensureVidyardScript().then((vyApi) => {
+      vyApi.api.renderPlayer({
+        uuid,
+        container: videoContainer,
+        type: 'inline',
+      });
+      vyApi.api.addReadyListener(() => {
+        vyApi.api.progressEvents(({ event }) => {
+          if (event === 100) trackVideoComplete({ videoName });
+        }, [100]);
+      }, uuid);
+    });
+  }
 }
 
 /**
@@ -211,7 +228,7 @@ function parseVideoRow(row) {
     if (textMatch) videoUrl = textMatch[1];
   }
   const picture = row.querySelector('picture');
-  
+
   // Extract text that isn't the URL for use as title
   let title = '';
   const allText = row.textContent.split('\n').map((t) => t.trim()).filter(Boolean);
@@ -234,7 +251,7 @@ function parseVideoRow(row) {
 export default async function decorate(block) {
   // Extract all rows from the block
   const rows = Array.from(block.querySelectorAll(':scope > div'));
-  
+
   if (rows.length === 0) {
     return;
   }
@@ -266,13 +283,26 @@ export default async function decorate(block) {
   block.appendChild(videoGrid);
 
   // Only load Vidyard embed script for inline (single) videos
-  if (!isMulti) {
+  if (!isMulti && videoData.length > 0) {
+    const { videoUrl, title } = videoData[0];
+    const uuid = getVidyardUuid(videoUrl);
+    const videoName = title || 'Video';
+
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           observer.unobserve(entry.target);
           ensureVidyardScript().then((vyApi) => {
             vyApi.api.renderDOMPlayers(block);
+            if (uuid) {
+              vyApi.api.addReadyListener(() => {
+                vyApi.api.progressEvents(({ event }) => {
+                  if (event === 100) {
+                    trackVideoComplete({ videoName });
+                  }
+                }, [100]);
+              }, uuid);
+            }
           });
         }
       });
