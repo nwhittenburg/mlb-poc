@@ -345,7 +345,7 @@ header .search-input {
 }
 
 header .search-input::placeholder {
-  color: var(--color-gray-500);
+  color: var(--mlb-gray-50);
 }
 
 header .search-input:focus {
