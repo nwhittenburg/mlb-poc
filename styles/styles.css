@@ -251,8 +251,6 @@ a {
 }
 
 main {
-  margin-bottom: 80px;
-
   /* 2-column layout when jumplinks is present */
   &:has(.jumplinks) {
     @media (min-width: 900px) {
@@ -289,6 +287,10 @@ main {
       }
     }
   }
+}
+
+body > main {
+  margin-bottom: 80px;
 }
 
 /* List styles only for page main content, not header fragment */

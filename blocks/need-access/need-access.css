@@ -63,6 +63,7 @@
   border-radius: 100px;
   padding: var(--spacing-s) var(--spacing-m);
   font-size: var(--body-font-size-s);
+  font-weight: 700;
   text-decoration: none;
 }
 
