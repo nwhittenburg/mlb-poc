@@ -95,20 +95,20 @@ header .brand-section .default-content {
   min-height: var(--header-height);
 }
 
-header .brand-section .default-content p {
+header .brand-section .default-content p a{
   display: flex;
   align-items: center;
   gap: var(--spacing-l);
 }
 
 header .brand-section .icon-mlb-logo {
-  width: 85px;
-  height: 45px;
+  width: 60px;
+  height: 35px;
 }
 
 header .brand-section .icon-adobe-logo {
-  width: 95px;
-  height: 30px;
+  width: 65px;
+  height: 35px;
 }
 
 header .brand-section .brand-text {
@@ -120,9 +120,11 @@ header .brand-section .brand-text {
 }
 
 header .brand-section .brand-separator {
-  width: 1px;
+  display: inline-block;
+  width: 0;
+  border-left: 1px solid var(--mlb-white);
   align-self: stretch;
-  background-color: var(--mlb-white);
+  flex-shrink: 0;
 }
 
 header .brand-section .action-wrapper {
@@ -405,7 +407,7 @@ header.is-mobile-open .main-nav-section {
   header .header-content {
     grid-template: var(--header-height) / auto 1fr auto;
     grid-template-areas: "brand nav actions";
-    gap: var(--spacing-xxl);
+    gap: 80px;
     padding: 0 var(--spacing-xxl);
     align-items: center;
     max-width: 1440px;
@@ -537,16 +539,19 @@ header.is-mobile-open .main-nav-section {
     font-weight: 700;
   }
 
-  /* Desktop nav underline on active/open */
+  /* Desktop nav underline on active/open/hover */
+  header .main-nav-item:hover::after,
   header .main-nav-item.is-open::after,
   header .main-nav-item.is-active::after {
     background-color: var(--mlb-primary-red);
   }
 
+  header .main-nav-item:hover:has(.menu) .main-nav-link::after,
   header .main-nav-item.is-open:has(.menu) .main-nav-link::after {
     transform: rotate(180deg);
   }
 
+  header .main-nav-item:hover > .menu,
   header .main-nav-item.is-open > .menu {
     display: block;
   }

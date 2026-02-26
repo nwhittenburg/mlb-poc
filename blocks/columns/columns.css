@@ -130,16 +130,18 @@
     }
 
     strong {
+      font-family: "HEX Franklin MLB", sans-serif;
       font-size: var(--heading-font-size-xxs);
       line-height: 1.25;
     }
 
     ul {
-      padding-inline-start: 0;
+      padding-inline-start: var(--spacing-l);
+      list-style-position: outside;
     }
 
     li + li {
-      margin-top: var(--spacing-xs);
+      margin-top: var(--spacing-s);
     }
   }
 
