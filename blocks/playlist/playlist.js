@@ -1,3 +1,6 @@
+import { trackVideoComplete } from '../../scripts/analytics.js';
+import { ensureVidyardScript, getVidyardUuid } from '../video/video.js';
+
 /**
  * Convert text to class name format
  * @param {string} text - Text to convert
@@ -11,21 +14,12 @@ function toClassName(text) {
 }
 
 /**
- * Extract Vidyard video ID from URL
- * @param {string} url - Vidyard URL
- * @returns {string} - Video ID
- */
-function getVidyardId(url) {
-  const match = url.match(/watch\/([^?]+)/);
-  return match ? match[1] : '';
-}
-
-/**
  * Create and show video modal
  * @param {Object} video - Video data object
  */
 function openVideoModal(video) {
-  const videoId = getVidyardId(video.url);
+  const videoId = getVidyardUuid(video.url);
+  const videoName = video.title || 'Video';
 
   // Create modal overlay
   const modal = document.createElement('div');
@@ -45,43 +39,33 @@ function openVideoModal(video) {
   closeButton.setAttribute('aria-label', 'Close video');
   closeButton.innerHTML = '&times;';
 
-  // Create video container
+  // Create video container for Vidyard API render
   const videoContainer = document.createElement('div');
   videoContainer.className = 'video-modal-player';
-
-  // Create Vidyard iframe - optimized for fast loading
-  const iframe = document.createElement('iframe');
-  iframe.className = 'vidyard-player-embed';
-  iframe.src = `https://play.vidyard.com/${videoId}?autoplay=1&type=inline`;
-  iframe.loading = 'eager';
-  iframe.allow = 'autoplay; fullscreen';
-  iframe.allowFullscreen = true;
-  iframe.setAttribute('frameborder', '0');
-
-  videoContainer.appendChild(iframe);
 
   modalContent.appendChild(closeButton);
   modalContent.appendChild(videoContainer);
   modal.appendChild(modalContent);
 
-  // Close modal function
-  const closeModal = () => {
+  let closeModal;
+  const handleEscape = (e) => {
+    if (e.key === 'Escape') closeModal();
+  };
+  closeModal = () => {
     modal.classList.add('closing');
     document.removeEventListener('keydown', handleEscape);
+    if (videoId) {
+      ensureVidyardScript().then((vyApi) => {
+        const players = vyApi.api.getPlayersByUUID(videoId);
+        players.forEach((player) => vyApi.api.destroyPlayer(player));
+      });
+    }
     setTimeout(() => {
       modal.remove();
       document.body.style.overflow = '';
     }, 300);
   };
 
-  // Close on Escape key
-  const handleEscape = (e) => {
-    if (e.key === 'Escape') {
-      closeModal();
-    }
-  };
-
-  // Close on button click
   closeButton.addEventListener('click', (e) => {
     e.stopPropagation();
     closeModal();
@@ -89,22 +73,31 @@ function openVideoModal(video) {
 
   // Close on overlay click
   modal.addEventListener('click', (e) => {
-    if (e.target === modal) {
-      closeModal();
-    }
+    if (e.target === modal) closeModal();
   });
 
-  // Add keyboard listener
   document.addEventListener('keydown', handleEscape);
 
   // Add to DOM and show
   document.body.appendChild(modal);
   document.body.style.overflow = 'hidden';
-  
-  // Trigger animation
-  requestAnimationFrame(() => {
-    modal.classList.add('show');
-  });
+  requestAnimationFrame(() => modal.classList.add('show'));
+
+  // Load Vidyard and render player with progress tracking
+  if (videoId) {
+    ensureVidyardScript().then((vyApi) => {
+      vyApi.api.renderPlayer({
+        uuid: videoId,
+        container: videoContainer,
+        type: 'inline',
+      });
+      vyApi.api.addReadyListener(() => {
+        vyApi.api.progressEvents(({ event }) => {
+          if (event === 100) trackVideoComplete({ videoName });
+        }, [100]);
+      }, videoId);
+    });
+  }
 }
 
 /**
@@ -118,7 +111,7 @@ function createVideoCard(video) {
   card.setAttribute('type', 'button');
   card.setAttribute('aria-label', `Play video: ${video.title}`);
 
-  const videoId = getVidyardId(video.url);
+  const videoId = getVidyardUuid(video.url) || '';
 
   // Create thumbnail container
   const thumbnail = document.createElement('div');
@@ -161,7 +154,7 @@ async function fetchVideoData() {
   try {
     const response = await fetch('/docs/playlist-get-help.json');
     if (!response.ok) throw new Error(`Failed to fetch: ${response.status}`);
-    
+
     const json = await response.json();
     return json.data || [];
   } catch (error) {
@@ -192,7 +185,7 @@ export default async function decorate(block) {
 
   // Fetch all video data
   const allVideos = await fetchVideoData();
-  
+
   if (allVideos.length === 0) {
     block.textContent = 'No videos found';
     return;
@@ -214,7 +207,7 @@ export default async function decorate(block) {
   // Create playlist tabs and panels for each authored category
   categories.forEach((category, i) => {
     const id = toClassName(category);
-    
+
     // Filter videos for this category
     const videos = allVideos.filter((video) => video.category === category);
 
@@ -239,7 +232,7 @@ export default async function decorate(block) {
     // Create video grid
     const videoGrid = document.createElement('div');
     videoGrid.className = 'video-grid';
-    
+
     if (videos.length > 0) {
       videos.forEach((video) => {
         const card = createVideoCard(video);

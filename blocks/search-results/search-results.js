@@ -1,3 +1,5 @@
+import { trackSearch } from '../../scripts/analytics.js';
+
 const RESULTS_PER_PAGE = 5;
 const SEARCH_INDEX_PATH = '/search-index.json';
 
@@ -60,7 +62,6 @@ function getExcerpt(content, term) {
   if (end < clean.length) excerpt = `${excerpt}...`;
   return excerpt;
 }
-
 
 function getTotalPages() {
   return Math.ceil(currentResults.length / RESULTS_PER_PAGE);
@@ -155,6 +156,8 @@ function renderSearchResults(results, searchTerm) {
 
   wrapper.querySelector('h2').textContent = `Search results (${results.length})`;
   renderPage();
+
+  trackSearch({ searchTerm, resultCount: results.length });
 }
 
 export function clearSearchResults() {
