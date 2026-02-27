@@ -8,10 +8,17 @@ const MIN_SEARCH_LENGTH = 2;
 
 let debounceTimer = null;
 
+function clearActiveState() {
+  document.querySelectorAll('header .main-nav-item.is-active').forEach((el) => {
+    el.classList.remove('is-active');
+  });
+}
+
 function closeAllMenus() {
   document.querySelectorAll('header .main-nav-item.is-open').forEach((el) => {
     el.classList.remove('is-open');
   });
+  clearActiveState();
 }
 
 function clearSearchUI() {
@@ -74,10 +81,13 @@ function toggleSearch() {
   if (searchInput) setTimeout(() => searchInput.focus(), 100);
 }
 
-function toggleMenu(menu) {
-  const isOpen = menu.classList.contains('is-open');
+function toggleMenu(li) {
+  const isOpen = li.classList.contains('is-open');
   closeAllMenus();
-  if (!isOpen) menu.classList.add('is-open');
+  if (!isOpen) {
+    li.classList.add('is-open');
+    li.classList.add('is-active');
+  }
 }
 
 function decorateNavToggle(btn) {
@@ -106,6 +116,13 @@ function decorateNavItem(li) {
   const textNode = li.querySelector(':scope > p');
   const menu = decorateMenu(li);
 
+  li.addEventListener('mouseenter', () => {
+    li.classList.add('is-active');
+  });
+  li.addEventListener('mouseleave', () => {
+    li.classList.remove('is-active');
+  });
+
   if (menu) {
     if (textNode) {
       textNode.classList.add('main-nav-link');
@@ -117,9 +134,7 @@ function decorateNavItem(li) {
   } else if (link) {
     link.classList.add('main-nav-link');
     link.addEventListener('click', () => {
-      document.querySelectorAll('header .main-nav-item.is-active').forEach((el) => {
-        el.classList.remove('is-active');
-      });
+      clearActiveState();
       li.classList.add('is-active');
     });
   }
@@ -158,16 +173,6 @@ function decorateNavSection(section) {
 
   section.querySelectorAll('nav > ul > li').forEach(decorateNavItem);
 
-  const currentPath = window.location.pathname;
-  section.querySelectorAll('.main-nav-item').forEach((item) => {
-    const links = item.querySelectorAll('a[href]');
-    const isActive = [...links].some((a) => {
-      const raw = a.getAttribute('href');
-      if (!raw || raw === '#' || raw === '/') return false;
-      return currentPath.startsWith(new URL(raw, window.location.origin).pathname);
-    });
-    if (isActive) item.classList.add('is-active');
-  });
 }
 
 async function decorateActionSection(section) {
