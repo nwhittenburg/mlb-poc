@@ -366,7 +366,6 @@ header .search-clear {
   transition: opacity 0.2s ease;
   width: 40px;
   height: 40px;
-  margin: var(--spacing-xs);
   font-size: 24px;
   line-height: 1;
   color: var(--mlb-gray-40);
@@ -602,7 +601,7 @@ header.is-mobile-open .main-nav-section {
     top: 100%;
     left: 0;
     right: 0;
-    padding: var(--spacing-l) var(--spacing-xxl);
+    padding: var(--spacing-m) var(--spacing-xxl);
     background: var(--mlb-primary-navy);
     box-shadow: 0 4px 20px rgb(0 0 0 / 15%);
     z-index: 101;
@@ -632,14 +631,13 @@ header.is-mobile-open .main-nav-section {
   }
 
   header .search-input {
-    padding: var(--spacing-m) var(--spacing-s);
+    padding: var(--spacing-s);
     font-size: var(--body-font-size-l);
   }
 
   header .search-clear {
     width: 48px;
     height: 48px;
-    margin: 5px;
     font-size: 28px;
   }
 
