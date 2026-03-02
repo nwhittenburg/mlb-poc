@@ -117,6 +117,15 @@ async function populateCardFromLink(cell, link) {
   cell.appendChild(ctaP);
 }
 
+function makeCardClickable(card) {
+  const link = card.querySelector('.card-cta a');
+  if (!link) return;
+  card.addEventListener('click', (e) => {
+    if (e.target.closest('a')) return;
+    link.click();
+  });
+}
+
 function decorateMultiCard(el, allCells, maxCols) {
   const { parentElement } = el;
   const isHinting = el.classList.contains('hinting');
@@ -151,6 +160,7 @@ function decorateMultiCard(el, allCells, maxCols) {
       ctaPara.classList.add('card-cta');
     }
 
+    makeCardClickable(card);
     parentElement.insertBefore(card, el);
   });
 
@@ -216,4 +226,5 @@ export default async function decorate(el) {
     el.appendChild(wrapper.firstChild);
   }
   wrapper.remove();
+  makeCardClickable(el);
 }

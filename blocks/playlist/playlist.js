@@ -90,11 +90,22 @@ function openVideoModal(video) {
         uuid: videoId,
         container: videoContainer,
         type: 'inline',
+        autoplay: 1,
       });
       vyApi.api.addReadyListener(() => {
-        vyApi.api.progressEvents(({ event }) => {
-          if (event === 100) trackVideoComplete({ videoName });
-        }, [100]);
+        const players = vyApi.api.getPlayersByUUID(videoId);
+        const player = players?.[0];
+        if (player) {
+          player.play();
+          if (typeof player.on === 'function') {
+            player.on('playerComplete', () => trackVideoComplete({ videoName }));
+          } else {
+            vyApi.api.progressEvents((result) => {
+              const done = result.event === 95 || result.event === 100;
+              if (result.player?.uuid === videoId && done) trackVideoComplete({ videoName });
+            }, [95, 100]);
+          }
+        }
       }, videoId);
     });
   }

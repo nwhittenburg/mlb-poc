@@ -1,6 +1,8 @@
 import { loadArea, setConfig } from './ak.js';
 import { attachNavigationTracking, pushPageContext } from './analytics.js';
 import { initAndEager, isMartechInitialized, martechLazy } from './martech.js';
+import getConfigValue from './config.js';
+import env from './utils/env.js';
 
 const hostnames = ['aep-docs.mlb.com'];
 
@@ -32,9 +34,21 @@ function cleanEmptyMetadata() {
   document.head.querySelectorAll('meta[content=""]').forEach((meta) => meta.remove());
 }
 
+function injectLaunchScript(url) {
+  if (!url) return;
+  const s = document.createElement('script');
+  s.src = url;
+  s.async = true;
+  document.head.appendChild(s);
+}
+
 async function loadPage() {
   cleanEmptyMetadata();
   setConfig({ hostnames, locales, widgets, components, decorateArea });
+
+  const launchKeyMap = { dev: 'adobe-launch-dev-url', stage: 'adobe-launch-staging-url', prod: 'adobe-launch-url' };
+  const launchUrl = await getConfigValue(launchKeyMap[env] || 'adobe-launch-url');
+  injectLaunchScript(launchUrl);
 
   await Promise.all([
     initAndEager(),

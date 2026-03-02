@@ -117,11 +117,22 @@ function openVideoModal(uuid, title) {
         uuid,
         container: videoContainer,
         type: 'inline',
+        autoplay: 1,
       });
       vyApi.api.addReadyListener(() => {
-        vyApi.api.progressEvents(({ event }) => {
-          if (event === 100) trackVideoComplete({ videoName });
-        }, [100]);
+        const players = vyApi.api.getPlayersByUUID(uuid);
+        const player = players?.[0];
+        if (player) {
+          player.play();
+          if (typeof player.on === 'function') {
+            player.on('playerComplete', () => trackVideoComplete({ videoName }));
+          } else {
+            vyApi.api.progressEvents((result) => {
+              const done = result.event === 95 || result.event === 100;
+              if (result.player?.uuid === uuid && done) trackVideoComplete({ videoName });
+            }, [95, 100]);
+          }
+        }
       }, uuid);
     });
   }
@@ -224,8 +235,8 @@ function parseVideoRow(row) {
   const link = row.querySelector('a');
   let videoUrl = link?.href || link?.textContent?.trim();
   if (!videoUrl) {
-    const textMatch = row.textContent.match(/(https?:\/\/share\.vidyard\.com\/watch\/[a-zA-Z0-9]+)/);
-    if (textMatch) videoUrl = textMatch[1];
+    const [url] = row.textContent.match(/(https?:\/\/share\.vidyard\.com\/watch\/[a-zA-Z0-9]+)/) || [];
+    if (url) videoUrl = url;
   }
   const picture = row.querySelector('picture');
 
@@ -296,18 +307,24 @@ export default async function decorate(block) {
             vyApi.api.renderDOMPlayers(block);
             if (uuid) {
               vyApi.api.addReadyListener(() => {
-                vyApi.api.progressEvents(({ event }) => {
-                  if (event === 100) {
-                    trackVideoComplete({ videoName });
+                const players = vyApi.api.getPlayersByUUID(uuid);
+                const player = players?.[0];
+                if (player) {
+                  if (typeof player.on === 'function') {
+                    player.on('playerComplete', () => trackVideoComplete({ videoName }));
+                  } else {
+                    vyApi.api.progressEvents((result) => {
+                      const done = result.event === 95 || result.event === 100;
+                      if (result.player?.uuid === uuid && done) trackVideoComplete({ videoName });
+                    }, [95, 100]);
                   }
-                }, [100]);
+                }
               }, uuid);
             }
           });
         }
       });
     }, { rootMargin: '100px' });
-
     observer.observe(block);
   }
 }
