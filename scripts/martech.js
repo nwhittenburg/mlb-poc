@@ -12,6 +12,7 @@ import {
   updateUserConsent,
   pushToDataLayer as pluginPushToDataLayer,
 } from '../plugins/martech/src/index.js';
+import getConfigValue from './config.js';
 
 // Disable martech via ?martech=off for debugging
 const disabled = window.location.search.includes('martech=off');
@@ -26,8 +27,8 @@ let initialized = false;
 export async function initAndEager() {
   if (disabled) return undefined;
 
-  const datastreamId = 'c62742e3-1bf5-4d85-a442-4fa95cb7306b';
-  const orgId = 'A65F776A5245B01B0A490D44@AdobeOrg';
+  const datastreamId = await getConfigValue('web-sdk-datastream-id');
+  const orgId = await getConfigValue('web-sdk-org-id');
 
   const webSDKConfig = {
     datastreamId,

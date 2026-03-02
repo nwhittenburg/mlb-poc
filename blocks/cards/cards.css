@@ -7,6 +7,7 @@
   background: var(--mlb-white, #fff);
   border: 1px solid #e8e8e8;
   height: auto;
+  cursor: pointer;
 
   /* Hover effect */
   &:hover {

@@ -129,6 +129,7 @@
     border: 1px solid #e8e8e8;
     text-decoration: none;
     color: inherit;
+    cursor: pointer;
     transition: transform 0.25s ease-in-out;
     margin-top: var(--spacing-m);
     margin-bottom: var(--spacing-m);
