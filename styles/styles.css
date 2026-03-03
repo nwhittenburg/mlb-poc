@@ -114,6 +114,10 @@ a {
     mask: url('/img/icons/ext.svg') no-repeat center / contain;
   }
 
+  &.btn .ext-link-icon {
+    margin-left: 0;
+  }
+
   &.btn {
     display: inline-flex;
     align-items: center;
