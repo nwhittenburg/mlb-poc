@@ -148,6 +148,28 @@ export function localizeUrl({ config, url }) {
   return new URL(`${origin}${locale.prefix}${pathname}${search}${hash}`);
 }
 
+function isExternalLink(a) {
+  try {
+    const href = a.getAttribute('href');
+    if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:')) return false;
+    const url = new URL(href, window.location.origin);
+    return url.origin !== window.location.origin;
+  } catch {
+    return false;
+  }
+}
+
+function decorateExternalLink(a) {
+  a.target = '_blank';
+  a.rel = (a.rel ? `${a.rel} ` : '') + 'noopener noreferrer';
+  if (!a.querySelector('.ext-link-icon')) {
+    const icon = document.createElement('span');
+    icon.className = 'ext-link-icon';
+    icon.setAttribute('aria-hidden', 'true');
+    a.appendChild(icon);
+  }
+}
+
 function decorateHash(a, url) {
   const { hash } = url;
   if (!hash || hash === '#') return {};
@@ -223,6 +245,7 @@ function decorateLinks(el) {
   return anchors.reduce((acc, a) => {
     const decorated = decorateLink(config, a);
     if (decorated) acc.push(decorated);
+    if (isExternalLink(a)) decorateExternalLink(a);
     return acc;
   }, []);
 }
