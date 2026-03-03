@@ -200,8 +200,8 @@ function decorateLink(config, a) {
       if (localized) a.href = localized.href;
     }
     
-    // Check if link contains icon-frame and open in new tab
-    if (a.querySelector('.icon-frame')) {
+    // Check if link contains icon-ext and open in new tab
+    if (a.querySelector('.icon-ext')) {
       a.target = '_blank';
     }
     
