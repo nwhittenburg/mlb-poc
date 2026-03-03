@@ -102,6 +102,22 @@ p:has(.btn-primary) {
 a {
   color: var(--color-link);
 
+  .ext-link-icon {
+    display: inline-block;
+    flex-shrink: 0;
+    width: 0.75em;
+    height: 0.75em;
+    margin-left: 0.25em;
+    vertical-align: -0.1em;
+    background-color: currentColor;
+    -webkit-mask: url('/img/icons/ext.svg') no-repeat center / contain;
+    mask: url('/img/icons/ext.svg') no-repeat center / contain;
+  }
+
+  &.btn .ext-link-icon {
+    margin-left: 0;
+  }
+
   &.btn {
     display: inline-flex;
     align-items: center;
