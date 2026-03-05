@@ -127,6 +127,10 @@ function decorateNavItem(li) {
     if (textNode) {
       textNode.classList.add('main-nav-link');
       textNode.addEventListener('click', (e) => {
+        if (e.target.closest('a')) {
+          closeAllMenus();
+          return;
+        }
         e.preventDefault();
         toggleMenu(li);
       });

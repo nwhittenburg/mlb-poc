@@ -113,8 +113,8 @@
         align-items: center;
         gap: var(--spacing-s);
 
-        /* Add left chevron icon */
-        &::before {
+        /* Add left chevron icon (skip when breadcrumb has link > current page) */
+        &:not(:has(~ strong))::before {
           content: "";
           display: block;
           width: 16px;
@@ -154,8 +154,8 @@
       text-align: left;
     }
 
-    /* Add chevron icon */
-    .btn-primary::after {
+    /* Add chevron icon (skip when ext-link-icon is present) */
+    .btn-primary:not(:has(.ext-link-icon))::after {
       content: "";
       display: block;
       width: 24px;
@@ -228,10 +228,8 @@
     }
   }
 
-  &.overlay {
-    .hero-background::after {
-      background: color-mix(in srgb, var(--mlb-black) 55%, transparent);
-    }
+  .hero-background::after {
+    background: color-mix(in srgb, var(--mlb-black) 55%, transparent);
   }
 }
 
