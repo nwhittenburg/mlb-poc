@@ -1,4 +1,4 @@
-import { trackVideoComplete } from '../../scripts/analytics.js';
+import { trackVideoComplete, trackVideoStart } from '../../scripts/analytics.js';
 import { ensureVidyardScript, getVidyardUuid } from '../video/video.js';
 
 /**
@@ -96,8 +96,14 @@ function openVideoModal(video) {
         const players = vyApi.api.getPlayersByUUID(videoId);
         const player = players?.[0];
         if (player) {
-          player.play();
+          let startFired = false;
           if (typeof player.on === 'function') {
+            player.on('play', () => {
+              if (!startFired) {
+                startFired = true;
+                trackVideoStart({ videoName });
+              }
+            });
             player.on('playerComplete', () => trackVideoComplete({ videoName }));
           } else {
             vyApi.api.progressEvents((result) => {
@@ -105,6 +111,7 @@ function openVideoModal(video) {
               if (result.player?.uuid === videoId && done) trackVideoComplete({ videoName });
             }, [95, 100]);
           }
+          player.play();
         }
       }, videoId);
     });

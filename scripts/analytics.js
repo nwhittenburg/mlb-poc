@@ -80,6 +80,20 @@ export function pushPageContext() {
 }
 
 /**
+ * Track video start. Call when a video begins playback.
+ * @param {Object} params
+ * @param {string} params.videoName - Video name (e.g. "How To Videos : Road Runner Traps")
+ */
+export function trackVideoStart({ videoName }) {
+  if (!isMartechInitialized()) return;
+  pushToDataLayer({
+    event: 'videoanalysis',
+    v13: videoName,
+    e15: 1,
+  });
+}
+
+/**
  * Track video complete. Call when a video reaches 100% completion.
  * @param {Object} params
  * @param {string} params.videoName - Video name (e.g. "How To Videos : Road Runner Traps")
@@ -90,6 +104,21 @@ export function trackVideoComplete({ videoName }) {
     event: 'videoanalysis',
     v13: videoName,
     e14: 1,
+  });
+}
+
+/**
+ * Track internal link click (Internal Campaign Analysis).
+ * Increments e3 when users click internal CTAs and promotional elements.
+ * @param {Object} params
+ * @param {string} params.linkText - Text of the clicked link
+ */
+export function trackLinkClick({ linkText }) {
+  if (!isMartechInitialized()) return;
+  const text = linkText?.trim() || 'Internal Link Click';
+  pushToDataLayer({
+    event: 'linkanalysis',
+    e3: { [text]: 1 },
   });
 }
 
@@ -150,6 +179,7 @@ export function attachNavigationTracking() {
     }
     const navigation = getNavigationPath(link);
     if (navigation) trackNavigation({ navigation });
+    trackLinkClick({ linkText: link.textContent?.trim() });
   });
 }
 
