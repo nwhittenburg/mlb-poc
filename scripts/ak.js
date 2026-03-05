@@ -323,6 +323,10 @@ function decorateDoc() {
   // Detect Hash
   const pageId = window.location.hash?.replace('#', '');
   if (pageId) localStorage.setItem('lazyhash', pageId);
+
+  if (/\/capabilities\//.test(window.location.pathname)) {
+    document.body.classList.add('capabilities');
+  }
 }
 
 export async function loadArea({ area } = { area: document }) {

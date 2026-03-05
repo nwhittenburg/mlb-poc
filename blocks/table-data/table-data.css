@@ -43,6 +43,10 @@
     line-height: 1.5;
   }
 
+  &:not(:has(tr > td:nth-of-type(3))) td {
+    font-size: var(--body-font-size-m, 16px);
+  }
+
   th:first-child,
   td:first-child {
     background-color: var(--table-header-bg);
