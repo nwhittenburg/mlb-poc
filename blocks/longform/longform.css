@@ -84,7 +84,7 @@
 
 /* Plain longform (no numbers) */
 .longform:not(.numbered) {
-  font-size: 20px;
+  font-size: var(--body-font-size-xl);
   font-weight: 400;
   line-height: 1.5;
   color: var(--c1-text-text, #2c2c2c);
@@ -97,4 +97,9 @@
 
 .longform:not(.numbered) p:last-child {
   margin-bottom: 0;
+}
+
+.capabilities .longform.numbered .longform-content,
+.capabilities .longform:not(.numbered) {
+  font-size: var(--body-font-size-l);
 }
