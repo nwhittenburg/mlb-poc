@@ -1,4 +1,4 @@
-import { trackVideoComplete } from '../../scripts/analytics.js';
+import { trackVideoComplete, trackVideoStart } from '../../scripts/analytics.js';
 
 /**
  * Extracts the video UUID from a Vidyard share URL
@@ -123,8 +123,14 @@ function openVideoModal(uuid, title) {
         const players = vyApi.api.getPlayersByUUID(uuid);
         const player = players?.[0];
         if (player) {
-          player.play();
+          let startFired = false;
           if (typeof player.on === 'function') {
+            player.on('play', () => {
+              if (!startFired) {
+                startFired = true;
+                trackVideoStart({ videoName });
+              }
+            });
             player.on('playerComplete', () => trackVideoComplete({ videoName }));
           } else {
             vyApi.api.progressEvents((result) => {
@@ -132,6 +138,7 @@ function openVideoModal(uuid, title) {
               if (result.player?.uuid === uuid && done) trackVideoComplete({ videoName });
             }, [95, 100]);
           }
+          player.play();
         }
       }, uuid);
     });
@@ -310,7 +317,14 @@ export default async function decorate(block) {
                 const players = vyApi.api.getPlayersByUUID(uuid);
                 const player = players?.[0];
                 if (player) {
+                  let startFired = false;
                   if (typeof player.on === 'function') {
+                    player.on('play', () => {
+                      if (!startFired) {
+                        startFired = true;
+                        trackVideoStart({ videoName });
+                      }
+                    });
                     player.on('playerComplete', () => trackVideoComplete({ videoName }));
                   } else {
                     vyApi.api.progressEvents((result) => {
