@@ -34,7 +34,13 @@
 .video .video-container img {
   display: block;
   width: 100%;
-  height: 320px;
+  height: auto;
+}
+
+@media (min-width: 900px) {
+  .video .video-container img { 
+    max-height: 320px;
+  }
 }
 
 /* Play icon overlay for multi-grid modal items */
