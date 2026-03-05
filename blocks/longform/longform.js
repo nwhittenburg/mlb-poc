@@ -42,7 +42,7 @@ export default function decorate(block) {
       const imageCount = hasImage.filter(Boolean).length;
 
       if (cells.length === 2 && imageCount === 1) {
-        columns.style.gridTemplateColumns = hasImage.map((img) => (img ? '1fr' : '2fr')).join(' ');
+        columns.style.gridTemplateColumns = hasImage.map((img) => (img ? 'auto' : '1fr')).join(' ');
       } else {
         columns.style.gridTemplateColumns = `repeat(${cells.length}, 1fr)`;
       }
