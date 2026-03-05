@@ -91,7 +91,7 @@ body {
   }
 
   &.capabilities {
-    font-size: var(--body-font-size-l);
+    font-size: var(--body-font-size-l, 18px);
   }
 }
 

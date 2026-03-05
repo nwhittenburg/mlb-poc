@@ -44,7 +44,7 @@
   }
 
   &:not(:has(tr > td:nth-of-type(3))) td {
-    font-size: var(--body-font-size-m);
+    font-size: var(--body-font-size-m, 16px);
   }
 
   th:first-child,
