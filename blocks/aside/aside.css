@@ -1,0 +1,62 @@
+/* Aside block - 2 columns. Below 900px: 50-50. Above 900px: split-X-Y applies. Mobile first. */
+.aside {
+  --aside-col-1: 50%;
+  --aside-col-2: 50%;
+}
+
+.aside .aside-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-l);
+  align-items: center;
+}
+
+.aside .aside-col {
+  padding: var(--spacing-l);
+  border-radius: 16px;
+}
+
+.aside .aside-image {
+  padding: 0;
+  background: transparent;
+}
+
+.aside .aside-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 16px;
+}
+
+.aside .aside-content h2 {
+  margin: 0;
+}
+
+.aside .aside-content p {
+  font-size: var(--body-font-size-m);
+}
+
+.aside .aside-content p strong:has(img) {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-m);
+}
+
+@media (width >= 900px) {
+  .aside .aside-row:has(.aside-col-1.aside-image) {
+    grid-template-columns: var(--aside-col-1) 1fr;
+  }
+
+  .aside .aside-row:has(.aside-col-2.aside-image) {
+    grid-template-columns: 1fr var(--aside-col-2);
+  }
+
+  .aside .aside-col {
+    padding: 0;
+    background: transparent;
+  }
+
+  .aside .aside-image {
+    padding: 0;
+  }
+}

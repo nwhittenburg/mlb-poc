@@ -53,15 +53,6 @@ Add class: `image-cover`
 
 Creates equal-height columns with images that fill their container using `object-fit: cover`.
 
-### Extended Image
-
-Add class: `extended-image` (requires `full-width` section)
-
-Creates an asymmetric layout where the image extends beyond the container width:
-- Image on left: extends to left edge of viewport
-- Image on right: extends to right edge of viewport
-- Content column has max-width of 560px
-
 ### Z-Pattern
 
 Add class: `z-pattern`
@@ -97,11 +88,3 @@ Multiple classes can be combined:
 ```
 columns, no-background, gap-xl
 ```
-
-## Extended Image Requirements
-
-The `extended-image` variation requires:
-1. Parent section must have `full-width` class
-2. Works best with 2 columns (image + content)
-3. Image should be in a column by itself (wrapped in picture tag only)
-4. Automatically detects image position (left or right) based on column order

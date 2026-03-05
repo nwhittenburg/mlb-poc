@@ -231,24 +231,6 @@ a {
     padding-bottom: var(--spacing-xl);
   }
 }
-@media (min-width: 900px) {
-  .section {
-    &.full-width {
-      > .block-content:not(:has(.hero)) {
-        max-width: 1920px;
-      }
-    }
-  }
-}
-
-.section {
-  &.full-width { /* Apply max-width to all blocks except hero */
-  > .block-content:not(:has(.hero)) {
-    max-width: 1920px;
-    }
-  }
-  
-}
 
 main {
   /* 2-column layout when jumplinks is present */
