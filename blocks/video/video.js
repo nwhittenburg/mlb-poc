@@ -19,6 +19,8 @@ function getPosterUrl(uuid) {
   return `https://play.vidyard.com/${uuid}.jpg`;
 }
 
+const readyListenersRegistered = new Set();
+
 /**
  * Loads Vidyard script if not already loaded
  */
@@ -119,28 +121,25 @@ export function openVideoModal(uuid, title) {
         type: 'inline',
         autoplay: 1,
       });
-      vyApi.api.addReadyListener(() => {
-        const players = vyApi.api.getPlayersByUUID(uuid);
-        const player = players?.[0];
-        if (player) {
-          let startFired = false;
-          if (typeof player.on === 'function') {
-            player.on('play', () => {
-              if (!startFired) {
-                startFired = true;
-                trackVideoStart({ videoName });
-              }
-            });
-            player.on('playerComplete', () => trackVideoComplete({ videoName }));
-          } else {
-            vyApi.api.progressEvents((result) => {
-              const done = result.event === 95 || result.event === 100;
-              if (result.player?.uuid === uuid && done) trackVideoComplete({ videoName });
-            }, [95, 100]);
+      if (!readyListenersRegistered.has(uuid)) {
+        readyListenersRegistered.add(uuid);
+        vyApi.api.addReadyListener(() => {
+          const players = vyApi.api.getPlayersByUUID(uuid);
+          const player = players?.[0];
+          if (player) {
+            if (typeof player.on === 'function') {
+              player.on('play', () => trackVideoStart({ videoName }));
+              player.on('playerComplete', () => trackVideoComplete({ videoName }));
+            } else {
+              vyApi.api.progressEvents((result) => {
+                const done = result.event === 95 || result.event === 100;
+                if (result.player?.uuid === uuid && done) trackVideoComplete({ videoName });
+              }, [95, 100]);
+            }
+            player.play();
           }
-          player.play();
-        }
-      }, uuid);
+        }, uuid);
+      }
     });
   }
 }
@@ -317,14 +316,8 @@ export default async function decorate(block) {
                 const players = vyApi.api.getPlayersByUUID(uuid);
                 const player = players?.[0];
                 if (player) {
-                  let startFired = false;
                   if (typeof player.on === 'function') {
-                    player.on('play', () => {
-                      if (!startFired) {
-                        startFired = true;
-                        trackVideoStart({ videoName });
-                      }
-                    });
+                    player.on('play', () => trackVideoStart({ videoName }));
                     player.on('playerComplete', () => trackVideoComplete({ videoName }));
                   } else {
                     vyApi.api.progressEvents((result) => {
