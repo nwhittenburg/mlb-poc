@@ -1,6 +1,6 @@
 /**
  * Longform block
- * Transforms content into a numbered list format
+ * Transforms content into a numbered or plain list format with optional image columns
  * @param {Element} block The longform block element
  */
 
@@ -23,13 +23,32 @@ async function normalizeImageColumns(block) {
   block.style.setProperty('--longform-img-width', `${maxWidth}px`);
 }
 
-export default function decorate(block) {
-  const isNumbered = block.classList.contains('numbered');
+function buildColumns(cells) {
+  const columns = document.createElement('div');
+  columns.classList.add('longform-columns');
 
-  if (!isNumbered) {
-    return;
+  const hasImage = cells.map((c) => !!c.querySelector('picture, img'));
+  const imageCount = hasImage.filter(Boolean).length;
+
+  if (cells.length === 2 && imageCount === 1) {
+    columns.classList.add('longform-columns--with-image');
+    if (hasImage[0]) columns.classList.add('longform-columns--image-first');
+  } else {
+    columns.style.gridTemplateColumns = `repeat(${cells.length}, 1fr)`;
   }
 
+  cells.forEach((cell, i) => {
+    const col = document.createElement('div');
+    col.classList.add('longform-col');
+    if (hasImage[i]) col.classList.add('longform-col--image');
+    while (cell.firstChild) col.appendChild(cell.firstChild);
+    columns.appendChild(col);
+  });
+
+  return columns;
+}
+
+function decorateNumbered(block) {
   const rows = [...block.querySelectorAll(':scope > div')];
   if (!rows.length) return;
 
@@ -53,32 +72,9 @@ export default function decorate(block) {
     content.classList.add('longform-content');
 
     if (cells.length > 1) {
-      const columns = document.createElement('div');
-      columns.classList.add('longform-columns');
-
-      const hasImage = cells.map((c) => !!c.querySelector('picture, img'));
-      const imageCount = hasImage.filter(Boolean).length;
-
-      if (cells.length === 2 && imageCount === 1) {
-        columns.classList.add('longform-columns--with-image');
-        if (hasImage[0]) columns.classList.add('longform-columns--image-first');
-      } else {
-        columns.style.gridTemplateColumns = `repeat(${cells.length}, 1fr)`;
-      }
-
-      cells.forEach((cell, i) => {
-        const col = document.createElement('div');
-        col.classList.add('longform-col');
-        if (hasImage[i]) col.classList.add('longform-col--image');
-        while (cell.firstChild) col.appendChild(cell.firstChild);
-        columns.appendChild(col);
-      });
-
-      content.appendChild(columns);
+      content.appendChild(buildColumns(cells));
     } else {
-      while (cells[0].firstChild) {
-        content.appendChild(cells[0].firstChild);
-      }
+      while (cells[0].firstChild) content.appendChild(cells[0].firstChild);
     }
 
     item.appendChild(numberEl);
@@ -90,6 +86,45 @@ export default function decorate(block) {
 
   block.innerHTML = '';
   block.appendChild(list);
+}
+
+function decoratePlain(block) {
+  const rows = [...block.querySelectorAll(':scope > div')];
+  if (!rows.length) return;
+
+  const list = document.createElement('div');
+  list.classList.add('longform-list');
+
+  rows.forEach((row) => {
+    const cells = [...row.querySelectorAll(':scope > div')];
+    if (!cells.length || !cells.some((c) => c.textContent.trim())) return;
+
+    const item = document.createElement('div');
+    item.classList.add('longform-item');
+
+    const content = document.createElement('div');
+    content.classList.add('longform-content');
+
+    if (cells.length > 1) {
+      content.appendChild(buildColumns(cells));
+    } else {
+      while (cells[0].firstChild) content.appendChild(cells[0].firstChild);
+    }
+
+    item.appendChild(content);
+    list.appendChild(item);
+  });
+
+  block.innerHTML = '';
+  block.appendChild(list);
+}
+
+export default function decorate(block) {
+  if (block.classList.contains('numbered')) {
+    decorateNumbered(block);
+  } else {
+    decoratePlain(block);
+  }
 
   normalizeImageColumns(block);
 }
