@@ -53,7 +53,7 @@ export function ensureVidyardScript() {
  * @param {string} uuid - The Vidyard video UUID
  * @param {string} title - The video title
  */
-function openVideoModal(uuid, title) {
+export function openVideoModal(uuid, title) {
   const videoName = title || 'Video';
 
   const modal = document.createElement('div');

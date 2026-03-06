@@ -1,5 +1,4 @@
-import { trackVideoComplete, trackVideoStart } from '../../scripts/analytics.js';
-import { ensureVidyardScript, getVidyardUuid } from '../video/video.js';
+import { getVidyardUuid, openVideoModal as openVideoModalBase } from '../video/video.js';
 
 /**
  * Convert text to class name format
@@ -15,107 +14,10 @@ function toClassName(text) {
 
 /**
  * Create and show video modal
- * @param {Object} video - Video data object
+ * @param {Object} video - Video data object with url and title
  */
 function openVideoModal(video) {
-  const videoId = getVidyardUuid(video.url);
-  const videoName = video.title || 'Video';
-
-  // Create modal overlay
-  const modal = document.createElement('div');
-  modal.className = 'video-modal';
-  modal.setAttribute('role', 'dialog');
-  modal.setAttribute('aria-modal', 'true');
-  modal.setAttribute('aria-label', video.title);
-
-  // Create modal content
-  const modalContent = document.createElement('div');
-  modalContent.className = 'video-modal-content';
-
-  // Create close button
-  const closeButton = document.createElement('button');
-  closeButton.className = 'video-modal-close';
-  closeButton.setAttribute('type', 'button');
-  closeButton.setAttribute('aria-label', 'Close video');
-  closeButton.innerHTML = '&times;';
-
-  // Create video container for Vidyard API render
-  const videoContainer = document.createElement('div');
-  videoContainer.className = 'video-modal-player';
-
-  modalContent.appendChild(closeButton);
-  modalContent.appendChild(videoContainer);
-  modal.appendChild(modalContent);
-
-  let closeModal;
-  const handleEscape = (e) => {
-    if (e.key === 'Escape') closeModal();
-  };
-  closeModal = () => {
-    modal.classList.add('closing');
-    document.removeEventListener('keydown', handleEscape);
-    if (videoId) {
-      ensureVidyardScript().then((vyApi) => {
-        const players = vyApi.api.getPlayersByUUID(videoId);
-        players.forEach((player) => vyApi.api.destroyPlayer(player));
-      });
-    }
-    setTimeout(() => {
-      modal.remove();
-      document.body.style.overflow = '';
-    }, 300);
-  };
-
-  closeButton.addEventListener('click', (e) => {
-    e.stopPropagation();
-    closeModal();
-  });
-
-  // Close on overlay click
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) closeModal();
-  });
-
-  document.addEventListener('keydown', handleEscape);
-
-  // Add to DOM and show
-  document.body.appendChild(modal);
-  document.body.style.overflow = 'hidden';
-  requestAnimationFrame(() => modal.classList.add('show'));
-
-  // Load Vidyard and render player with progress tracking
-  if (videoId) {
-    ensureVidyardScript().then((vyApi) => {
-      vyApi.api.renderPlayer({
-        uuid: videoId,
-        container: videoContainer,
-        type: 'inline',
-        autoplay: 1,
-      });
-      vyApi.api.addReadyListener(() => {
-        const players = vyApi.api.getPlayersByUUID(videoId);
-        const player = players?.[0];
-        if (player) {
-          let startFired = false;
-          if (typeof player.on === 'function') {
-            player.on('play', () => {
-              if (!startFired) {
-                startFired = true;
-                trackVideoStart({ videoName });
-              }
-            });
-            player.on('playerComplete', () => trackVideoComplete({ videoName }));
-          } else {
-            vyApi.api.progressEvents((result) => {
-              const done = result.event === 95 || result.event === 100;
-              if (result.player?.uuid === videoId && done) trackVideoComplete({ videoName });
-            }, [95, 100]);
-          }
-          player.play();
-        }
-      }, videoId);
-    });
-  }
+  openVideoModalBase(getVidyardUuid(video.url), video.title);
 }
 
 /**

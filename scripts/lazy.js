@@ -4,6 +4,16 @@
   import('./utils/footer.js').then(({ default: footer }) => footer());
   import('../tools/sidekick/sidekick.js');
 
+  const videoId = new URLSearchParams(window.location.search).get('v');
+  if (videoId) {
+    Promise.all([
+      import('../blocks/video/video.js'),
+      import('./ak.js'),
+    ]).then(([{ openVideoModal }, { loadStyle }]) => {
+      loadStyle('/blocks/video/video.css').then(() => openVideoModal(videoId));
+    });
+  }
+
   const searchCSS = document.createElement('link');
   searchCSS.rel = 'stylesheet';
   searchCSS.href = '/blocks/search-results/search-results.css';
