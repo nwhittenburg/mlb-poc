@@ -56,11 +56,8 @@
   grid-template-columns: 1fr;
 }
 
-.longform.numbered .longform-columns--image-first .longform-col--image {
-  order: -1;
-}
-
 .longform.numbered .longform-col--image {
+  order: -1;
   display: flex;
   align-items: center;
   justify-content: center;
