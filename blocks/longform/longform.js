@@ -24,8 +24,8 @@ async function normalizeImageColumns(block) {
     const firstCol = columns.querySelector('.longform-col');
     const isImageFirst = firstCol?.classList.contains('longform-col--image');
     columns.style.gridTemplateColumns = isImageFirst
-      ? `${maxWidth}px 1fr`
-      : `1fr ${maxWidth}px`;
+      ? `minmax(0, ${maxWidth}px) minmax(400px, 1fr)`
+      : `minmax(400px, 1fr) minmax(0, ${maxWidth}px)`;
   });
 }
 
@@ -69,7 +69,7 @@ export default function decorate(block) {
 
       if (cells.length === 2 && imageCount === 1) {
         // Defer grid sizing to normalizeImageColumns; set a temporary auto layout
-        columns.style.gridTemplateColumns = hasImage.map((img) => (img ? 'auto' : '1fr')).join(' ');
+        columns.style.gridTemplateColumns = hasImage.map((img) => (img ? 'auto' : 'minmax(400px, 1fr)')).join(' ');
       } else {
         columns.style.gridTemplateColumns = `repeat(${cells.length}, 1fr)`;
       }
