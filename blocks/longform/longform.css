@@ -85,26 +85,30 @@
     order: unset;
   }
 
-  /* Small images: intrinsic width, normalized across block */
+  /* Default: proportional 1fr/2fr layout (no JS needed) */
   .longform .longform-columns--with-image {
-    grid-template-columns: minmax(0, var(--longform-img-width, auto)) 1fr;
-  }
-
-  .longform .longform-columns--with-image:not(.longform-columns--image-first) {
-    grid-template-columns: 1fr minmax(0, var(--longform-img-width, auto));
-  }
-
-  /* Large images: proportional 1fr/2fr layout */
-  .longform--large-images .longform-columns--with-image {
     grid-template-columns: 1fr 2fr;
   }
 
-  .longform--large-images .longform-columns--with-image:not(.longform-columns--image-first) {
+  .longform .longform-columns--with-image:not(.longform-columns--image-first) {
     grid-template-columns: 2fr 1fr;
   }
 
-  .longform--large-images .longform-col img {
+  .longform .longform-col img {
     width: 100%;
+  }
+
+  /* Small images: intrinsic width, normalized across block */
+  .longform--small-images .longform-columns--with-image {
+    grid-template-columns: minmax(0, var(--longform-img-width, auto)) 1fr;
+  }
+
+  .longform--small-images .longform-columns--with-image:not(.longform-columns--image-first) {
+    grid-template-columns: 1fr minmax(0, var(--longform-img-width, auto));
+  }
+
+  .longform--small-images .longform-col img {
+    width: auto;
   }
 }
 

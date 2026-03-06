@@ -23,9 +23,8 @@ async function normalizeImageColumns(block) {
   const contentWidth = block.querySelector('.longform-content')?.offsetWidth || 0;
   const threshold = contentWidth / 3;
 
-  if (maxNatural >= threshold) {
-    block.classList.add('longform--large-images');
-  } else {
+  if (maxNatural < threshold) {
+    block.classList.add('longform--small-images');
     block.style.setProperty('--longform-img-width', `${maxNatural}px`);
   }
 }
