@@ -52,6 +52,12 @@
   width: 100%;
 }
 
+.longform.numbered .longform-col--image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .longform.numbered .longform-col img {
   max-width: 100%;
   width: auto;
