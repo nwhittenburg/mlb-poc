@@ -95,6 +95,10 @@
 
 /* Desktop: side-by-side with normalized image width */
 @media (width >= 600px) {
+  .longform.numbered .longform-col--image {
+    order: unset;
+  }
+
   .longform.numbered .longform-columns--with-image {
     grid-template-columns: minmax(0, var(--longform-img-width, auto)) 1fr;
   }
