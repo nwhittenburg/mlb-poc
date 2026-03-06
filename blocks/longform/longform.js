@@ -17,10 +17,17 @@ async function normalizeImageColumns(block) {
       img.addEventListener('error', resolve, { once: true });
     }))));
 
-  const maxWidth = Math.max(...images.map((img) => img.naturalWidth));
-  if (maxWidth <= 0) return;
+  const maxNatural = Math.max(...images.map((img) => img.naturalWidth));
+  if (maxNatural <= 0) return;
 
-  block.style.setProperty('--longform-img-width', `${maxWidth}px`);
+  const contentWidth = block.querySelector('.longform-content')?.offsetWidth || 0;
+  const threshold = contentWidth / 3;
+
+  if (maxNatural >= threshold) {
+    block.classList.add('longform--large-images');
+  } else {
+    block.style.setProperty('--longform-img-width', `${maxNatural}px`);
+  }
 }
 
 function buildColumns(cells) {
