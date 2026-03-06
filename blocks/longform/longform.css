@@ -1,5 +1,4 @@
 .longform {
-  /* Container gets top border */
   border-top: 2px solid var(--c1-content-divider-400, #b6b6b6);
 }
 
@@ -52,6 +51,15 @@
   width: 100%;
 }
 
+/* Mobile-first: stack image above text */
+.longform.numbered .longform-columns--with-image {
+  grid-template-columns: 1fr;
+}
+
+.longform.numbered .longform-columns--image-first .longform-col--image {
+  order: -1;
+}
+
 .longform.numbered .longform-col--image {
   display: flex;
   align-items: center;
@@ -79,7 +87,6 @@
   line-height: 1.5;
 }
 
-
 .longform.numbered .longform-content li:not(:last-child) {
   margin-bottom: 8px;
 }
@@ -87,6 +94,17 @@
 .longform.numbered .longform-content strong,
 .longform.numbered .longform-content b {
   font-weight: 700;
+}
+
+/* Desktop: side-by-side with normalized image width */
+@media (width >= 600px) {
+  .longform.numbered .longform-columns--with-image {
+    grid-template-columns: minmax(0, var(--longform-img-width, auto)) 1fr;
+  }
+
+  .longform.numbered .longform-columns--with-image:not(.longform-columns--image-first) {
+    grid-template-columns: 1fr minmax(0, var(--longform-img-width, auto));
+  }
 }
 
 /* Plain longform (no numbers) */

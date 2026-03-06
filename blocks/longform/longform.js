@@ -20,24 +20,16 @@ async function normalizeImageColumns(block) {
   const maxWidth = Math.max(...images.map((img) => img.naturalWidth));
   if (maxWidth <= 0) return;
 
-  block.querySelectorAll('.longform-columns').forEach((columns) => {
-    const firstCol = columns.querySelector('.longform-col');
-    const isImageFirst = firstCol?.classList.contains('longform-col--image');
-    columns.style.gridTemplateColumns = isImageFirst
-      ? `minmax(0, ${maxWidth}px) minmax(400px, 1fr)`
-      : `minmax(400px, 1fr) minmax(0, ${maxWidth}px)`;
-  });
+  block.style.setProperty('--longform-img-width', `${maxWidth}px`);
 }
 
 export default function decorate(block) {
   const isNumbered = block.classList.contains('numbered');
 
   if (!isNumbered) {
-    // Plain longform - just apply base styling
     return;
   }
 
-  // Numbered variant: each authored row becomes a numbered item
   const rows = [...block.querySelectorAll(':scope > div')];
   if (!rows.length) return;
 
@@ -68,8 +60,8 @@ export default function decorate(block) {
       const imageCount = hasImage.filter(Boolean).length;
 
       if (cells.length === 2 && imageCount === 1) {
-        // Defer grid sizing to normalizeImageColumns; set a temporary auto layout
-        columns.style.gridTemplateColumns = hasImage.map((img) => (img ? 'auto' : 'minmax(400px, 1fr)')).join(' ');
+        columns.classList.add('longform-columns--with-image');
+        if (hasImage[0]) columns.classList.add('longform-columns--image-first');
       } else {
         columns.style.gridTemplateColumns = `repeat(${cells.length}, 1fr)`;
       }
