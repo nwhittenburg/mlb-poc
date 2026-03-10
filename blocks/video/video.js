@@ -54,8 +54,9 @@ export function ensureVidyardScript() {
  * Opens a video modal with Vidyard API (enables progress tracking)
  * @param {string} uuid - The Vidyard video UUID
  * @param {string} title - The video title
+ * @param {Object} params - Additional params passed to Vidyard renderPlayer (e.g. { second: 35 })
  */
-export function openVideoModal(uuid, title) {
+export function openVideoModal(uuid, title, params = {}) {
   const videoName = title || 'Video';
 
   const modal = document.createElement('div');
@@ -133,6 +134,7 @@ export function openVideoModal(uuid, title) {
         container: videoContainer,
         type: 'inline',
         autoplay: 1,
+        ...params,
       });
       if (!readyListenersRegistered.has(uuid)) {
         readyListenersRegistered.add(uuid);
