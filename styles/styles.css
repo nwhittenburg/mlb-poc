@@ -361,7 +361,7 @@ li {
 }
 
 li + li {
-  margin-top: var(--spacing-s);
+  margin-top: var(--spacing-xs);
 }
 
 body > main ul ul li + li,

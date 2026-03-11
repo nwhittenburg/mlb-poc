@@ -25,7 +25,9 @@
   margin: 0;
 }
 
-.longform .longform-content p + p {
+.longform .longform-content p + p,
+.longform .longform-content ul + p,
+.longform .longform-content ol + p {
   margin-top: 20px;
 }
 
@@ -71,7 +73,7 @@
 }
 
 .longform .longform-content li:not(:last-child) {
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 
 .longform .longform-content strong,
