@@ -1,4 +1,4 @@
-.default-content:has(+ .block-content .table-data) h3 {
+.default-content:has(+ .block-content .table-data):has(> h3:only-child) > h3 {
   font-family: "HEX Franklin MLB Condensed", sans-serif;
 }
 
