@@ -228,6 +228,12 @@
     }
   }
 
+  &.no-overlay {
+    .hero-background::after {
+      background: none;
+    }
+  }
+
   .hero-background::after {
     background: color-mix(in srgb, var(--mlb-black) 55%, transparent);
   }
