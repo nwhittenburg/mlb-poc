@@ -91,7 +91,7 @@
 }
 
 .jumplinks-headings > li.expanded > .jumplinks-subheadings {
-  max-height: 500px;
+  max-height: 100%;
 }
 
 .jumplinks-subheadings a {

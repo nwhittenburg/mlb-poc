@@ -36,6 +36,10 @@
   font-size: var(--body-font-size-m);
 }
 
+.aside .aside-content p:has(a.btn) {
+  text-align: left;
+}
+
 .aside .aside-content p strong:has(img) {
   display: flex;
   align-items: center;
