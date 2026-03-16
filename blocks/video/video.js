@@ -80,6 +80,17 @@ export function openVideoModal(uuid, title) {
   modalContent.appendChild(videoContainer);
   modal.appendChild(modalContent);
 
+  const scrollY = window.scrollY;
+  const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+  Object.assign(document.body.style, {
+    position: 'fixed',
+    top: `-${scrollY}px`,
+    right: '0',
+    left: '0',
+    paddingRight: `${scrollbarWidth}px`,
+    overflow: 'hidden',
+  });
+
   let closeModal;
   const handleEscape = (e) => {
     if (e.key === 'Escape') closeModal();
@@ -95,7 +106,10 @@ export function openVideoModal(uuid, title) {
     }
     setTimeout(() => {
       modal.remove();
-      document.body.style.overflow = '';
+      ['position', 'top', 'right', 'left', 'paddingRight', 'overflow'].forEach(
+        (prop) => { document.body.style[prop] = ''; },
+      );
+      window.scrollTo(0, scrollY);
     }, 300);
   };
 
@@ -110,7 +124,6 @@ export function openVideoModal(uuid, title) {
 
   document.addEventListener('keydown', handleEscape);
   document.body.appendChild(modal);
-  document.body.style.overflow = 'hidden';
   requestAnimationFrame(() => modal.classList.add('show'));
 
   if (uuid) {
