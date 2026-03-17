@@ -295,11 +295,11 @@ export default async function decorate(block) {
     .map((row) => parseVideoRow(row))
     .filter(({ videoUrl }) => videoUrl);
 
-  const isMulti = videoData.length >= 2;
+  const isMulti = videoData.length >= 2 || block.classList.contains('contained');
 
   if (isMulti) {
     videoGrid.classList.add('video-grid-multi');
-  } else if (videoData.length === 1) {
+  } else {
     videoGrid.classList.add('video-grid-single');
   }
 
