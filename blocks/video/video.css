@@ -9,8 +9,13 @@
 }
 
 @media (min-width: 900px) {
-  .video .video-grid.video-grid-multi {
+  .video .video-grid.video-grid-multi:not(.contained) {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .video.contained .video-grid.video-grid-multi {
+    grid-template-columns: 1fr;
+    justify-items: center;
   }
 }
 

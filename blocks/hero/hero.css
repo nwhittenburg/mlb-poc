@@ -192,7 +192,7 @@
   /* Constrained variant - max-width 500px for content */
   &.constrained {
     .fg-text {
-      max-width: 500px;
+      max-width: 550px;
     }
   }
 
