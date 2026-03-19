@@ -12,6 +12,10 @@
  * @param {Element} block
  */
 export default async function decorate(block) {
+  const section = block.closest('.section');
+  const hideSampleValue = section?.classList.contains('hide-sample-value-column')
+    || section?.querySelector('.section-metadata')?.textContent?.toLowerCase().includes('hide-sample-value-column');
+
   const table = document.createElement('table');
   const thead = document.createElement('thead');
   const tbody = document.createElement('tbody');
@@ -20,6 +24,7 @@ export default async function decorate(block) {
 
   // Build table rows and identify accordion sections
   const bodyRows = [];
+  let sampleValueColIndex = -1;
 
   rows.forEach((row, i) => {
     const tr = document.createElement('tr');
@@ -32,6 +37,10 @@ export default async function decorate(block) {
     if (i === 0 && header) {
       // Table header row
       cells.forEach((cell, j) => {
+        const isSampleValue = cell.textContent.trim().toLowerCase() === 'sample value';
+        if (isSampleValue) sampleValueColIndex = j;
+        if (hideSampleValue && isSampleValue) return;
+
         const th = document.createElement('th');
         th.setAttribute('scope', 'column');
         if (j === 0) {
@@ -68,6 +77,8 @@ export default async function decorate(block) {
     } else {
       // Regular data row
       cells.forEach((cell, j) => {
+        if (hideSampleValue && j === sampleValueColIndex) return;
+
         const td = document.createElement('td');
         if (j === 0) {
           td.classList.add('attribute-cell');
