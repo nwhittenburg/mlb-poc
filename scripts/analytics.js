@@ -107,26 +107,19 @@ export function trackVideoComplete({ videoName }) {
   });
 }
 
-/**
- * Track internal link click (Internal Campaign Analysis).
- * Increments e3 when users click internal CTAs and promotional elements.
- * @param {Object} params
- * @param {string} params.linkText - Text of the clicked link
- */
-export function trackLinkClick({ linkText }) {
+/** Basic Traffic: v17 Links + link URL, e15 Link Clicks */
+export function trackLinkClick({ links, url }) {
   if (!isMartechInitialized()) return;
-  const text = linkText?.trim() || 'Internal Link Click';
+  const label = links?.trim() || 'Link Click';
+  const href = typeof url === 'string' ? url.trim() : '';
   pushToDataLayer({
-    event: 'linkanalysis',
-    e3: { [text]: 1 },
+    event: 'basictraffic',
+    v17: { Links: label, linkUrl: href },
+    e15: { 'Link Clicks': 1 },
   });
 }
 
-/**
- * Track navigation usage. Call when a nav link is clicked.
- * @param {Object} params
- * @param {string} params.navigation - Navigation path (e.g. "footer : data dictionary")
- */
+/** navigationusage — header/footer path in v4 */
 export function trackNavigation({ navigation }) {
   if (!isMartechInitialized()) return;
   pushToDataLayer({
@@ -161,39 +154,58 @@ function getNavigationPath(link) {
   return null;
 }
 
-/**
- * Attach navigation tracking to header and footer links.
- */
+/** Same origin as this page (mailto/tel count as external). */
+function isInternalHref(href) {
+  if (/^mailto:/i.test(href) || /^tel:/i.test(href)) return false;
+  try {
+    return new URL(href, window.location.origin).origin === window.location.origin;
+  } catch {
+    return false;
+  }
+}
+
+/** Internal nav paths → navigationusage; basictraffic except internal header (nav only). */
 export function attachNavigationTracking() {
   document.addEventListener('click', (e) => {
     const link = e.target.closest('a[href]');
     if (!link) return;
     const href = link.getAttribute('href');
-    const isJsUrl = /^javascript:/i.test(href);
-    if (!href || href === '#' || isJsUrl) return;
-    try {
-      const url = new URL(href, window.location.origin);
-      if (url.origin !== window.location.origin) return;
-    } catch {
-      return;
-    }
+    if (!href || href === '#' || /^javascript:/i.test(href)) return;
+
+    const internal = isInternalHref(href);
     const navigation = getNavigationPath(link);
-    if (navigation) trackNavigation({ navigation });
-    trackLinkClick({ linkText: link.textContent?.trim() });
+
+    if (internal) {
+      if (navigation) trackNavigation({ navigation });
+      if (link.closest('header')) return;
+    }
+
+    const linksLabel = navigation
+      || link.getAttribute('aria-label')?.trim()
+      || link.querySelector('h1, h2, h3, h4, h5, h6')?.textContent?.trim()
+      || link.textContent?.trim()
+      || 'Link Click';
+    trackLinkClick({ links: linksLabel, url: link.href });
   });
 }
 
-/**
- * Track internal search. Call when search results are rendered.
- */
-export function trackSearch({ searchTerm, resultCount }) {
+/** internalsearchanalysis — site search or use-case facet filters */
+export function trackSearch({
+  searchTerm = '',
+  resultCount,
+  searchResultsPageType,
+  internalSearchTermFilters = '',
+}) {
   if (!isMartechInitialized()) return;
+  const n = Number(resultCount);
+  const isNull = n === 0;
   pushToDataLayer({
     event: 'internalsearchanalysis',
     internalSearchTerm: searchTerm,
     internalSearch: 1,
-    nullSearchResults: resultCount === 0 ? 1 : 0,
-    searchResults: { number: String(resultCount) },
-    searchResultsPageType: resultCount === 0 ? 'No Results' : 'Results Page',
+    nullSearchResults: isNull ? 1 : 0,
+    searchResults: { number: String(n) },
+    searchResultsPageType: searchResultsPageType ?? (isNull ? 'No Results' : 'Results Page'),
+    ...(internalSearchTermFilters ? { internalSearchTermFilters } : {}),
   });
 }
