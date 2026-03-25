@@ -1,3 +1,4 @@
+import { trackSearch } from '../../scripts/analytics.js';
 import { fetchPlaceholders } from '../../scripts/placeholders.js';
 
 const INDEX_PATH = '/use-cases-index.json';
@@ -28,6 +29,17 @@ function applyFilters(data, activeFilters) {
   return data.filter((item) => Object.entries(activeFilters).every(
     ([key, value]) => !value || item[key] === value,
   ));
+}
+
+function buildInternalSearchTermFiltersString(filterDefs, activeFilters, ph) {
+  const allLabel = ph.all || 'All';
+  return filterDefs
+    .map(({ label, key }) => {
+      const raw = activeFilters[key];
+      const display = raw === '' || raw === undefined ? allLabel : raw;
+      return `${label}=${display}`;
+    })
+    .join(' | ');
 }
 
 function closeAllDropdowns(bar, except) {
@@ -239,6 +251,17 @@ export default async function decorate(block) {
     visibleCount = PAGE_SIZE;
     filtered = applyFilters(data, activeFilters);
     renderCards(grid, filtered, loadMore, visibleCount, ph);
+
+    trackSearch({
+      searchTerm: '',
+      resultCount: filtered.length,
+      searchResultsPageType: 'Use Case Library',
+      internalSearchTermFilters: buildInternalSearchTermFiltersString(
+        filterDefs,
+        activeFilters,
+        ph,
+      ),
+    });
   });
 
   loadMore.querySelector('button').addEventListener('click', () => {
