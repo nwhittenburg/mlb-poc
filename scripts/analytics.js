@@ -113,7 +113,7 @@ export function trackLinkClick({ links, url }) {
   const label = links?.trim() || 'Link Click';
   const href = typeof url === 'string' ? url.trim() : '';
   pushToDataLayer({
-    event: 'basictraffic',
+    event: 'linkclick',
     v17: { Links: label, linkUrl: href },
     e15: { 'Link Clicks': 1 },
   });
