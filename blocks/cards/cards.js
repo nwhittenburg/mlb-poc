@@ -164,8 +164,6 @@ function decorateMultiCard(el, allCells, maxCols) {
     parentElement.insertBefore(card, el);
   });
 
-  parentElement.style.setProperty('--card-columns', cappedCols);
-
   if (isHinting) {
     parentElement.classList.add('hinting');
     if (cappedCols <= 2) parentElement.classList.add('hint-sm');
