@@ -91,9 +91,22 @@
     }
   }
 
-  &.align-top {
+  &.align-top,
+  &.valign-top {
     .row {
       align-items: start;
+    }
+  }
+
+  &.valign-center {
+    .row {
+      align-items: center;
+    }
+  }
+
+  &.valign-bottom {
+    .row {
+      align-items: end;
     }
   }
 
