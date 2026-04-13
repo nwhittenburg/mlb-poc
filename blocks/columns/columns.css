@@ -152,6 +152,36 @@
       padding: 0;
     }
   }
+
+  &.align-left {
+    .col {
+      text-align: left;
+
+      p:has(.btn-primary) {
+        text-align: left;
+      }
+    }
+  }
+
+  &.align-center {
+    .col {
+      text-align: center;
+
+      p:has(.btn-primary) {
+        text-align: center;
+      }
+    }
+  }
+
+  &.align-right {
+    .col {
+      text-align: right;
+
+      p:has(.btn-primary) {
+        text-align: right;
+      }
+    }
+  }
 }
 
 @media (width >= 900px) {
