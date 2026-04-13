@@ -91,22 +91,27 @@
     }
   }
 
-  &.align-top,
-  &.valign-top {
+  &.align-top {
     .row {
       align-items: start;
     }
   }
 
+  &.valign-top {
+    .col {
+      justify-content: flex-start;
+    }
+  }
+
   &.valign-center {
-    .row {
-      align-items: center;
+    .col {
+      justify-content: center;
     }
   }
 
   &.valign-bottom {
-    .row {
-      align-items: end;
+    .col {
+      justify-content: flex-end;
     }
   }
 
