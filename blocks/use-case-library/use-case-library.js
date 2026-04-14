@@ -16,7 +16,8 @@ async function fetchUseCases() {
     .map((item) => Object.fromEntries(
       Object.entries(item).map(([k, v]) => [k, typeof v === 'string' ? v.trim() : v]),
     ))
-    .filter((item) => item.title);
+    .filter((item) => item.title)
+    .sort((a, b) => (a.title || '').localeCompare(b.title || '', undefined, { sensitivity: 'base' }));
 }
 
 function getDistinctValues(data, key) {
