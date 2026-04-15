@@ -317,6 +317,10 @@ body > main {
   margin-bottom: 80px;
 }
 
+body > main:not(:has(.hero)) {
+  margin-top: 80px;
+}
+
 /* List styles only for page main content, not header fragment */
 body > main ul,
 body > main ol {
