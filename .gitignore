@@ -9,3 +9,6 @@ helix-importer-ui
 .idea
 .wrangler
 placeholders.json
+
+# Agent skill helper scripts (npm install under skill packages)
+.skills/**/node_modules/
