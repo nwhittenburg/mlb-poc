@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Segmentation Child</title>
+  <style>
+    body { font-family: sans-serif; max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
+    table { border-collapse: collapse; width: 100%; margin: 1.5rem 0; }
+    td, th { border: 1px solid #ccc; padding: 10px; text-align: left; vertical-align: top; }
+    th { background: #f0f0f0; }
+    hr { margin: 2rem 0; }
+  </style>
+</head>
+<body>
+
+<h1>Audience Segmentation</h1>
+
+<hr>
+
+<h2>Overview</h2>
+
+<h3>MLB's Audience Segmentation Overview</h3>
+
+<p>Answers the questions: what is segmentation within MLB? What role does AEP play at MLB? How does CDP enable real-time marketing? Why does MLB need a CDP?</p>
+
+<p>MLB uses Adobe Experience Platform (AEP) and Real-Time Customer Data Platform (RTCDP) to create a unified, actionable view of fan data that powers personalized, omnichannel marketing at scale.</p>
+
+<p>Historically, fan data existed across multiple systems (ticketing platforms, email service providers, and digital engagement tools) making it challenging for Clubs to build consistent audiences or respond quickly to fan behavior. By centralizing and standardizing fan data within a shared CDP environment, MLB enables Clubs to move beyond static lists and manual processes toward dynamic, scalable audience activation.</p>
+
+<p>Together, AEP, CDP, and segmentation form the foundation of MLB's modern fan engagement strategy:</p>
+
+<ul>
+  <li>AEP collects, standardizes, and stores unified fan data.</li>
+  <li>RTCDP enables audience segmentation, evaluation, and activation.</li>
+  <li>Segmentation allows Clubs to define dynamic audiences based on fan attributes and behaviors.</li>
+</ul>
+
+<h4>Core Concepts</h4>
+
+<p><strong>Customer Data Platform (CDP)</strong><br>A centralized system that unifies fan data from multiple sources into a single, persistent profile used for segmentation and activation.</p>
+
+<p><strong>Adobe Experience Platform (AEP)</strong><br>The foundational data layer that ingests, standardizes, and stores fan data from MLB and Club systems.</p>
+
+<p><strong>Real-Time Customer Data Platform (RTCDP)</strong><br>The activation layer built on AEP that enables marketers to define audiences, evaluate them in near real time or on a schedule, and activate them across marketing destinations.</p>
+
+<p><strong>Fan Profile</strong><br>A unified representation of a fan, combining attributes (such as season ticket holder status) and behavioral data (such as ticket purchases or digital engagement) into a single profile.</p>
+
+<p><strong>Segmentation</strong><br>The process of defining groups of fans based on shared attributes and behaviors.</p>
+
+<p><strong>Audience</strong><br>The output of segmentation: fan profiles that meet specified criteria and are eligible for activation.</p>
+
+<p><strong>Attributes and Events</strong><br>Attributes describe a fan. Events capture actions a fan takes.</p>
+
+<p><strong>Activation</strong><br>The process of sending an audience to marketing platforms to deliver messaging.</p>
+
+<p><strong>Destinations</strong><br>External marketing platforms where audiences are activated, such as paid media or social platforms.</p>
+
+<h4>How the System Works</h4>
+
+<table>
+  <tr><th>Longform (numbered)</th></tr>
+  <tr><td>
+    <p><strong>Data Collection and Profile Creation (AEP)</strong></p>
+    <p>AEP serves as the system of record for MLB fan data. It ingests data from MLB and Club systems, including:</p>
+    <ul>
+      <li>Ticketing platforms</li>
+      <li>Email service providers</li>
+      <li>Digital engagement sources</li>
+      <li>Other fan interaction systems</li>
+    </ul>
+    <p>As data is ingested, it is mapped to standardized schemas that define how fan information is structured. This ensures that data from different systems can be accurately combined. The result is a continuously updated, unified fan profile for each individual.</p>
+    <p>By centralizing fan data within AEP, MLB:</p>
+    <ul>
+      <li>Reduces duplication</li>
+      <li>Improves data quality</li>
+      <li>Creates consistency across Clubs</li>
+      <li>Establishes a scalable foundation for personalization</li>
+    </ul>
+  </td></tr>
+  <tr><td>
+    <p><strong>Segmentation and Audience Creation (RTCDP)</strong></p>
+    <p>RTCDP builds on the unified profiles stored in AEP. Marketers use segmentation to define groups of fans based on attributes and events. These rules determine which fans qualify for an audience at any given time. Segmentation logic can be reused across campaigns and destinations, creating a consistent and scalable approach to audience management.</p>
+    <p>Instead of relying on manual list pulls or static spreadsheets, Clubs create dynamic audiences that update automatically as fan data changes.</p>
+  </td></tr>
+  <tr><td>
+    <p><strong>Audience Evaluation and Real-Time Updates</strong></p>
+    <p>Once segmentation rules are defined, audiences are evaluated either:</p>
+    <ul>
+      <li>On a scheduled basis</li>
+      <li>In near real time as new data is ingested</li>
+    </ul>
+    <p>As fan behavior changes (when a fan purchases a ticket, for example), that fan may automatically enter or exit relevant audiences. This ensures campaigns always reflect the most current information available without requiring manual updates.</p>
+  </td></tr>
+  <tr><td>
+    <p><strong>Activation to Marketing Destinations</strong></p>
+    <p>After evaluation, audiences can be activated to external marketing destinations, including:</p>
+    <ul>
+      <li>Email platforms</li>
+      <li>Push notifications</li>
+      <li>Paid media channels</li>
+      <li>Social media platforms</li>
+    </ul>
+    <p>Because audience membership updates automatically, activation remains aligned with real fan behavior. This improves targeting accuracy, increases operational efficiency, and enhances the overall fan experience.</p>
+  </td></tr>
+</table>
+
+<h4>Why Segmentation Matters for MLB Clubs</h4>
+
+<p>By combining AEP, RTCDP, and segmentation, MLB provides Clubs with:</p>
+
+<ul>
+  <li>A shared, unified data foundation</li>
+  <li>Dynamic audiences that update automatically</li>
+  <li>Reduced reliance on one-off list pulls</li>
+  <li>Faster response to fan behavior</li>
+  <li>More advanced personalization capabilities</li>
+  <li>Improved measurement and decision-making</li>
+</ul>
+
+<p>This approach balances consistency and flexibility:</p>
+
+<ul>
+  <li>Clubs benefit from a standardized data model and shared infrastructure.</li>
+  <li>Clubs retain the flexibility to tailor campaigns to local strategies and market needs.</li>
+</ul>
+
+<p>Segmentation supports a wide range of use cases reducing manual effort and improving marketing consistency across seasons.</p>
+
+<h4>The Shift from Static to Dynamic Marketing</h4>
+
+<p>The move to a CDP-powered environment represents a fundamental evolution in how MLB Clubs engage fans.</p>
+
+<p><strong>Before:</strong></p>
+
+<ul>
+  <li>Data siloed across systems</li>
+  <li>Manual list pulls</li>
+  <li>Static audiences</li>
+  <li>Delayed campaign updates</li>
+</ul>
+
+<p><strong>Now:</strong></p>
+
+<ul>
+  <li>Unified fan profiles</li>
+  <li>Centralized segmentation logic</li>
+  <li>Automatically updating audiences</li>
+  <li>Scheduled or near real-time evaluation</li>
+  <li>Scalable activation across channels</li>
+</ul>
+
+<p>This shift improves marketing efficiency while delivering more relevant, timely experiences to fans.</p>
+
+<hr>
+
+<h2>What is Segmentation?</h2>
+
+<h3>MLB's Data Ecosystem &amp; Architecture</h3>
+
+<p>Answers the questions: what systems contribute data to MLB? How is data organized across MLB? How does fan data move end-to-end?</p>
+
+<p>MLB's data ecosystem defines how fan data is generated, structured, unified, and activated across the league and individual Clubs. It connects upstream data sources, centralized data platforms, and downstream marketing systems into a coordinated framework that supports segmentation and personalized marketing at scale.</p>
+
+<p>While the data ecosystem describes the systems that generate and use data, data architecture defines how that data is structured and modeled to ensure consistency. Together, they enable a reliable end-to-end data flow that transforms fan interactions into actionable audiences.</p>
+
+<p>Adobe Experience Platform (AEP) and Real-Time Customer Data Platform (RTCDP) serve as the central layers within this framework, enabling unified profiles, segmentation, and marketing activation.</p>
+
+<p>Understanding this integrated structure helps define:</p>
+
+<ul>
+  <li>Where fan data originates</li>
+  <li>How it is organized and standardized</li>
+  <li>How it moves through the system</li>
+  <li>How it ultimately supports marketing use cases</li>
+</ul>
+
+<h4>Core Concepts</h4>
+
+<p><strong>Data Sources</strong><br>Upstream systems that generate fan data, such as ticketing platforms, OneView, Grandstand, and digital properties.</p>
+
+<p><strong>Centralized Data Platform</strong><br>A shared environment (AEP and RTCDP) that consolidates data from multiple sources for consistent use across Clubs.</p>
+
+<p><strong>Schema</strong><br>A structured model that defines how fan attributes and behaviors are organized and stored.</p>
+
+<p><strong>Data Ingestion</strong><br>The process of bringing collected data into Adobe Experience Platform.</p>
+
+<p><strong>Profile Unification</strong><br>Combining data from multiple systems into a single, continuously updated fan profile.</p>
+
+<p><strong>Segmentation and Activation</strong><br>Using unified profiles to define audiences and deliver messaging across marketing channels.</p>
+
+<h4>The MLB Data Ecosystem</h4>
+
+<p>Fan data is generated continuously as fans interact with Clubs, games, and digital properties. These upstream systems produce information about fan attributes (who they are) and fan events (what they do).</p>
+
+<p>Without coordination, this data would remain fragmented across systems. MLB's centralized data platform reduces that fragmentation by ingesting and consolidating data into a shared environment.</p>
+
+<p>Within this ecosystem:</p>
+
+<ul>
+  <li>Upstream systems generate data</li>
+  <li>AEP ingests and standardizes the data</li>
+  <li>RTCDP enables segmentation and activation</li>
+  <li>Marketing platforms receive evaluated audiences</li>
+</ul>
+
+<p>By centralizing fan data, MLB improves visibility into fan engagement and ensures that information collected in one system can support multiple downstream use cases.</p>
+
+<h4>The Role of Data Architecture</h4>
+
+<p>While the ecosystem defines where data lives, data architecture defines how it is structured.</p>
+
+<p>MLB's data architecture relies on standardized schemas that ensure fan attributes and behaviors are modeled consistently across systems. When data is ingested into AEP, it is mapped to these predefined schemas. This mapping ensures that ticketing data, digital engagement data, and email interaction data can coexist accurately within a single fan profile.</p>
+
+<p>Because architecture is standardized:</p>
+
+<ul>
+  <li>Fan profiles behave predictably</li>
+  <li>Segmentation logic performs consistently</li>
+  <li>Use cases scale across Clubs</li>
+  <li>Data quality improves</li>
+</ul>
+
+<p>A clear architectural foundation reduces ambiguity and builds trust in how audiences are defined and evaluated.</p>
+
+<h4>MLB's End-to-End Data Flow</h4>
+
+<p>MLB's end-to-end data flow connects data collection to marketing activation in a coordinated pipeline.</p>
+
+<table>
+  <tr><th>Longform (numbered)</th></tr>
+  <tr><td>
+    <p><strong>Data Generation (Upstream Systems)</strong></p>
+    <p>Fan interactions generate data across ticketing, digital, and Club platforms.</p>
+  </td></tr>
+  <tr><td>
+    <p><strong>Data Ingestion and Standardization (AEP)</strong></p>
+    <p>Data is ingested into Adobe Experience Platform and mapped to standardized schemas. This ensures alignment across systems and enables accurate profile updates.</p>
+  </td></tr>
+  <tr><td>
+    <p><strong>Profile Unification</strong></p>
+    <p>Data from multiple sources is combined into a single fan profile. As new data arrives, profiles are updated continuously.</p>
+  </td></tr>
+  <tr><td>
+    <p><strong>Segmentation and Audience Evaluation (RTCDP)</strong></p>
+    <p>Real-Time Customer Data Platform applies segmentation rules to unified profiles. Fans qualify for or exit audiences as their attributes and behaviors change.</p>
+  </td></tr>
+  <tr><td>
+    <p><strong>Activation to Marketing Destinations</strong></p>
+    <p>Evaluated audiences are delivered to marketing destinations such as paid media and social platforms. Because audiences update automatically, activation reflects current fan behavior.</p>
+  </td></tr>
+</table>
+
+<h4>Why This Matters for Clubs</h4>
+
+<p>This integrated approach provides several key benefits:</p>
+
+<ul>
+  <li>Reduced data fragmentation</li>
+  <li>Improved data quality and consistency</li>
+  <li>Predictable segmentation behavior</li>
+  <li>Faster response to fan actions</li>
+  <li>Reduced manual effort</li>
+  <li>Scalable personalization across campaigns</li>
+</ul>
+
+<p>By aligning ecosystem, architecture, and end-to-end flow, MLB creates a shared foundation that supports consistent marketing execution while allowing Clubs to tailor strategies to local needs.</p>
+
+<h3>Segmentation Evaluation Methods</h3>
+
+<p>Answers the questions: How are segments evaluated? What evaluation methods are available? When do segments update?</p>
+
+<p>Segmentation in Real-Time Customer Data Platform (RTCDP) enables Clubs to define, evaluate, and activate audiences using unified fan data. It provides a structured, repeatable workflow that transforms fan profiles into actionable marketing audiences.</p>
+
+<p>Within the MLB ecosystem:</p>
+
+<ul>
+  <li>Adobe Experience Platform (AEP) manages data ingestion and unified fan profiles.</li>
+  <li>RTCDP allows marketers to define segmentation logic, evaluate audience membership, and activate audiences across channels.</li>
+</ul>
+
+<p>Together, segmentation and evaluation ensure audiences reflect real fan behavior rather than static snapshots, supporting timely and accurate marketing execution.</p>
+
+<h4>Core Concepts</h4>
+
+<p><strong>Segmentation</strong><br>The process of defining groups of fans (audiences) based on shared attributes and behaviors.</p>
+
+<p><strong>Audience</strong><br>The output of segmentation: fan profiles that meet specified criteria and are eligible for activation.</p>
+
+<p><strong>Attributes and Events</strong><br>Attributes describe a fan (for example, season ticket holder status). Events capture actions a fan takes (for example, purchasing a ticket).</p>
+
+<p><strong>Segment Creation</strong><br>Defining the logic that determines which fans qualify for an audience.</p>
+
+<p><strong>Segment Evaluation</strong><br>The process of calculating which fan profiles meet audience criteria.</p>
+
+<p><strong>Evaluation Schedule</strong><br>The timing and frequency at which segments are recalculated.</p>
+
+<p><strong>Audience Activation</strong><br>Sending evaluated audiences to marketing destinations.</p>
+
+<p><strong>Audience Readiness</strong><br>The point at which an audience is fully evaluated and available for activation.</p>
+
+<h4>The Segmentation Workflow</h4>
+
+<p>Segmentation in RTCDP follows a clear end-to-end workflow:</p>
+
+<ol>
+  <li>Segment Creation</li>
+  <li>Segment Evaluation</li>
+  <li>Audience Activation</li>
+</ol>
+
+<p>This structured approach ensures audiences are built consistently and can be reused, refined, and scaled across campaigns.</p>
+
+<h4>How It Works</h4>
+
+<table>
+  <tr><th>Longform (numbered)</th></tr>
+  <tr><td>
+    <p><strong>Segment Creation</strong></p>
+    <p>Segmentation begins in RTCDP using unified fan profiles sourced from Adobe Experience Platform.</p>
+    <p>Marketers define rules using fan attributes and behavioral events. These rules determine the conditions under which a fan qualifies for an audience. Segments can support both simple and advanced use cases, from targeting ticket holders to building behavior-driven audiences.</p>
+    <p>Once the segment logic is saved, it enters the evaluation stage.</p>
+  </td></tr>
+  <tr><td>
+    <p><strong>Segment Evaluation</strong></p>
+    <p>Segment evaluation determines which fans currently meet the defined criteria. During evaluation, RTCDP:</p>
+    <ul>
+      <li>Reviews relevant fan profiles</li>
+      <li>Applies the segment's logic</li>
+      <li>Calculates audience membership</li>
+    </ul>
+    <p>Evaluation may occur:</p>
+    <ul>
+      <li>On a scheduled basis, or</li>
+      <li>In near real time as new data is ingested</li>
+    </ul>
+    <p>As fan data updates within AEP, RTCDP reevaluates segments automatically. Fans may enter or exit audiences as they meet or no longer meet the defined conditions.</p>
+    <p>This dynamic evaluation ensures that audiences remain current without manual updates. Understanding the evaluation schedule helps Clubs plan campaigns effectively and avoid delays in audience activation.</p>
+  </td></tr>
+  <tr><td>
+    <p><strong>Audience Activation</strong></p>
+    <p>Once a segment has been evaluated and is considered ready, it becomes available for activation. Marketers can send evaluated audiences to destinations such as:</p>
+    <ul>
+      <li>Email platforms</li>
+      <li>Paid media platforms</li>
+      <li>Social advertising channels</li>
+    </ul>
+    <p>Because evaluation is ongoing, activation reflects the most up-to-date fan behavior. Over time, segments can be reused, refined, or combined with other audiences to support new campaigns and evolving strategies.</p>
+  </td></tr>
+</table>
+
+<h4>Why This Matters for Clubs</h4>
+
+<p>Centralizing segmentation within RTCDP provides several advantages:</p>
+
+<ul>
+  <li>Reduced reliance on manual list pulls</li>
+  <li>Consistent, repeatable audience creation</li>
+  <li>Automatically updating audience membership</li>
+  <li>Improved campaign timing and accuracy</li>
+  <li>Scalable audience management across seasons</li>
+</ul>
+
+<p>By following a defined segmentation workflow, Clubs can confidently move from raw fan data to personalized marketing execution.</p>
+
+<hr>
+
+<h2>How to Use Segmentation</h2>
+
+<h3>Use Cases</h3>
+
+<h3>UI Overview</h3>
+
+<h3>Targeting Fans</h3>
+
+<h3>Attributes vs Events</h3>
+
+<h3>Destinations</h3>
+
+<hr>
+
+<h2>Best Practices</h2>
+
+<h3>Support</h3>
+
+<h3>Sequencing events</h3>
+
+<h3>Dynamic segmentation</h3>
+
+<h3>Audience composition</h3>
+
+<h3>A/B testing</h3>
+
+</body>
+</html>
