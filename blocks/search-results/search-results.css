@@ -4,7 +4,7 @@ header .search-results {
   flex-direction: column;
   width: 100%;
   background: var(--mlb-white);
-  border-radius: 0 0 8px 8px;
+  border-radius: 8px;
   margin-top: var(--spacing-m);
 }
 
