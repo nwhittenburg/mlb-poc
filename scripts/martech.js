@@ -27,8 +27,10 @@ let initialized = false;
 export async function initAndEager() {
   if (disabled) return undefined;
 
-  const datastreamId = await getConfigValue('web-sdk-datastream-id');
-  const orgId = await getConfigValue('web-sdk-org-id');
+  const [datastreamId, orgId] = await Promise.all([
+    getConfigValue('web-sdk-datastream-id'),
+    getConfigValue('web-sdk-org-id'),
+  ]);
 
   const webSDKConfig = {
     datastreamId,

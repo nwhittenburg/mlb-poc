@@ -1,8 +1,19 @@
-// Session Storage utilities
+const cache = new Map();
+
 export const getSessionStorageItem = (prop) => window.sessionStorage.getItem(prop);
-export const setSessionStorageItem = (prop, value) => window.sessionStorage.setItem(prop, value);
+
+export const setSessionStorageItem = (prop, value) => {
+  cache.delete(prop);
+  window.sessionStorage.setItem(prop, value);
+};
 
 export const getPropFromSessionStorageObj = (prop, key) => {
-  const obj = JSON.parse(getSessionStorageItem(prop));
-  return obj && obj[key] ? obj[key] : '';
+  let obj = cache.get(prop);
+  if (!obj) {
+    const raw = getSessionStorageItem(prop);
+    if (!raw) return '';
+    obj = JSON.parse(raw);
+    cache.set(prop, obj);
+  }
+  return obj[key] || '';
 };
