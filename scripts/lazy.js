@@ -32,19 +32,21 @@
   document.addEventListener('click', (e) => {
     const a = e.target.closest('a[href*="v="]');
     if (!a) return;
-    const url = new URL(a.href, location.origin);
-    if (url.origin !== location.origin || url.pathname !== location.pathname) return;
+    const url = new URL(a.href, window.location.origin);
+    if (url.origin !== window.location.origin || url.pathname !== window.location.pathname) return;
     const v = url.searchParams.get('v');
     if (!v) return;
     e.preventDefault();
-    history.pushState({}, '', a.href);
+    window.history.pushState({}, '', a.href);
     openVideoFromParam(v, url.searchParams);
   });
 
-  const searchCSS = document.createElement('link');
-  searchCSS.rel = 'stylesheet';
-  searchCSS.href = '/blocks/search-results/search-results.css';
-  document.head.appendChild(searchCSS);
+  if (document.querySelector('.search-results')) {
+    const searchCSS = document.createElement('link');
+    searchCSS.rel = 'stylesheet';
+    searchCSS.href = '/blocks/search-results/search-results.css';
+    document.head.appendChild(searchCSS);
+  }
 
   window.setTimeout(() => {
     import('./martech.js').then(({ martechDelayed, isMartechInitialized }) => {
