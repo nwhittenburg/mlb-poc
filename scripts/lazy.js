@@ -41,12 +41,10 @@
     openVideoFromParam(v, url.searchParams);
   });
 
-  if (document.querySelector('.search-results')) {
-    const searchCSS = document.createElement('link');
-    searchCSS.rel = 'stylesheet';
-    searchCSS.href = '/blocks/search-results/search-results.css';
-    document.head.appendChild(searchCSS);
-  }
+  const searchCSS = document.createElement('link');
+  searchCSS.rel = 'stylesheet';
+  searchCSS.href = '/blocks/search-results/search-results.css';
+  document.head.appendChild(searchCSS);
 
   window.setTimeout(() => {
     import('./martech.js').then(({ martechDelayed, isMartechInitialized }) => {
