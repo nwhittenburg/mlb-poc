@@ -303,7 +303,12 @@ function decorateHeader() {
     header.remove();
     return;
   }
-  header.className = meta;
+  // First class must stay `header` — loadBlock() resolves blocks/<name>/ from classList[0].
+  header.className = 'header';
+  if (meta.startsWith('/')) {
+    const segment = meta.split('/').filter(Boolean).pop();
+    if (segment) header.classList.add(segment);
+  }
   header.dataset.status = 'decorated';
   const breadcrumbs = document.body.querySelector('breadcrumbs');
   const breadcrumbsPath = getMetadata('breadcrumbs');
