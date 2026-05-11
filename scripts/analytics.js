@@ -75,7 +75,10 @@ export function getPageContext() {
 export function pushPageContext() {
   if (!isMartechInitialized()) return;
   const context = getPageContext();
-  pushToDataLayer({ pageContext: context });
+  pushToDataLayer({
+    eventName: 'pageview',
+    pageContext: context,
+  });
   sessionStorage.setItem(PREV_PAGE_KEY, context.pageName);
 }
 
