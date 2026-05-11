@@ -90,7 +90,7 @@ export function pushPageContext() {
 export function trackVideoStart({ videoName }) {
   if (!isMartechInitialized()) return;
   pushToDataLayer({
-    event: 'videoanalysis',
+    event: 'videostart',
     v13: videoName,
     e15: 1,
   });
@@ -104,7 +104,7 @@ export function trackVideoStart({ videoName }) {
 export function trackVideoComplete({ videoName }) {
   if (!isMartechInitialized()) return;
   pushToDataLayer({
-    event: 'videoanalysis',
+    event: 'videocomplete',
     v13: videoName,
     e14: 1,
   });
