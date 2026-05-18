@@ -1,26 +1,174 @@
-/* Header Search Results (loaded via lazy.js into header search panel) */
+/* ── Search results panel (rendered inside header search section) ── */
+
 header .search-results {
   display: flex;
   flex-direction: column;
-  width: 100%;
   background: var(--mlb-white);
   border-radius: 8px;
   margin-top: var(--spacing-m);
 }
 
-header .search-results h2 {
+header .search-results-heading {
+  /* color and font-family inherited from body */
   font-size: var(--heading-font-size-s);
   font-weight: 700;
-  color: var(--mlb-text-color);
   margin: 0;
   padding: var(--spacing-l) var(--spacing-l) var(--spacing-m);
 }
 
-header .search-results-list {
-  display: flex;
-  flex-direction: column;
+/* Filter bar ── hidden on mobile, shown at 900px+ */
+header .search-results-filters {
+  display: none;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: var(--spacing-m);
+  padding: 0 var(--spacing-l) var(--spacing-m);
+  border-bottom: 1px solid var(--mlb-background);
 }
 
+/* Filter group: bold label above + dropdown below */
+header .sr-filter {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  min-width: 240px;
+}
+
+header .sr-filter-label {
+  /* color inherited from body */
+  font-size: var(--body-font-size-s);
+  font-weight: 700;
+}
+
+/* Dropdown ── matches UCL style */
+header .sr-dropdown {
+  position: relative;
+}
+
+header .sr-dropdown-trigger {
+  /* cursor and font inherited via global button reset */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background: var(--mlb-white);
+  border: 1px solid #6e6e6e;
+  border-radius: 8px;
+  padding: var(--spacing-s) var(--spacing-m);
+  font-size: var(--body-font-size-s);
+  text-align: left;
+  transition: border-color 0.2s ease;
+}
+
+header .sr-dropdown-trigger:hover,
+header .sr-dropdown-trigger:focus-visible {
+  border-color: var(--mlb-secondary-blue-10);
+  outline: 2px solid var(--mlb-secondary-blue-10);
+  outline-offset: -2px;
+}
+
+header .sr-dropdown-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+header .sr-dropdown-chevron {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  margin-left: var(--spacing-s);
+  transition: transform 0.2s ease;
+}
+
+header .sr-dropdown-chevron svg {
+  width: 12px;
+  height: 8px;
+}
+
+header .sr-dropdown.open .sr-dropdown-chevron {
+  transform: rotate(180deg);
+}
+
+/* Dropdown list */
+header .sr-dropdown-list {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 102;
+  margin: var(--spacing-xs) 0 0;
+  padding: var(--spacing-xs) 0;
+  list-style: none;
+  background: var(--mlb-white);
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 12%);
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+header .sr-dropdown.open .sr-dropdown-list {
+  display: block;
+}
+
+header .sr-dropdown-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-s);
+  padding: var(--spacing-s) var(--spacing-m);
+  font-size: var(--body-font-size-m);
+  margin-top: 0; /* reset global li + li spacing */
+  transition: background 0.15s ease;
+}
+
+header .sr-dropdown-list li:hover {
+  background: var(--mlb-background);
+}
+
+header .sr-dropdown-list li.selected {
+  font-weight: 700;
+  color: var(--mlb-secondary-blue-10);
+}
+
+/* Checkmark indicator for selected items */
+header .sr-dropdown-list li::after {
+  content: "";
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  opacity: 0;
+}
+
+header .sr-dropdown-list li.selected::after {
+  opacity: 1;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14' fill='none'%3E%3Cpath d='M2 7L5.5 10.5L12 3.5' stroke='%23274dea' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+/* Clear filters ── vertically aligned with dropdown buttons */
+header .search-results-clear {
+  /* cursor inherited via global button reset */
+  align-self: flex-end;
+  padding-bottom: calc(var(--spacing-s) + 1px);
+  background: none;
+  border: none;
+  font-size: var(--body-font-size-s);
+  color: var(--mlb-gray-30);
+  text-underline-offset: 2px;
+  white-space: nowrap;
+  transition: color 0.2s ease;
+}
+
+header .search-results-clear:hover,
+header .search-results-clear:focus {
+  color: var(--mlb-secondary-blue-20);
+}
+
+/* Results list ── block children stack naturally, no flex needed */
 header .search-result-item {
   padding: var(--spacing-m) var(--spacing-l);
   border-bottom: 1px solid var(--mlb-background);
@@ -38,6 +186,7 @@ header .search-result-item h3 {
 }
 
 header .search-result-item a {
+  /* override global a { color: var(--color-link) } */
   color: var(--mlb-text-color);
   text-decoration: none;
   transition: color 0.2s ease;
@@ -55,7 +204,7 @@ header .search-result-excerpt {
   margin: var(--spacing-xs) 0 0;
 }
 
-/* Pagination nav pill */
+/* Pagination */
 header .search-results-nav {
   display: flex;
   justify-content: center;
@@ -72,10 +221,10 @@ header .search-results-nav-pill {
 }
 
 header .search-results-nav button {
+  /* cursor inherited via global button reset */
   background: none;
   border: none;
   padding: 0;
-  cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -123,11 +272,16 @@ header .search-results-nav .search-nav-dot:hover:not(.active) {
   background: #aaa;
 }
 
-/* Desktop adjustments */
+/* ── Desktop (900px+) ── */
 @media (width >= 900px) {
-  header .search-results h2 {
+  header .search-results-heading {
     font-size: var(--heading-font-size-l);
     padding: var(--spacing-xl) var(--spacing-xxl) var(--spacing-m);
+  }
+
+  header .search-results-filters {
+    display: flex;
+    padding: var(--spacing-m) var(--spacing-xxl);
   }
 
   header .search-result-item {
