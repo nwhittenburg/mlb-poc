@@ -76,6 +76,7 @@ function searchContent(term) {
   if (!term || term.length < 2) return [];
   const lower = term.toLowerCase();
   return searchIndex.filter((item) => {
+    if ((item.path || '').startsWith('/need-access')) return false;
     const t = (item.title || '').toLowerCase();
     const c = (item.content || '').toLowerCase();
     const p = (item.path || '').toLowerCase();
@@ -196,7 +197,7 @@ function applyFilters() {
     const rt = getResourceTypeFromPath(item.path);
     const matchesType = state.selectedTypes.length === 0 || state.selectedTypes.includes(rt);
     const matchesSolution = state.selectedSolutions.length === 0
-      || state.selectedSolutions.includes(item.solution);
+      || state.selectedSolutions.includes(item['solution-type']);
     return matchesType && matchesSolution;
   });
 }
@@ -347,7 +348,7 @@ function renderSearchResults(results, searchTerm) {
   const resourceTypeOptions = [
     ...new Set(results.map((r) => getResourceTypeFromPath(r.path))),
   ].sort();
-  const solutionOptions = [...new Set(results.map((r) => r.solution).filter(Boolean))].sort();
+  const solutionOptions = [...new Set(results.map((r) => r['solution-type']).filter(Boolean))].sort();
 
   state.resourceTypeFilter.updateOptions(resourceTypeOptions);
   state.solutionFilter.updateOptions(solutionOptions);
