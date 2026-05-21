@@ -1,5 +1,5 @@
 import { loadArea, setConfig } from './ak.js';
-import { attachNavigationTracking, pushPageContext } from './analytics.js';
+import { attachNavigationTracking, pushPageContext, pushUserToDataLayer } from './analytics.js';
 import { initAndEager, isMartechInitialized, martechLazy } from './martech.js';
 import getConfigValue from './config.js';
 import env from './utils/env.js';
@@ -57,6 +57,7 @@ async function loadPage() {
 
   if (isMartechInitialized()) {
     await martechLazy();
+    await pushUserToDataLayer();
     pushPageContext();
     attachNavigationTracking();
   }
