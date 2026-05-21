@@ -116,5 +116,6 @@ function sampleRUM(checkpoint, data) {
 
 window.hlx ??= {};
 window.hlx.RUM_MASK_URL = 'full';
+window.SAMPLE_PAGEVIEWS_AT_RATE = 'high';
 sampleRUM.collectBaseURL = window.origin;
 sampleRUM();
