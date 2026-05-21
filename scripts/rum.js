@@ -8,7 +8,7 @@
  * when collectBaseURL is overridden, as configured in deps/rum.js).
  *
  * Automatic instrumentation (CWV, viewblock, click, navigate, formsubmit …) is
- * provided by the helix-rum-enhancer script loaded via loadRumEnhancer().
+ * provided by the helix-rum-enhancer, which loads automatically on sampled page views.
  *
  * Usage in a block:
  *   import { checkpoint } from '../../scripts/rum.js';
@@ -52,24 +52,4 @@ export function onCheckpoint(name, callback) {
     if (name !== '*' && detail.checkpoint !== name) return;
     callback(detail.data || {}, detail.checkpoint);
   });
-}
-
-/**
- * Load the helix-rum-enhancer, which adds automatic instrumentation for:
- * - Core Web Vitals (LCP, CLS, INP, TTFB) → `cwv` checkpoint
- * - Click tracking with semantic source selectors → `click` checkpoint
- * - Block viewport entry → `viewblock` checkpoint
- * - Media viewport entry → `viewmedia` checkpoint
- * - Internal navigation / back-button → `navigate`, `reload` checkpoints
- * - External referrer attribution → `enter` checkpoint
- * - Form submissions → `formsubmit` checkpoint
- *
- * This is safe to call multiple times – the enhancer guards against double-loading.
- * Call it in the delayed phase (after LCP) to avoid performance impact.
- *
- * The project sets window.hlx.RUM_MANUAL_ENHANCE = true in deps/rum.js so the
- * enhancer is NOT auto-loaded; this function is the explicit trigger.
- */
-export function loadRumEnhancer() {
-  window.hlx?.rum?.sampleRUM?.enhance?.();
 }
