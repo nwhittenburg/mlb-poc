@@ -4,6 +4,7 @@
  */
 import { getMetadata } from './ak.js';
 import { isMartechInitialized, pushToDataLayer } from './martech.js';
+import { onCheckpoint } from './rum.js';
 
 const PREV_PAGE_KEY = 'acdl_previous_page';
 
@@ -242,5 +243,51 @@ export function trackSearch({
     searchResults: { number: String(n) },
     searchResultsPageType: searchResultsPageType ?? (isNull ? 'No Results' : 'Results Page'),
     ...(internalSearchTermFilters ? { internalSearchTermFilters } : {}),
+  });
+}
+
+/**
+ * Bridge selected Operational Telemetry checkpoints into ACDL.
+ *
+ * The `rum` CustomEvent fires for ALL page views (not just the sampled fraction),
+ * so every visitor's interaction flows into Adobe Analytics.
+ *
+ * Bridged checkpoints:
+ *   error      → jserror event (unhandled JS errors, not previously tracked)
+ *   cwv        → cwv event (Core Web Vitals reported after the enhancer loads)
+ *   formsubmit → formsubmit event (complement to trackSearch / trackLinkClick)
+ *
+ * Call once during page initialisation, before any user interaction can occur.
+ */
+export function attachRumBridge() {
+  // Unhandled JS errors – source = stack location, target = error message
+  onCheckpoint('error', ({ source, target }) => {
+    if (!isMartechInitialized()) return;
+    pushToDataLayer({
+      event: 'jserror',
+      errorSource: source || 'unknown',
+      errorMessage: typeof target === 'string' ? target : String(target ?? 'unknown'),
+    });
+  });
+
+  // Core Web Vitals – fired by the enhancer once per metric (LCP, CLS, INP, TTFB)
+  // source = metric name, target = metric value (number as string)
+  onCheckpoint('cwv', ({ source, target }) => {
+    if (!isMartechInitialized() || !source || target === undefined) return;
+    pushToDataLayer({
+      event: 'cwv',
+      cwvMetric: source,
+      cwvValue: target,
+    });
+  });
+
+  // Form submissions – source = CSS selector of form, target = action URL
+  onCheckpoint('formsubmit', ({ source, target }) => {
+    if (!isMartechInitialized()) return;
+    pushToDataLayer({
+      event: 'formsubmit',
+      formSource: source || 'unknown',
+      formTarget: target || '',
+    });
   });
 }
