@@ -192,6 +192,38 @@ export function attachNavigationTracking() {
   });
 }
 
+/**
+ * Fetch auth status and push authenticated user identity to the data layer.
+ * Only pushes when the user is logged in and a userId is present.
+ * Call before pushPageContext so user context is set before the pageview event fires.
+ */
+export async function pushUserToDataLayer() {
+  if (!isMartechInitialized()) return;
+
+  let status;
+  try {
+    const res = await fetch('/auth/status.json');
+    if (!res.ok) return;
+    status = await res.json();
+  } catch {
+    return;
+  }
+
+  if (!status?.loggedIn || !status?.userId) return;
+
+  pushToDataLayer({
+    event: 'user',
+    user: {
+      authState: 'authenticated',
+      authProvider: 'ims',
+      profile: {
+        id: status.userId,
+        accountType: status.accountType,
+      },
+    },
+  });
+}
+
 /** internalsearchanalysis — site search or use-case facet filters */
 export function trackSearch({
   searchTerm = '',
