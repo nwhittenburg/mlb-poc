@@ -1,5 +1,10 @@
 import { loadArea, setConfig } from './ak.js';
-import { attachNavigationTracking, pushPageContext } from './analytics.js';
+import {
+  attachNavigationTracking,
+  attachRumBridge,
+  pushPageContext,
+  pushUserToDataLayer,
+} from './analytics.js';
 import { initAndEager, isMartechInitialized, martechLazy } from './martech.js';
 import getConfigValue from './config.js';
 import env from './utils/env.js';
@@ -55,11 +60,19 @@ async function loadPage() {
     loadArea(),
   ]);
 
+  // Set up the OT → ACDL bridge early so no events are missed.
+  attachRumBridge();
+
   if (isMartechInitialized()) {
     await martechLazy();
+    await pushUserToDataLayer();
     pushPageContext();
     attachNavigationTracking();
   }
+
+  // Delayed phase: load the RUM enhancer + martechDelayed after LCP, with no
+  // race against rendering. Using a 3 s delay is the standard AEM pattern.
+  setTimeout(() => import('./delayed.js').catch(() => {}), 3000);
 }
 await loadPage();
 
