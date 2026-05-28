@@ -193,32 +193,37 @@ export function attachNavigationTracking() {
 }
 
 /**
- * Fetch auth status and push authenticated user identity to the data layer.
+ * Read okta_user cookie. Returns { userId: "user@mlb.com" } after login, null if not logged in.
+ * @returns {{ userId: string } | null}
+ */
+function getOktaUser() {
+  const m = document.cookie.match(/(?:^|;\s*)okta_user=([^;]+)/);
+  if (!m) return null;
+  try {
+    return JSON.parse(decodeURIComponent(m[1]));
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Push authenticated user identity to the data layer from the okta_user cookie.
  * Only pushes when the user is logged in and a userId is present.
  * Call before pushPageContext so user context is set before the pageview event fires.
  */
-export async function pushUserToDataLayer() {
+export function pushUserToDataLayer() {
   if (!isMartechInitialized()) return;
 
-  let status;
-  try {
-    const res = await fetch('/auth/status.json');
-    if (!res.ok) return;
-    status = await res.json();
-  } catch {
-    return;
-  }
-
-  if (!status?.loggedIn || !status?.userId) return;
+  const user = getOktaUser();
+  if (!user?.userId) return;
 
   pushToDataLayer({
     event: 'user',
     user: {
       authState: 'authenticated',
-      authProvider: 'ims',
+      authProvider: 'okta',
       profile: {
-        id: status.userId,
-        accountType: status.accountType,
+        id: user.userId,
       },
     },
   });
