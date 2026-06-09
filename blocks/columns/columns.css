@@ -169,6 +169,11 @@
       border: none;
       padding: 0;
     }
+    
+    /* Strong elements should flow normally, not stack as flex items */
+    .col:has(> strong) {
+      display: block;
+    }
   }
 
   &.align-left {
