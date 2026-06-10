@@ -168,6 +168,9 @@
       background: transparent;
       border: none;
       padding: 0;
+      p {
+        font-size: var(--body-font-size-xl);
+      }
     }
     
     /* Strong elements should flow normally, not stack as flex items */
