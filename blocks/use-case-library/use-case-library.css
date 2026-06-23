@@ -86,6 +86,9 @@
     overflow-y: auto;
 
     li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       padding: var(--spacing-s) var(--spacing-m);
       font-size: var(--body-font-size-m);
       cursor: pointer;
@@ -98,6 +101,19 @@
       &.selected {
         font-weight: 700;
         color: var(--mlb-secondary-blue-10);
+
+        &::after {
+          content: '';
+          display: inline-block;
+          width: 16px;
+          height: 16px;
+          background-color: var(--mlb-secondary-blue-10);
+          mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M13.5 3.5L6 11 2.5 7.5' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E");
+          mask-repeat: no-repeat;
+          mask-position: center;
+          mask-size: contain;
+          flex-shrink: 0;
+        }
       }
     }
   }
