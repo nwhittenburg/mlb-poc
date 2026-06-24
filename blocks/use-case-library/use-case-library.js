@@ -209,6 +209,13 @@ export default async function decorate(block) {
   filterDefs.forEach(({ key }) => { activeFilters[key] = new Set(); });
 
   const filterBar = buildFilterBar(filterDefs, data, ph);
+
+  const clearBtn = document.createElement('button');
+  clearBtn.type = 'button';
+  clearBtn.classList.add('use-case-library-clear');
+  clearBtn.textContent = ph.clearFilters || 'Clear Filters';
+  filterBar.appendChild(clearBtn);
+
   const grid = document.createElement('div');
   grid.classList.add('use-case-library-grid');
   const loadMore = buildLoadMore(ph);
@@ -271,6 +278,21 @@ export default async function decorate(block) {
         ph,
       ),
     });
+  });
+
+  clearBtn.addEventListener('click', () => {
+    filterDefs.forEach(({ key }) => { activeFilters[key].clear(); });
+    filterBar.querySelectorAll('.ucl-dropdown').forEach((dd) => {
+      dd.querySelectorAll('li').forEach((item) => {
+        const isAll = item.dataset.value === '';
+        item.classList.toggle('selected', isAll);
+        item.setAttribute('aria-selected', String(isAll));
+      });
+      dd.querySelector('.ucl-dropdown-text').textContent = ph.all || 'All';
+    });
+    visibleCount = PAGE_SIZE;
+    filtered = applyFilters(data, activeFilters);
+    renderCards(grid, filtered, loadMore, visibleCount, ph);
   });
 
   loadMore.querySelector('button').addEventListener('click', () => {

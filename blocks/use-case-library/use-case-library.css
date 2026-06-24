@@ -122,6 +122,23 @@
     display: block;
   }
 
+  .use-case-library-clear {
+    align-self: flex-end;
+    padding-bottom: calc(var(--spacing-s) + 1px);
+    background: none;
+    border: none;
+    font-size: var(--body-font-size-s);
+    color: var(--mlb-gray-30);
+    text-underline-offset: 2px;
+    white-space: nowrap;
+    transition: color 0.2s ease;
+
+    &:hover,
+    &:focus {
+      color: var(--mlb-secondary-blue-20);
+    }
+  }
+
   .use-case-library-grid {
     display: grid;
     gap: var(--spacing-xl);
