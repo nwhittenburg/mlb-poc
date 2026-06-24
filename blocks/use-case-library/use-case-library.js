@@ -28,7 +28,7 @@ function getDistinctValues(data, key) {
 
 function applyFilters(data, activeFilters) {
   return data.filter((item) => Object.entries(activeFilters).every(
-    ([key, value]) => !value || item[key] === value,
+    ([key, values]) => values.size === 0 || values.has(item[key]),
   ));
 }
 
@@ -36,8 +36,8 @@ function buildInternalSearchTermFiltersString(filterDefs, activeFilters, ph) {
   const allLabel = ph.all || 'All';
   return filterDefs
     .map(({ label, key }) => {
-      const raw = activeFilters[key];
-      const display = raw === '' || raw === undefined ? allLabel : raw;
+      const values = activeFilters[key];
+      const display = values.size === 0 ? allLabel : [...values].join(', ');
       return `${label}=${display}`;
     })
     .join(' | ');
@@ -83,6 +83,7 @@ function createDropdown(label, key, options, ph) {
   const list = document.createElement('ul');
   list.classList.add('ucl-dropdown-list');
   list.setAttribute('role', 'listbox');
+  list.setAttribute('aria-multiselectable', 'true');
   list.setAttribute('aria-label', label);
 
   const allItem = document.createElement('li');
@@ -193,18 +194,6 @@ function buildLoadMore(ph) {
   return wrapper;
 }
 
-function selectOption(dd, li) {
-  dd.querySelectorAll('li').forEach((item) => {
-    item.classList.remove('selected');
-    item.setAttribute('aria-selected', 'false');
-  });
-  li.classList.add('selected');
-  li.setAttribute('aria-selected', 'true');
-  dd.querySelector('.ucl-dropdown-text').textContent = li.textContent;
-  dd.classList.remove('open');
-  dd.querySelector('.ucl-dropdown-trigger').setAttribute('aria-expanded', 'false');
-}
-
 export default async function decorate(block) {
   const filterDefs = [...block.querySelectorAll(':scope > div')]
     .map((row) => {
@@ -217,9 +206,16 @@ export default async function decorate(block) {
 
   const [data, ph] = await Promise.all([fetchUseCases(), fetchPlaceholders()]);
   const activeFilters = {};
-  filterDefs.forEach(({ key }) => { activeFilters[key] = ''; });
+  filterDefs.forEach(({ key }) => { activeFilters[key] = new Set(); });
 
   const filterBar = buildFilterBar(filterDefs, data, ph);
+
+  const clearBtn = document.createElement('button');
+  clearBtn.type = 'button';
+  clearBtn.classList.add('use-case-library-clear');
+  clearBtn.textContent = ph.clearFilters || 'Clear Filters';
+  filterBar.appendChild(clearBtn);
+
   const grid = document.createElement('div');
   grid.classList.add('use-case-library-grid');
   const loadMore = buildLoadMore(ph);
@@ -246,9 +242,28 @@ export default async function decorate(block) {
     const li = e.target.closest('.ucl-dropdown-list li');
     if (!li) return;
     const dd = li.closest('.ucl-dropdown');
-    selectOption(dd, li);
+    const key = dd.dataset.key;
+    const values = activeFilters[key];
 
-    activeFilters[dd.dataset.key] = li.dataset.value;
+    if (li.dataset.value === '') {
+      values.clear();
+    } else if (values.has(li.dataset.value)) {
+      values.delete(li.dataset.value);
+    } else {
+      values.add(li.dataset.value);
+    }
+
+    dd.querySelectorAll('li').forEach((item) => {
+      const isAll = item.dataset.value === '';
+      const sel = isAll ? values.size === 0 : values.has(item.dataset.value);
+      item.classList.toggle('selected', sel);
+      item.setAttribute('aria-selected', String(sel));
+    });
+
+    const ph2 = ph.all || 'All';
+    // eslint-disable-next-line no-nested-ternary
+    dd.querySelector('.ucl-dropdown-text').textContent = values.size === 0 ? ph2 : values.size === 1 ? [...values][0] : `${values.size} selected`;
+
     visibleCount = PAGE_SIZE;
     filtered = applyFilters(data, activeFilters);
     renderCards(grid, filtered, loadMore, visibleCount, ph);
@@ -263,6 +278,21 @@ export default async function decorate(block) {
         ph,
       ),
     });
+  });
+
+  clearBtn.addEventListener('click', () => {
+    filterDefs.forEach(({ key }) => { activeFilters[key].clear(); });
+    filterBar.querySelectorAll('.ucl-dropdown').forEach((dd) => {
+      dd.querySelectorAll('li').forEach((item) => {
+        const isAll = item.dataset.value === '';
+        item.classList.toggle('selected', isAll);
+        item.setAttribute('aria-selected', String(isAll));
+      });
+      dd.querySelector('.ucl-dropdown-text').textContent = ph.all || 'All';
+    });
+    visibleCount = PAGE_SIZE;
+    filtered = applyFilters(data, activeFilters);
+    renderCards(grid, filtered, loadMore, visibleCount, ph);
   });
 
   loadMore.querySelector('button').addEventListener('click', () => {
