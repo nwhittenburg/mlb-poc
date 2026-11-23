@@ -289,8 +289,22 @@ function createInlineVideoItem(videoUrl, posterImage, videoTitle) {
  * Returns { videoUrl, posterImage, title }
  */
 function parseVideoRow(row) {
-  const link = [...row.querySelectorAll('a')].find((a) => a.href.includes(ADOBE_TV_HOST));
-  let videoUrl = link?.href;
+  let videoUrl;
+  [...row.querySelectorAll('a')].some((a) => {
+    // links pasted from email may be wrapped (e.g. Outlook safelinks), so also
+    // check the decoded href and the link text for the real video URL
+    let decoded = a.href;
+    try {
+      decoded = decodeURIComponent(a.href);
+    } catch (e) {
+      // keep the raw href
+    }
+    const found = [decoded, a.textContent]
+      .map((candidate) => candidate.match(/https?:\/\/video\.tv\.adobe\.com\/v\/\d+[^\s&<"]*/)?.[0])
+      .find(Boolean);
+    if (found) videoUrl = found;
+    return !!found;
+  });
   if (!videoUrl) {
     const [url] = row.textContent.match(/https?:\/\/video\.tv\.adobe\.com\/v\/\d+[^\s<]*/) || [];
     if (url) videoUrl = url;
