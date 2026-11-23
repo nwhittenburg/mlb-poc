@@ -8,10 +8,11 @@ const hostnames = ['aep-docs.mlb.com'];
 
 const locales = { '': { lang: 'en' } };
 
-// Widget patterns to look for (video block handles both YouTube and Vidyard)
+// Widget patterns to look for (video block handles YouTube, Vidyard, and Adobe video)
 const widgets = [
   { fragment: '/fragments/' },
   { video: 'vidyard.com' },
+  { video: 'video.tv.adobe.com' },
   { video: 'https://www.youtube' },
 ];
 
