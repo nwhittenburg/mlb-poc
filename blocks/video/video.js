@@ -1,4 +1,11 @@
 import { trackVideoComplete, trackVideoStart } from '../../scripts/analytics.js';
+import {
+  ADOBE_TV_HOST,
+  createAdobePlayer,
+  findAdobeVideoUrl,
+  getAdobeEmbedUrl,
+  watchAdobePlayer,
+} from './adobe-player.js';
 
 /**
  * Extracts the video UUID from a Vidyard share URL
@@ -8,6 +15,18 @@ import { trackVideoComplete, trackVideoStart } from '../../scripts/analytics.js'
 export function getVidyardUuid(url) {
   const match = url.match(/(?:share\.vidyard\.com\/watch\/|play\.vidyard\.com\/?)([a-zA-Z0-9]+)/);
   return match ? match[1] : null;
+}
+
+/**
+ * Returns the Adobe video reference (full URL or numeric ID) if the value is an Adobe video
+ * @param {string} value - A URL, an Adobe video ID or a Vidyard UUID
+ * @returns {string|null} The Adobe video URL or ID
+ */
+export function getAdobeVideoRef(value) {
+  if (!value) return null;
+  const str = String(value);
+  if (/^\d+$/.test(str)) return str;
+  return findAdobeVideoUrl(str);
 }
 
 /**
@@ -51,13 +70,20 @@ export function ensureVidyardScript() {
 }
 
 /**
- * Opens a video modal with Vidyard API (enables progress tracking)
- * @param {string} uuid - The Vidyard video UUID
+ * Opens a video modal (enables progress tracking)
+ * - Vidyard: rendered with the Vidyard API
+ * - Adobe (video.tv.adobe.com): rendered as an iframe, tracked via the player's messages
+ * @param {string} video - Vidyard UUID, Adobe video URL or Adobe video ID
  * @param {string} title - The video title
- * @param {Object} params - Additional params passed to Vidyard renderPlayer (e.g. { second: 35 })
+ * @param {Object} params - Player params (e.g. { second: 35 }). For Adobe videos `second`
+ * sets the start time and any other params are added to the player URL.
  */
-export function openVideoModal(uuid, title, params = {}) {
+export function openVideoModal(video, title, params = {}) {
   const videoName = title || 'Video';
+  const adobeRef = getAdobeVideoRef(video);
+  const uuid = adobeRef ? null : video;
+  let adobeIframe;
+  let stopAdobeWatch;
 
   const modal = document.createElement('div');
   modal.className = 'video-modal';
@@ -81,7 +107,7 @@ export function openVideoModal(uuid, title, params = {}) {
   modalContent.appendChild(videoContainer);
   modal.appendChild(modalContent);
 
-  const scrollY = window.scrollY;
+  const { scrollY } = window;
   const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
   Object.assign(document.body.style, {
     position: 'fixed',
@@ -104,6 +130,10 @@ export function openVideoModal(uuid, title, params = {}) {
         const players = vyApi.api.getPlayersByUUID(uuid);
         players.forEach((player) => vyApi.api.destroyPlayer(player));
       });
+    }
+    if (adobeIframe) {
+      stopAdobeWatch();
+      adobeIframe.remove();
     }
     setTimeout(() => {
       modal.remove();
@@ -157,6 +187,116 @@ export function openVideoModal(uuid, title, params = {}) {
       }
     });
   }
+
+  if (adobeRef) {
+    const { second, ...urlParams } = params;
+    const src = getAdobeEmbedUrl(adobeRef, { autoplay: true, params: urlParams });
+    if (src) {
+      adobeIframe = createAdobePlayer(src, title);
+      adobeIframe.loading = 'eager';
+      stopAdobeWatch = watchAdobePlayer(adobeIframe, { videoName, startAt: Number(second) });
+      videoContainer.appendChild(adobeIframe);
+    }
+  }
+}
+
+/**
+ * Creates the poster button for an Adobe video (Adobe has no public thumbnail URL,
+ * so an authored poster is used, or a dark 16:9 placeholder with the play icon)
+ * @param {Element} posterImage - Optional authored picture element
+ * @param {string} videoTitle - The video title
+ * @returns {HTMLButtonElement}
+ */
+function createAdobePosterButton(posterImage, videoTitle) {
+  const btn = document.createElement('button');
+  btn.className = 'video-container adobe-poster';
+  btn.type = 'button';
+  btn.setAttribute('aria-label', `Play video: ${videoTitle || 'Video'}`);
+
+  const posterUrl = posterImage?.querySelector('img')?.src;
+  if (posterUrl) {
+    const img = document.createElement('img');
+    img.src = posterUrl;
+    img.alt = videoTitle || 'Video player';
+    img.loading = 'lazy';
+    btn.appendChild(img);
+  } else {
+    btn.classList.add('no-poster');
+  }
+
+  const playIcon = document.createElement('div');
+  playIcon.className = 'video-play-icon';
+  btn.appendChild(playIcon);
+  return btn;
+}
+
+function appendVideoTitle(videoItem, videoTitle) {
+  if (!videoTitle) return;
+  const titleElement = document.createElement('h3');
+  titleElement.className = 'video-title';
+  titleElement.textContent = videoTitle;
+  videoItem.appendChild(titleElement);
+}
+
+/**
+ * Creates an Adobe video item that plays in a modal on click
+ */
+function createAdobeModalVideoItem(adobeUrl, posterImage, videoTitle) {
+  const videoItem = document.createElement('div');
+  videoItem.className = 'video-item';
+
+  const btn = createAdobePosterButton(posterImage, videoTitle);
+  btn.addEventListener('click', () => openVideoModal(adobeUrl, videoTitle));
+  videoItem.appendChild(btn);
+
+  appendVideoTitle(videoItem, videoTitle);
+  return videoItem;
+}
+
+/**
+ * Creates an inline Adobe video item.
+ * With a poster: shows the poster and play icon, loads the player on click.
+ * Without a poster: loads the player when the block scrolls near the viewport.
+ */
+function createAdobeInlineVideoItem(adobeUrl, posterImage, videoTitle) {
+  const videoName = videoTitle || 'Video';
+  const videoItem = document.createElement('div');
+  videoItem.className = 'video-item';
+
+  const embedPlayer = (container, autoplay) => {
+    const iframe = createAdobePlayer(getAdobeEmbedUrl(adobeUrl, { autoplay }), videoTitle);
+    watchAdobePlayer(iframe, { videoName });
+    container.replaceChildren(iframe);
+  };
+
+  const createPlayerContainer = () => {
+    const container = document.createElement('div');
+    container.className = 'video-container adobe-player';
+    return container;
+  };
+
+  if (posterImage?.querySelector('img')) {
+    const btn = createAdobePosterButton(posterImage, videoTitle);
+    btn.addEventListener('click', () => {
+      const container = createPlayerContainer();
+      btn.replaceWith(container);
+      embedPlayer(container, true);
+    }, { once: true });
+    videoItem.appendChild(btn);
+  } else {
+    const container = createPlayerContainer();
+    videoItem.appendChild(container);
+    const observer = new IntersectionObserver((entries) => {
+      if (entries.some((entry) => entry.isIntersecting)) {
+        observer.disconnect();
+        embedPlayer(container, false);
+      }
+    }, { rootMargin: '100px' });
+    observer.observe(container);
+  }
+
+  appendVideoTitle(videoItem, videoTitle);
+  return videoItem;
 }
 
 /**
@@ -167,6 +307,9 @@ export function openVideoModal(uuid, title, params = {}) {
  * @returns {Element} The video item element
  */
 function createModalVideoItem(videoUrl, posterImage, videoTitle) {
+  const adobeUrl = getAdobeVideoRef(videoUrl);
+  if (adobeUrl) return createAdobeModalVideoItem(adobeUrl, posterImage, videoTitle);
+
   const videoUuid = getVidyardUuid(videoUrl);
   if (!videoUuid) return null;
 
@@ -211,6 +354,9 @@ function createModalVideoItem(videoUrl, posterImage, videoTitle) {
  * @returns {Element} The video item element
  */
 function createInlineVideoItem(videoUrl, posterImage, videoTitle) {
+  const adobeUrl = getAdobeVideoRef(videoUrl);
+  if (adobeUrl) return createAdobeInlineVideoItem(adobeUrl, posterImage, videoTitle);
+
   const videoUuid = getVidyardUuid(videoUrl);
   if (!videoUuid) {
     return null;
@@ -253,8 +399,19 @@ function createInlineVideoItem(videoUrl, posterImage, videoTitle) {
  * Returns { videoUrl, posterImage, title }
  */
 function parseVideoRow(row) {
-  const link = row.querySelector('a');
-  let videoUrl = link?.href || link?.textContent?.trim();
+  const isVideoUrlText = (text) => text.includes('share.vidyard.com')
+    || text.includes('play.vidyard.com')
+    || text.includes(ADOBE_TV_HOST);
+
+  // Adobe video links (also when wrapped, e.g. Outlook safelinks copied from an email)
+  let videoUrl = [...row.querySelectorAll('a')]
+    .map((a) => findAdobeVideoUrl(a.href) || findAdobeVideoUrl(a.textContent))
+    .find(Boolean) || findAdobeVideoUrl(row.textContent);
+
+  if (!videoUrl) {
+    const link = row.querySelector('a');
+    videoUrl = link?.href || link?.textContent?.trim();
+  }
   if (!videoUrl) {
     const [url] = row.textContent.match(/(https?:\/\/share\.vidyard\.com\/watch\/[a-zA-Z0-9]+)/) || [];
     if (url) videoUrl = url;
@@ -266,7 +423,13 @@ function parseVideoRow(row) {
   const allText = row.textContent.split('\n').map((t) => t.trim()).filter(Boolean);
   if (allText.length > 0) {
     // Find text that isn't a URL
-    title = allText.find((text) => !text.includes('share.vidyard.com') && !text.includes('play.vidyard.com')) || '';
+    title = allText.find((text) => !isVideoUrlText(text)) || '';
+  }
+  if (!title) {
+    // Paragraphs without line breaks between them
+    title = [...row.querySelectorAll('p, h1, h2, h3, h4, h5, h6')]
+      .map((el) => el.textContent.trim())
+      .find((text) => text && !isVideoUrlText(text)) || '';
   }
 
   return {
@@ -277,10 +440,45 @@ function parseVideoRow(row) {
 }
 
 /**
+ * Turns a standalone Adobe video link in default content into an inline video block.
+ * Links inside blocks (video, embed, etc.) and links within text are left alone, and
+ * Vidyard links keep their current behavior (they stay links).
+ * @param {HTMLAnchorElement} link The auto-blocked link
+ */
+function decorateAutoBlock(link) {
+  if (link.closest('.block-content')) return;
+  const adobeUrl = findAdobeVideoUrl(link.href) || findAdobeVideoUrl(link.textContent);
+  if (!adobeUrl) return;
+
+  const parent = link.parentElement;
+  const isStandalone = parent?.tagName === 'P'
+    && [...parent.childNodes].every((node) => node === link || !node.textContent.trim());
+  if (!isStandalone) return;
+
+  const linkText = link.textContent.trim();
+  const title = linkText && !linkText.includes(ADOBE_TV_HOST) ? linkText : '';
+  const item = createAdobeInlineVideoItem(adobeUrl, null, title);
+
+  const wrapper = document.createElement('div');
+  wrapper.className = 'video';
+  const videoGrid = document.createElement('div');
+  videoGrid.className = 'video-grid video-grid-single';
+  videoGrid.appendChild(item);
+  wrapper.appendChild(videoGrid);
+  parent.replaceWith(wrapper);
+}
+
+/**
  * Decorates the video block
  * @param {Element} block The block element
  */
 export default async function decorate(block) {
+  // Auto-blocked link (see widgets in scripts.js)
+  if (block.tagName === 'A') {
+    decorateAutoBlock(block);
+    return;
+  }
+
   // Extract all rows from the block
   const rows = Array.from(block.querySelectorAll(':scope > div'));
 
@@ -314,8 +512,8 @@ export default async function decorate(block) {
   block.innerHTML = '';
   block.appendChild(videoGrid);
 
-  // Only load Vidyard embed script for inline (single) videos
-  if (!isMulti && videoData.length > 0) {
+  // Only load Vidyard embed script for inline (single) Vidyard videos
+  if (!isMulti && videoData.length > 0 && !getAdobeVideoRef(videoData[0].videoUrl)) {
     const { videoUrl, title } = videoData[0];
     const uuid = getVidyardUuid(videoUrl);
     const videoName = title || 'Video';

@@ -1,89 +1,29 @@
-import { trackVideoComplete, trackVideoStart } from '../../scripts/analytics.js';
+import {
+  ADOBE_TV_HOST,
+  createAdobePlayer as createPlayerIframe,
+  getAdobeEmbedUrl,
+  getAdobeVideoId,
+  watchAdobePlayer,
+} from '../video/adobe-player.js';
 
-const ADOBE_TV_ORIGIN = 'https://video.tv.adobe.com';
-const ADOBE_TV_HOST = 'video.tv.adobe.com';
-
-/**
- * Extracts the video ID from an Adobe TV (Media Publishing Cloud) URL
- * e.g. https://video.tv.adobe.com/v/3495665/?pls=1 -> 3495665
- * @param {string} url - The Adobe TV URL
- * @returns {string|null} The video ID
- */
-export function getAdobeVideoId(url) {
-  const match = url?.match(/video\.tv\.adobe\.com\/v\/(\d+)/);
-  return match ? match[1] : null;
-}
+export { getAdobeVideoId };
 
 /**
  * Builds the embeddable player URL, keeping any authored query params (e.g. pls=1)
- * @param {string} url - The authored Adobe TV URL
+ * @param {string} url - The authored Adobe video URL
  * @param {boolean} autoplay - Whether the player should start automatically
  * @returns {string|null} The embed URL
  */
 export function getEmbedUrl(url, autoplay = false) {
-  const id = getAdobeVideoId(url);
-  if (!id) return null;
-  let params;
-  try {
-    params = new URL(url).searchParams;
-  } catch (e) {
-    params = new URLSearchParams();
-  }
-  if (autoplay) params.set('autoplay', 'true');
-  const query = params.toString();
-  return `${ADOBE_TV_ORIGIN}/v/${id}/${query ? `?${query}` : ''}`;
+  return getAdobeEmbedUrl(url, { autoplay });
 }
 
 /**
- * Creates the Adobe TV player iframe
- * @param {string} src - The embed URL
- * @param {string} title - The video title
- * @returns {HTMLIFrameElement}
- */
-function createPlayerIframe(src, title) {
-  const iframe = document.createElement('iframe');
-  iframe.src = src;
-  iframe.title = title || 'Adobe video player';
-  iframe.loading = 'lazy';
-  iframe.setAttribute('allow', 'autoplay; fullscreen; encrypted-media; picture-in-picture');
-  iframe.setAttribute('allowfullscreen', '');
-  iframe.setAttribute('scrolling', 'no');
-  return iframe;
-}
-
-/**
- * Tracks video start/complete for a player iframe.
- * The Adobe TV player reports its state to the parent window via postMessage.
- * @param {HTMLIFrameElement} iframe - The player iframe
- * @param {string} videoName - The video name used for analytics
+ * Tracks video start/complete for a player iframe
  * @returns {Function} Cleanup function that removes the listener
  */
 function trackPlayer(iframe, videoName) {
-  let started = false;
-  let completed = false;
-
-  const onMessage = (event) => {
-    if (event.origin !== ADOBE_TV_ORIGIN || event.source !== iframe.contentWindow) return;
-    let { data } = event;
-    if (typeof data === 'string') {
-      try {
-        data = JSON.parse(data);
-      } catch (e) {
-        return;
-      }
-    }
-    const state = data?.state;
-    if (state === 'play' && !started) {
-      started = true;
-      trackVideoStart({ videoName });
-    } else if ((state === 'ended' || state === 'complete') && !completed) {
-      completed = true;
-      trackVideoComplete({ videoName });
-    }
-  };
-
-  window.addEventListener('message', onMessage);
-  return () => window.removeEventListener('message', onMessage);
+  return watchAdobePlayer(iframe, { videoName });
 }
 
 /**
