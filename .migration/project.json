@@ -1,0 +1,9 @@
+{
+  "sites": {
+    "mlb-poc": {
+      "previewOrg": "nwhittenburg",
+      "previewSite": "mlb-poc",
+      "contentHostUrl": "https://content.da.live/nwhittenburg/mlb-poc/"
+    }
+  }
+}
