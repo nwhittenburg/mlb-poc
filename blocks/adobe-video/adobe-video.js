@@ -2,11 +2,12 @@ import { trackVideoComplete, trackVideoStart } from '../../scripts/analytics.js'
 
 const ADOBE_TV_ORIGIN = 'https://video.tv.adobe.com';
 const ADOBE_TV_HOST = 'video.tv.adobe.com';
+const ADOBE_URL_PATTERN = /https?:\/\/video\.tv\.adobe\.com\/v\/\d+[^\s&<>"]*/;
 
 /**
- * Extracts the video ID from an Adobe TV (Media Publishing Cloud) URL
+ * Extracts the video ID from an Adobe video URL
  * e.g. https://video.tv.adobe.com/v/3495665/?pls=1 -> 3495665
- * @param {string} url - The Adobe TV URL
+ * @param {string} url - The Adobe video URL
  * @returns {string|null} The video ID
  */
 export function getAdobeVideoId(url) {
@@ -15,52 +16,80 @@ export function getAdobeVideoId(url) {
 }
 
 /**
+ * Finds an Adobe video URL in a string, also inside wrapped/encoded links
+ * (e.g. Outlook safelinks copied from an email).
+ * @param {string} text - An href or text
+ * @returns {string|null} The Adobe video URL, including its query params
+ */
+export function findAdobeVideoUrl(text) {
+  if (!text) return null;
+  let decoded = text;
+  try {
+    decoded = decodeURIComponent(text);
+  } catch (e) {
+    // keep the raw value
+  }
+  return decoded.match(ADOBE_URL_PATTERN)?.[0] || null;
+}
+
+/**
  * Builds the embeddable player URL, keeping any authored query params (e.g. pls=1)
- * @param {string} url - The authored Adobe TV URL
+ * @param {string} url - The authored Adobe video URL
  * @param {boolean} autoplay - Whether the player should start automatically
  * @returns {string|null} The embed URL
  */
 export function getEmbedUrl(url, autoplay = false) {
   const id = getAdobeVideoId(url);
   if (!id) return null;
-  let params;
+  let search;
   try {
-    params = new URL(url).searchParams;
+    search = new URL(url).searchParams;
   } catch (e) {
-    params = new URLSearchParams();
+    search = new URLSearchParams();
   }
-  if (autoplay) params.set('autoplay', 'true');
-  const query = params.toString();
+  if (autoplay) search.set('autoplay', 'true');
+  const query = search.toString();
   return `${ADOBE_TV_ORIGIN}/v/${id}/${query ? `?${query}` : ''}`;
 }
 
 /**
- * Creates the Adobe TV player iframe
- * @param {string} src - The embed URL
+ * Creates the Adobe player iframe
+ * @param {string} src - The player URL
  * @param {string} title - The video title
  * @returns {HTMLIFrameElement}
  */
 function createPlayerIframe(src, title) {
   const iframe = document.createElement('iframe');
   iframe.src = src;
-  iframe.title = title || 'Adobe video player';
+  iframe.title = title || 'Video player';
   iframe.loading = 'lazy';
   iframe.setAttribute('allow', 'autoplay; fullscreen; encrypted-media; picture-in-picture');
-  iframe.setAttribute('allowfullscreen', '');
   iframe.setAttribute('scrolling', 'no');
   return iframe;
 }
 
 /**
- * Tracks video start/complete for a player iframe.
- * The Adobe TV player reports its state to the parent window via postMessage.
+ * Tracks video start/complete for a player iframe (same data layer events as Vidyard).
+ * The Adobe player reports its state to the page with postMessage, as JSON strings like
+ * {"type":"mpcStatus","state":"start"|"play"|"pause"|"tick"|"complete","id":"3495665"}.
+ * Start and complete are each tracked once per player.
  * @param {HTMLIFrameElement} iframe - The player iframe
  * @param {string} videoName - The video name used for analytics
+ * @param {number} startAt - Optional start time in seconds (deep links, e.g. ?second=35)
  * @returns {Function} Cleanup function that removes the listener
  */
-function trackPlayer(iframe, videoName) {
+function trackPlayer(iframe, videoName, startAt = 0) {
   let started = false;
   let completed = false;
+
+  // start time: the player accepts player.js commands; sent when the player is ready
+  // and again on first playback (whichever the player honors), never after that
+  const seek = () => {
+    if (!(startAt > 0) || started) return;
+    const message = { context: 'player.js', version: '0.0.11', method: 'setCurrentTime' };
+    message.value = startAt;
+    iframe.contentWindow?.postMessage(JSON.stringify(message), ADOBE_TV_ORIGIN);
+  };
 
   const onMessage = (event) => {
     if (event.origin !== ADOBE_TV_ORIGIN || event.source !== iframe.contentWindow) return;
@@ -72,11 +101,16 @@ function trackPlayer(iframe, videoName) {
         return;
       }
     }
+    if (data?.context === 'player.js' && data.event === 'ready') {
+      seek();
+      return;
+    }
     const state = data?.state;
-    if (state === 'play' && !started) {
+    if ((state === 'start' || state === 'play') && !started) {
+      seek();
       started = true;
       trackVideoStart({ videoName });
-    } else if ((state === 'ended' || state === 'complete') && !completed) {
+    } else if ((state === 'complete' || state === 'ended') && !completed) {
       completed = true;
       trackVideoComplete({ videoName });
     }
@@ -90,8 +124,10 @@ function trackPlayer(iframe, videoName) {
  * Opens a video modal with the Adobe TV player
  * @param {string} videoUrl - The Adobe TV video URL
  * @param {string} title - The video title
+ * @param {Object} options
+ * @param {number} options.startAt - Optional start time in seconds
  */
-export function openAdobeVideoModal(videoUrl, title) {
+export function openAdobeVideoModal(videoUrl, title, { startAt = 0 } = {}) {
   const src = getEmbedUrl(videoUrl, true);
   if (!src) return;
   const videoName = title || 'Video';
@@ -117,7 +153,7 @@ export function openAdobeVideoModal(videoUrl, title) {
   const iframe = createPlayerIframe(src, title);
   iframe.loading = 'eager';
   videoContainer.appendChild(iframe);
-  const stopTracking = trackPlayer(iframe, videoName);
+  const stopTracking = trackPlayer(iframe, videoName, startAt);
 
   modalContent.appendChild(closeButton);
   modalContent.appendChild(videoContainer);
@@ -289,26 +325,11 @@ function createInlineVideoItem(videoUrl, posterImage, videoTitle) {
  * Returns { videoUrl, posterImage, title }
  */
 function parseVideoRow(row) {
-  let videoUrl;
-  [...row.querySelectorAll('a')].some((a) => {
-    // links pasted from email may be wrapped (e.g. Outlook safelinks), so also
-    // check the decoded href and the link text for the real video URL
-    let decoded = a.href;
-    try {
-      decoded = decodeURIComponent(a.href);
-    } catch (e) {
-      // keep the raw href
-    }
-    const found = [decoded, a.textContent]
-      .map((candidate) => candidate.match(/https?:\/\/video\.tv\.adobe\.com\/v\/\d+[^\s&<"]*/)?.[0])
-      .find(Boolean);
-    if (found) videoUrl = found;
-    return !!found;
-  });
-  if (!videoUrl) {
-    const [url] = row.textContent.match(/https?:\/\/video\.tv\.adobe\.com\/v\/\d+[^\s<]*/) || [];
-    if (url) videoUrl = url;
-  }
+  // links pasted from email may be wrapped (e.g. Outlook safelinks), so check the
+  // decoded href and the link text, then the plain text, for the real video URL
+  const videoUrl = [...row.querySelectorAll('a')]
+    .map((a) => findAdobeVideoUrl(a.href) || findAdobeVideoUrl(a.textContent))
+    .find(Boolean) || findAdobeVideoUrl(row.textContent);
   const picture = row.querySelector('picture');
 
   // Use the first text that isn't the URL as the title
@@ -324,6 +345,71 @@ function parseVideoRow(row) {
     posterImage: picture,
     title,
   };
+}
+
+/**
+ * Turns the ?v= value of a deep link into an Adobe video URL
+ * @param {string} v - An Adobe video ID (e.g. 3495665) or an Adobe video URL
+ * @returns {string|null} The Adobe video URL, or null for other values (Vidyard UUIDs)
+ */
+function getDeepLinkVideoUrl(v) {
+  if (/^\d+$/.test(v)) return `${ADOBE_TV_ORIGIN}/v/${v}/`;
+  return findAdobeVideoUrl(v);
+}
+
+/**
+ * Opens the video of a deep link (?v=...) in a modal. Adobe video IDs/URLs play in the
+ * Adobe player; other values are legacy Vidyard UUIDs, handed to the video block.
+ * Other query params are player params, e.g. second=35 to start at 0:35.
+ * @param {string} v - The ?v= value
+ * @param {URLSearchParams} searchParams - All query params of the link
+ */
+async function openVideoFromParam(v, searchParams) {
+  const params = new URLSearchParams(searchParams);
+  params.delete('v');
+  const videoParams = {};
+  params.forEach((value, key) => {
+    const num = Number(value);
+    videoParams[key] = Number.isNaN(num) ? value : num;
+  });
+
+  const { loadStyle } = await import('../../scripts/ak.js');
+  const adobeUrl = getDeepLinkVideoUrl(v);
+  if (adobeUrl) {
+    await loadStyle('/blocks/adobe-video/adobe-video.css');
+    const startAt = Number(videoParams.second) || 0;
+    openAdobeVideoModal(adobeUrl, '', { startAt });
+    return;
+  }
+
+  // legacy Vidyard links, until the video block is retired
+  const [{ openVideoModal }] = await Promise.all([
+    import('../video/video.js'),
+    loadStyle('/blocks/video/video.css'),
+  ]);
+  openVideoModal(v, '', videoParams);
+}
+
+/**
+ * Video deep links: opens the video of a ?v= page URL on load, and of same-page
+ * ?v= links when clicked (e.g. /get-help?v=3495665&second=35)
+ */
+export function initVideoDeepLinks() {
+  const pageSearchParams = new URLSearchParams(window.location.search);
+  const pageVideoId = pageSearchParams.get('v');
+  if (pageVideoId) openVideoFromParam(pageVideoId, pageSearchParams);
+
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('a[href*="v="]');
+    if (!a) return;
+    const url = new URL(a.href, window.location.origin);
+    if (url.origin !== window.location.origin || url.pathname !== window.location.pathname) return;
+    const v = url.searchParams.get('v');
+    if (!v) return;
+    e.preventDefault();
+    window.history.pushState({}, '', a.href);
+    openVideoFromParam(v, url.searchParams);
+  });
 }
 
 /**

@@ -1,4 +1,21 @@
-import { getVidyardUuid, openVideoModal as openVideoModalBase } from '../video/video.js';
+import { loadStyle } from '../../scripts/ak.js';
+import { findAdobeVideoUrl, openAdobeVideoModal } from '../adobe-video/adobe-video.js';
+// Vidyard links (legacy, until the sheet only has Adobe links)
+import { getVidyardUuid, openVideoModal as openVidyardModal } from '../video/video.js';
+
+/**
+ * Gets the poster image URL for a video: the sheet's poster column (poster, image or
+ * thumbnail), else the Vidyard thumbnail. Adobe videos have no public thumbnail URL.
+ * @param {Object} video - Video data object
+ * @returns {string} The poster URL, or '' if there is none
+ */
+function getPosterUrl(video) {
+  const poster = (video.poster || video.image || video.thumbnail || '').trim();
+  if (poster) return poster;
+  if (findAdobeVideoUrl(video.url)) return '';
+  const videoId = getVidyardUuid(video.url || '') || '';
+  return `https://play.vidyard.com/${videoId}.jpg`;
+}
 
 /**
  * Convert text to class name format
@@ -13,11 +30,18 @@ function toClassName(text) {
 }
 
 /**
- * Create and show video modal
+ * Create and show video modal: Adobe links play in the Adobe Video block's modal,
+ * Vidyard links in the legacy Vidyard modal
  * @param {Object} video - Video data object with url and title
  */
-function openVideoModal(video) {
-  openVideoModalBase(getVidyardUuid(video.url), video.title);
+async function openVideoModal(video) {
+  const adobeUrl = findAdobeVideoUrl(video.url);
+  if (adobeUrl) {
+    await loadStyle('/blocks/adobe-video/adobe-video.css');
+    openAdobeVideoModal(adobeUrl, video.title);
+    return;
+  }
+  openVidyardModal(getVidyardUuid(video.url || ''), video.title);
 }
 
 /**
@@ -31,23 +55,24 @@ function createVideoCard(video) {
   card.setAttribute('type', 'button');
   card.setAttribute('aria-label', `Play video: ${video.title}`);
 
-  const videoId = getVidyardUuid(video.url) || '';
-
   // Create thumbnail container
   const thumbnail = document.createElement('div');
   thumbnail.className = 'video-thumbnail';
 
-  // Create thumbnail image
-  const img = document.createElement('img');
-  img.src = `https://play.vidyard.com/${videoId}.jpg`;
-  img.alt = video.title;
-  img.loading = 'lazy';
+  // Create thumbnail image (Adobe videos without a poster show the dark placeholder)
+  const posterUrl = getPosterUrl(video);
+  if (posterUrl) {
+    const img = document.createElement('img');
+    img.src = posterUrl;
+    img.alt = video.title;
+    img.loading = 'lazy';
+    thumbnail.appendChild(img);
+  }
 
   // Create play icon overlay
   const playIcon = document.createElement('div');
   playIcon.className = 'video-play-icon';
 
-  thumbnail.appendChild(img);
   thumbnail.appendChild(playIcon);
 
   // Create title
