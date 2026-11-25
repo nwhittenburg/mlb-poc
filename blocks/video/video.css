@@ -43,36 +43,12 @@
 }
 
 @media (min-width: 900px) {
-  .video .video-container img {
+  .video .video-container img { 
     max-height: 320px;
   }
 }
 
-/* Adobe videos: no thumbnail available, keep a 16:9 placeholder */
-.video .video-container.no-poster {
-  aspect-ratio: 16 / 9;
-}
-
-@media (min-width: 900px) {
-  .video .video-container.no-poster {
-    max-height: 320px;
-  }
-
-  /* contained items are centered at their natural width: match a 320px-high poster */
-  .video.contained .video-container.no-poster {
-    width: 569px;
-    max-width: 100%;
-  }
-}
-
-/* Adobe videos: inline player (iframe) */
-.video .video-container.adobe-player {
-  aspect-ratio: 16 / 9;
-  cursor: auto;
-}
-
-/* Play icon overlay for multi-grid modal items (and inline Adobe videos with a poster) */
-.video .video-grid-single .video-play-icon,
+/* Play icon overlay for multi-grid modal items */
 .video .video-grid-multi .video-play-icon {
   position: absolute;
   top: 50%;
@@ -80,18 +56,16 @@
   transform: translate(-50%, -50%);
   width: 96px;
   height: 96px;
-  background: url("/img/icons/video-button.svg");
+  background: url('/img/icons/video-button.svg');
   pointer-events: none;
   transition: opacity 0.15s ease;
 }
 
-.video .video-grid-multi .video-container:hover .video-play-icon,
-.video .video-grid-single .adobe-poster:hover .video-play-icon {
+.video .video-grid-multi .video-container:hover .video-play-icon {
   opacity: 0.9;
 }
 
-.video .video-grid-multi .video-container:hover img,
-.video .video-grid-single .adobe-poster:hover img {
+.video .video-grid-multi .video-container:hover img {
   opacity: 0.85;
 }
 
@@ -194,15 +168,6 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  border: none;
-}
-
-/* Adobe videos: inline player (iframe) */
-.video .adobe-player iframe {
-  position: absolute;
-  inset: 0;
   width: 100%;
   height: 100%;
   border: none;

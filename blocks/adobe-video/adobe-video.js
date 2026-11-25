@@ -1,12 +1,36 @@
-import {
-  ADOBE_TV_HOST,
-  createAdobePlayer as createPlayerIframe,
-  getAdobeEmbedUrl,
-  getAdobeVideoId,
-  watchAdobePlayer,
-} from '../video/adobe-player.js';
+import { trackVideoComplete, trackVideoStart } from '../../scripts/analytics.js';
 
-export { getAdobeVideoId };
+const ADOBE_TV_ORIGIN = 'https://video.tv.adobe.com';
+const ADOBE_TV_HOST = 'video.tv.adobe.com';
+const ADOBE_URL_PATTERN = /https?:\/\/video\.tv\.adobe\.com\/v\/\d+[^\s&<>"]*/;
+
+/**
+ * Extracts the video ID from an Adobe video URL
+ * e.g. https://video.tv.adobe.com/v/3495665/?pls=1 -> 3495665
+ * @param {string} url - The Adobe video URL
+ * @returns {string|null} The video ID
+ */
+export function getAdobeVideoId(url) {
+  const match = url?.match(/video\.tv\.adobe\.com\/v\/(\d+)/);
+  return match ? match[1] : null;
+}
+
+/**
+ * Finds an Adobe video URL in a string, also inside wrapped/encoded links
+ * (e.g. Outlook safelinks copied from an email).
+ * @param {string} text - An href or text
+ * @returns {string|null} The Adobe video URL, including its query params
+ */
+export function findAdobeVideoUrl(text) {
+  if (!text) return null;
+  let decoded = text;
+  try {
+    decoded = decodeURIComponent(text);
+  } catch (e) {
+    // keep the raw value
+  }
+  return decoded.match(ADOBE_URL_PATTERN)?.[0] || null;
+}
 
 /**
  * Builds the embeddable player URL, keeping any authored query params (e.g. pls=1)
@@ -15,15 +39,70 @@ export { getAdobeVideoId };
  * @returns {string|null} The embed URL
  */
 export function getEmbedUrl(url, autoplay = false) {
-  return getAdobeEmbedUrl(url, { autoplay });
+  const id = getAdobeVideoId(url);
+  if (!id) return null;
+  let search;
+  try {
+    search = new URL(url).searchParams;
+  } catch (e) {
+    search = new URLSearchParams();
+  }
+  if (autoplay) search.set('autoplay', 'true');
+  const query = search.toString();
+  return `${ADOBE_TV_ORIGIN}/v/${id}/${query ? `?${query}` : ''}`;
 }
 
 /**
- * Tracks video start/complete for a player iframe
+ * Creates the Adobe player iframe
+ * @param {string} src - The player URL
+ * @param {string} title - The video title
+ * @returns {HTMLIFrameElement}
+ */
+function createPlayerIframe(src, title) {
+  const iframe = document.createElement('iframe');
+  iframe.src = src;
+  iframe.title = title || 'Video player';
+  iframe.loading = 'lazy';
+  iframe.setAttribute('allow', 'autoplay; fullscreen; encrypted-media; picture-in-picture');
+  iframe.setAttribute('scrolling', 'no');
+  return iframe;
+}
+
+/**
+ * Tracks video start/complete for a player iframe (same data layer events as Vidyard).
+ * The Adobe player reports its state to the page with postMessage, as JSON strings like
+ * {"type":"mpcStatus","state":"start"|"play"|"pause"|"tick"|"complete","id":"3495665"}.
+ * Start and complete are each tracked once per player.
+ * @param {HTMLIFrameElement} iframe - The player iframe
+ * @param {string} videoName - The video name used for analytics
  * @returns {Function} Cleanup function that removes the listener
  */
 function trackPlayer(iframe, videoName) {
-  return watchAdobePlayer(iframe, { videoName });
+  let started = false;
+  let completed = false;
+
+  const onMessage = (event) => {
+    if (event.origin !== ADOBE_TV_ORIGIN || event.source !== iframe.contentWindow) return;
+    let { data } = event;
+    if (typeof data === 'string') {
+      try {
+        data = JSON.parse(data);
+      } catch (e) {
+        return;
+      }
+    }
+    const state = data?.state;
+    if ((state === 'start' || state === 'play') && !started) {
+      started = true;
+      trackVideoStart({ videoName });
+    } else if ((state === 'complete' || state === 'ended') && !completed) {
+      completed = true;
+      trackVideoComplete({ videoName });
+    }
+  };
+
+  window.addEventListener('message', onMessage);
+  return () => window.removeEventListener('message', onMessage);
 }
 
 /**
@@ -229,26 +308,11 @@ function createInlineVideoItem(videoUrl, posterImage, videoTitle) {
  * Returns { videoUrl, posterImage, title }
  */
 function parseVideoRow(row) {
-  let videoUrl;
-  [...row.querySelectorAll('a')].some((a) => {
-    // links pasted from email may be wrapped (e.g. Outlook safelinks), so also
-    // check the decoded href and the link text for the real video URL
-    let decoded = a.href;
-    try {
-      decoded = decodeURIComponent(a.href);
-    } catch (e) {
-      // keep the raw href
-    }
-    const found = [decoded, a.textContent]
-      .map((candidate) => candidate.match(/https?:\/\/video\.tv\.adobe\.com\/v\/\d+[^\s&<"]*/)?.[0])
-      .find(Boolean);
-    if (found) videoUrl = found;
-    return !!found;
-  });
-  if (!videoUrl) {
-    const [url] = row.textContent.match(/https?:\/\/video\.tv\.adobe\.com\/v\/\d+[^\s<]*/) || [];
-    if (url) videoUrl = url;
-  }
+  // links pasted from email may be wrapped (e.g. Outlook safelinks), so check the
+  // decoded href and the link text, then the plain text, for the real video URL
+  const videoUrl = [...row.querySelectorAll('a')]
+    .map((a) => findAdobeVideoUrl(a.href) || findAdobeVideoUrl(a.textContent))
+    .find(Boolean) || findAdobeVideoUrl(row.textContent);
   const picture = row.querySelector('picture');
 
   // Use the first text that isn't the URL as the title

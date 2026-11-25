@@ -1,4 +1,7 @@
-import { getAdobeVideoRef, getVidyardUuid, openVideoModal as openVideoModalBase } from '../video/video.js';
+import { loadStyle } from '../../scripts/ak.js';
+import { findAdobeVideoUrl, openAdobeVideoModal } from '../adobe-video/adobe-video.js';
+// Vidyard links (legacy, until the sheet only has Adobe links)
+import { getVidyardUuid, openVideoModal as openVidyardModal } from '../video/video.js';
 
 /**
  * Gets the poster image URL for a video: the sheet's poster column (poster, image or
@@ -9,7 +12,7 @@ import { getAdobeVideoRef, getVidyardUuid, openVideoModal as openVideoModalBase 
 function getPosterUrl(video) {
   const poster = (video.poster || video.image || video.thumbnail || '').trim();
   if (poster) return poster;
-  if (getAdobeVideoRef(video.url)) return '';
+  if (findAdobeVideoUrl(video.url)) return '';
   const videoId = getVidyardUuid(video.url || '') || '';
   return `https://play.vidyard.com/${videoId}.jpg`;
 }
@@ -27,12 +30,18 @@ function toClassName(text) {
 }
 
 /**
- * Create and show video modal
+ * Create and show video modal: Adobe links play in the Adobe Video block's modal,
+ * Vidyard links in the legacy Vidyard modal
  * @param {Object} video - Video data object with url and title
  */
-function openVideoModal(video) {
-  const adobeRef = getAdobeVideoRef(video.url);
-  openVideoModalBase(adobeRef || getVidyardUuid(video.url), video.title);
+async function openVideoModal(video) {
+  const adobeUrl = findAdobeVideoUrl(video.url);
+  if (adobeUrl) {
+    await loadStyle('/blocks/adobe-video/adobe-video.css');
+    openAdobeVideoModal(adobeUrl, video.title);
+    return;
+  }
+  openVidyardModal(getVidyardUuid(video.url || ''), video.title);
 }
 
 /**
