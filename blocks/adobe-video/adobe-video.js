@@ -75,11 +75,21 @@ function createPlayerIframe(src, title) {
  * Start and complete are each tracked once per player.
  * @param {HTMLIFrameElement} iframe - The player iframe
  * @param {string} videoName - The video name used for analytics
+ * @param {number} startAt - Optional start time in seconds (deep links, e.g. ?second=35)
  * @returns {Function} Cleanup function that removes the listener
  */
-function trackPlayer(iframe, videoName) {
+function trackPlayer(iframe, videoName, startAt = 0) {
   let started = false;
   let completed = false;
+
+  // start time: the player accepts player.js commands; sent when the player is ready
+  // and again on first playback (whichever the player honors), never after that
+  const seek = () => {
+    if (!(startAt > 0) || started) return;
+    const message = { context: 'player.js', version: '0.0.11', method: 'setCurrentTime' };
+    message.value = startAt;
+    iframe.contentWindow?.postMessage(JSON.stringify(message), ADOBE_TV_ORIGIN);
+  };
 
   const onMessage = (event) => {
     if (event.origin !== ADOBE_TV_ORIGIN || event.source !== iframe.contentWindow) return;
@@ -91,8 +101,13 @@ function trackPlayer(iframe, videoName) {
         return;
       }
     }
+    if (data?.context === 'player.js' && data.event === 'ready') {
+      seek();
+      return;
+    }
     const state = data?.state;
     if ((state === 'start' || state === 'play') && !started) {
+      seek();
       started = true;
       trackVideoStart({ videoName });
     } else if ((state === 'complete' || state === 'ended') && !completed) {
@@ -109,8 +124,10 @@ function trackPlayer(iframe, videoName) {
  * Opens a video modal with the Adobe TV player
  * @param {string} videoUrl - The Adobe TV video URL
  * @param {string} title - The video title
+ * @param {Object} options
+ * @param {number} options.startAt - Optional start time in seconds
  */
-export function openAdobeVideoModal(videoUrl, title) {
+export function openAdobeVideoModal(videoUrl, title, { startAt = 0 } = {}) {
   const src = getEmbedUrl(videoUrl, true);
   if (!src) return;
   const videoName = title || 'Video';
@@ -136,7 +153,7 @@ export function openAdobeVideoModal(videoUrl, title) {
   const iframe = createPlayerIframe(src, title);
   iframe.loading = 'eager';
   videoContainer.appendChild(iframe);
-  const stopTracking = trackPlayer(iframe, videoName);
+  const stopTracking = trackPlayer(iframe, videoName, startAt);
 
   modalContent.appendChild(closeButton);
   modalContent.appendChild(videoContainer);
@@ -328,6 +345,71 @@ function parseVideoRow(row) {
     posterImage: picture,
     title,
   };
+}
+
+/**
+ * Turns the ?v= value of a deep link into an Adobe video URL
+ * @param {string} v - An Adobe video ID (e.g. 3495665) or an Adobe video URL
+ * @returns {string|null} The Adobe video URL, or null for other values (Vidyard UUIDs)
+ */
+function getDeepLinkVideoUrl(v) {
+  if (/^\d+$/.test(v)) return `${ADOBE_TV_ORIGIN}/v/${v}/`;
+  return findAdobeVideoUrl(v);
+}
+
+/**
+ * Opens the video of a deep link (?v=...) in a modal. Adobe video IDs/URLs play in the
+ * Adobe player; other values are legacy Vidyard UUIDs, handed to the video block.
+ * Other query params are player params, e.g. second=35 to start at 0:35.
+ * @param {string} v - The ?v= value
+ * @param {URLSearchParams} searchParams - All query params of the link
+ */
+async function openVideoFromParam(v, searchParams) {
+  const params = new URLSearchParams(searchParams);
+  params.delete('v');
+  const videoParams = {};
+  params.forEach((value, key) => {
+    const num = Number(value);
+    videoParams[key] = Number.isNaN(num) ? value : num;
+  });
+
+  const { loadStyle } = await import('../../scripts/ak.js');
+  const adobeUrl = getDeepLinkVideoUrl(v);
+  if (adobeUrl) {
+    await loadStyle('/blocks/adobe-video/adobe-video.css');
+    const startAt = Number(videoParams.second) || 0;
+    openAdobeVideoModal(adobeUrl, '', { startAt });
+    return;
+  }
+
+  // legacy Vidyard links, until the video block is retired
+  const [{ openVideoModal }] = await Promise.all([
+    import('../video/video.js'),
+    loadStyle('/blocks/video/video.css'),
+  ]);
+  openVideoModal(v, '', videoParams);
+}
+
+/**
+ * Video deep links: opens the video of a ?v= page URL on load, and of same-page
+ * ?v= links when clicked (e.g. /get-help?v=3495665&second=35)
+ */
+export function initVideoDeepLinks() {
+  const pageSearchParams = new URLSearchParams(window.location.search);
+  const pageVideoId = pageSearchParams.get('v');
+  if (pageVideoId) openVideoFromParam(pageVideoId, pageSearchParams);
+
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('a[href*="v="]');
+    if (!a) return;
+    const url = new URL(a.href, window.location.origin);
+    if (url.origin !== window.location.origin || url.pathname !== window.location.pathname) return;
+    const v = url.searchParams.get('v');
+    if (!v) return;
+    e.preventDefault();
+    window.history.pushState({}, '', a.href);
+    openVideoFromParam(v, url.searchParams);
+  });
 }
 
 /**
